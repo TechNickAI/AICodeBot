@@ -1,0 +1,85 @@
+[tool.black]
+line-length = 120
+target-version = ["py311"]
+
+[tool.isort]
+line_length = 120
+profile = "black"
+py_version = 311
+use_parentheses = true
+## Ignore the source of the import and just sort alphabetically, with "from" before "import"
+combine_as_imports = true
+combine_straight_imports = true
+from_first = true
+lines_between_sections = 0
+no_sections = true
+
+[tool.pytest.ini_options]
+# Disable warnings from third-party libraries
+filterwarnings = "ignore::DeprecationWarning"
+
+
+[tool.ruff]
+extend-ignore = [
+    "DTZ003",
+    "DTZ007",
+    "E401",    # multiple imports on one line
+    "N817",    # D for decimal
+    "PLR0912", # Don't compplain about too many branches
+    "PLR0913", # don't complain about too many arguments
+    "PLR2004", # Don't force every magic value to be a constant
+    "PLW0120", # else without a break is fine (I use return with for-else)
+    "RET505",  # Allow for return values to be set outside of if/else blocks
+    "RET506",  # Allow for return values to be set after raising an exception
+    "RET507",  # Allow for return values to be set after continue
+    "RET508",  # Allow for return values to be set after break
+    "S101",    # assert
+    "S105",    # possible hardcoded password
+    "S308",    # Trust us with mark_safe
+    "S311",    # Trust us with random
+    "S324",    # Trust us with hashlib
+    "SIM108",  # Don't force ternary operators
+    "TRY003",  # long messages in exceptions are ok
+]
+# https://beta.ruff.rs/docs/rules/#ruff-specific-rules-ruf
+line-length = 120
+select = [
+    # Note, don't use isort through ruff, it's not as configurable as the standalone tool
+    "A", # builtins
+    #"ARG", # unused arguments
+    "B",   # bugbear
+    "DJ",  # django
+    "DTZ", # datetimez
+    "E",   # pycodestyle
+    "EXE", # executable settings
+    "F",   # pyflakes
+    "INP", # implicit namespace packages
+    "ISC", # string concatenation
+    "N",   # pep8 naming
+    "NPY", # numpy
+    "PD",  # pandas checking
+    "PGH", # explicit noqa
+    "PIE", # flake8 pie
+    "PLC", # pylint convention
+    "PLE", # pylint errors
+    "PLR", # pylint refactor
+    "PLW", # pylint warnings
+    #"PT",  # pytest style
+    "PTH", # Use path library
+    "RET", # return statements
+    "RSE", # raise statements
+    #"RUF", # ruff Disabled because it is too aggressive about removing noqa settings when editing files
+    "S",   # flake8-bandit
+    "SIM", # flake8 simplify
+    "SLF", # self
+    "T10", # debug statements
+    "T20", # print statements
+    "TRY", # try/except
+    "UP",  # pyupgrade
+    "W",   # pycodestyle warnings
+    "YTT", # flake8 2020
+]
+target-version = "py311"
+# Certain errors we don't want to fix because they are too aggressive,
+# especially in the editor (removing variables we haven't used yet
+unfixable = ["F401", "F841"]
