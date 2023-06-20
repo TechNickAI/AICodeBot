@@ -1,0 +1,3 @@
+# Use this for running tests (such as in CI environment)
+-r requirements.txt
+pytest

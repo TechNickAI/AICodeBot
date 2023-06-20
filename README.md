@@ -1,4 +1,4 @@
-# AI Code Bot
+# AI Code Bot 🤖
 
 ## Your AI-powered coding companion
 
