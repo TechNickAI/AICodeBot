@@ -43,15 +43,12 @@ def setup_environment():
                     env.write(line)
 
         console.print("[bold green]Created .env file with your OpenAI API key. You're all set![/bold green]")
-
-        return True
+        sys.exit(0)
 
     console.print(
         "[bold red]Please set an API key in the OPENAI_API_KEY environment variable or in a .env file.[/bold red]"
     )
     sys.exit(1)
-
-    return False
 
 
 @click.group()
@@ -69,19 +66,22 @@ def version():
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-def funfact(verbose):
-    """Tell me something interesting about programming or AI"""
+def fun_fact(verbose):
+    """Tell me something interesting about programming or AI."""
     setup_environment()
 
+    # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "fun_fact.yaml")
 
+    # Set up the language model
     llm = ChatOpenAI(temperature=1, max_tokens=1024)
+
     # Set up the chain
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     with console.status("Thinking", spinner="point"):
-        # Select a random year from 1950 to current year so that we get a different answer each time
-        year = random.randint(1950, datetime.datetime.utcnow().year)
+        # Select a random year so that we get a different answer each time
+        year = random.randint(1942, datetime.datetime.utcnow().year)
         response = chat_chain.run(f"programming and artificial intelligence in the year {year}")
         console.print(response, style=bot_style)
 
