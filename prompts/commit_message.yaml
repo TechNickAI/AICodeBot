@@ -1,0 +1,12 @@
+_type: prompt
+template_format: f-string
+input_variables: ["diff"]
+template: |
+    Given the following changes in the code:
+
+    {diff}
+
+    Please generate a commit message following best practices. The message should include a short summary and,
+    if necessary, a longer description. If a longer description is not needed, only provide the short summary.
+    The message should be concise, clear, and informative. If appropriate, use GitHub Markdown for formatting.
+    Please respond only with the commit message.

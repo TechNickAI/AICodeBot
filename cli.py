@@ -59,9 +59,26 @@ def cli():
 
 
 @cli.command()
-def version():
-    """Print the version number."""
-    console.print(f"[bold cyan]AICodeBot version {__version__}[/bold cyan]")
+@click.option("-v", "--verbose", count=True)
+def commit(verbose):
+    """Draft a commit message based on the changes."""
+    setup_environment()
+
+    # Load the prompt
+    prompt = load_prompt(Path(__file__).parent / "prompts" / "commit_message.yaml")
+
+    # Set up the language model
+    llm = ChatOpenAI(temperature=0.25, max_tokens=256)
+
+    # Set up the chain
+    chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+
+    # Get the changes from git
+    diff = os.popen("git diff").read()
+
+    with console.status("Thinking", spinner="point"):
+        response = chat_chain.run(diff)
+        console.print(response, style=bot_style)
 
 
 @cli.command()
@@ -84,6 +101,12 @@ def fun_fact(verbose):
         year = random.randint(1942, datetime.datetime.utcnow().year)
         response = chat_chain.run(f"programming and artificial intelligence in the year {year}")
         console.print(response, style=bot_style)
+
+
+@cli.command()
+def version():
+    """Print the version number."""
+    console.print(f"AICodeBot version {__version__}")
 
 
 if __name__ == "__main__":
