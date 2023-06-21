@@ -50,7 +50,5 @@ pip install -r requirements/requirements.txt
 Run the following command. The first time you do, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [api key settings](https://platform.openai.com/account/api-keys").
 
 ```bash
-
-```bash
-python3 cli.py --help
+python3 cli.py
 ```
