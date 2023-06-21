@@ -46,15 +46,13 @@ Once we've set up the bot to be able to use Large Language Models as a decision 
 
 ### Fun
 
-<img src="https://tenor.com/view/kto-kounotori-kounotoritoken-lbow-storkholders-gif-25676483.gif" style="width:25%; float: right">
-
 - [X] **Fun Facts**: Provides fun facts about programming or AI. It could also share interesting news or articles related to AI and programming.
 - [ ] **Telling Jokes**: Tells programming jokes. :smiley:
 - [ ] **Gif Reaction**: Reacts to messages with relevant and fun gifs. It could also react to specific events in the repository, like the merging of a pull request or the closing of an issue.
 
 - [ ] **Supportive Encouragement**: High fives and kudos for a job well done
 
-<br clear="all">
+<img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" style="width:25%">
 
 ## Setup
 
