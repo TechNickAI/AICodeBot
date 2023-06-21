@@ -14,13 +14,43 @@ For the initial release, you can get a Fun Fact related to AI and Programming.
 
 Behind the scenes, this is talking to the Open AI API and getting a response via Langchain.
 
-## Future Features (WIP)
+## Features
 
-- **Code Reviews**: Analyzes code for common issues or deviations from best practices.
-- **Dependency Management**: Checks for outdated dependencies and suggests updates.
-- **Documentation Improvement**: Analyzes README or other documentation files and suggests improvements.
-- **Performance Improvements**: Analyzes code for potential performance issues and suggests optimizations.
-- **Linting**: Checks code for stylistic or programming errors.
+Once we've set up the bot to be able to use Large Language Models as a decision making engine at the center of Github and Python APIs, we can start to build out the following features:
+
+### Code Improvements
+
+- [ ] **Code Review**: Provides feedback on potential issues in code, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement.
+- [ ] **Dependency Management**: Updating dependencies to their latest versions with pull requests that run tests.
+- [ ] **Documentation Generation**: Generates comprehensive documentation for code, including docstrings, README files, and wiki pages.
+- [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
+- [ ] **Code Formatting**: Automatically formats code according to a specified style guide.
+- [ ] **Error Detection**: Detects errors in code and suggests potential fixes.
+- [ ] **Test Generation**: Generates unit tests for code.
+- [ ] **Code Generation**: Generates boilerplate code for common tasks.
+- [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via Github Actions)
+- [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems.
+- [ ] **Linting**: Checks code for linting errors and automatically fixes them where possible.
+- [ ] **Handle Github Issues**: Handles issues that you assign to @aicodebot. It could also suggest labels for new issues based on their content.
+
+### User Interfaces
+
+- [ ] **Command line installable via pip**: autocode can be installed as a Python package using pip.
+- [ ] **Callable as a Github action**: Can be called as a GitHub action to perform tasks on GitHub repositories.
+- [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
+
+### Repository Management
+
+- [ ] **Handle Stale Issues**: Automatically detects and handles stale issues on GitHub by nudging the responsible parties.
+- [ ] **Triage Incoming Issues**: Provides Level 1 triage of incoming issues on GitHub, including tagging, assigning, and responding with FAQs. It could also escalate issues to human developers when necessary.
+
+### Fun
+
+- [X] **Fun Facts**: Provides fun facts about programming or AI. It could also share interesting news or articles related to AI and programming.
+- [ ] **Telling Jokes**: Tells programming jokes. :smiley:
+- [ ] **Gif Reaction**: Reacts to messages with relevant and fun gifs. It could also react to specific events in the repository, like the merging of a pull request or the closing of an issue.
+
+![Say What GIF](https://tenor.com/view/kto-kounotori-kounotoritoken-lbow-storkholders-gif-25676483.gif)
 
 ## Setup
 
@@ -47,7 +77,7 @@ pip install -r requirements/requirements.txt
 
 ## Usage
 
-Run the following command. The first time you do, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [api key settings](https://platform.openai.com/account/api-keys").
+Run the following command. The first time you do, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [API key settings](https://platform.openai.com/account/api-keys").
 
 ```bash
 python3 cli.py
