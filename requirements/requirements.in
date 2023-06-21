@@ -1,3 +1,5 @@
 click
+langchain
+openai
 python-dotenv
 rich

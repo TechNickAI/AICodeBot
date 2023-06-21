@@ -4,15 +4,100 @@
 #
 #    pip-compile
 #
+aiohttp==3.8.4
+    # via
+    #   langchain
+    #   openai
+aiosignal==1.3.1
+    # via aiohttp
+async-timeout==4.0.2
+    # via aiohttp
+attrs==23.1.0
+    # via aiohttp
+certifi==2023.5.7
+    # via requests
+charset-normalizer==3.1.0
+    # via
+    #   aiohttp
+    #   requests
 click==8.1.3
     # via -r requirements.in
+dataclasses-json==0.5.8
+    # via langchain
+frozenlist==1.3.3
+    # via
+    #   aiohttp
+    #   aiosignal
+idna==3.4
+    # via
+    #   requests
+    #   yarl
+langchain==0.0.207
+    # via -r requirements.in
+langchainplus-sdk==0.0.16
+    # via langchain
 markdown-it-py==3.0.0
     # via rich
+marshmallow==3.19.0
+    # via
+    #   dataclasses-json
+    #   marshmallow-enum
+marshmallow-enum==1.5.1
+    # via dataclasses-json
 mdurl==0.1.2
     # via markdown-it-py
+multidict==6.0.4
+    # via
+    #   aiohttp
+    #   yarl
+mypy-extensions==1.0.0
+    # via typing-inspect
+numexpr==2.8.4
+    # via langchain
+numpy==1.25.0
+    # via
+    #   langchain
+    #   numexpr
+openai==0.27.8
+    # via -r requirements.in
+openapi-schema-pydantic==1.2.4
+    # via langchain
+packaging==23.1
+    # via marshmallow
+pydantic==1.10.9
+    # via
+    #   langchain
+    #   langchainplus-sdk
+    #   openapi-schema-pydantic
 pygments==2.15.1
     # via rich
 python-dotenv==1.0.0
     # via -r requirements.in
+pyyaml==6.0
+    # via langchain
+requests==2.31.0
+    # via
+    #   langchain
+    #   langchainplus-sdk
+    #   openai
 rich==13.4.2
     # via -r requirements.in
+sqlalchemy==2.0.16
+    # via langchain
+tenacity==8.2.2
+    # via
+    #   langchain
+    #   langchainplus-sdk
+tqdm==4.65.0
+    # via openai
+typing-extensions==4.6.3
+    # via
+    #   pydantic
+    #   sqlalchemy
+    #   typing-inspect
+typing-inspect==0.9.0
+    # via dataclasses-json
+urllib3==2.0.3
+    # via requests
+yarl==1.9.2
+    # via aiohttp

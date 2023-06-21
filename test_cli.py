@@ -1,4 +1,4 @@
-from cli import joke, version
+from cli import funfact, version
 from click.testing import CliRunner
 from setup import __version__
 import os, pytest
@@ -12,7 +12,7 @@ def test_version():
 
 
 @pytest.mark.skipif(os.getenv("OPENAI_API_KEY") is None, reason="Skipping live tests without an API key.")
-def test_joke():
+def test_funfact():
     runner = CliRunner()
-    result = runner.invoke(joke)
+    result = runner.invoke(funfact)
     assert result.exit_code == 0

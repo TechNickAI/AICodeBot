@@ -1,11 +1,16 @@
 from dotenv import find_dotenv, load_dotenv
+from langchain.chains import LLMChain
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import load_prompt
 from pathlib import Path
 from rich.console import Console
+from rich.style import Style
 from setup import __version__
-import click, os, sys, webbrowser
+import click, datetime, openai, os, random, sys, webbrowser
 
 # Create a Console object
 console = Console()
+bot_style = Style(color="#30D5C8")
 
 # Load environment variables from .env file
 load_dotenv(find_dotenv())
@@ -13,6 +18,7 @@ load_dotenv(find_dotenv())
 
 def setup_environment():
     if os.getenv("OPENAI_API_KEY"):
+        openai.api_key = os.getenv("OPENAI_API_KEY")
         return True
 
     openai_api_key_url = "https://platform.openai.com/account/api-keys"
@@ -63,12 +69,21 @@ def version():
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-def joke(verbose):
-    """Tell a [probably bad] programming joke."""
+def funfact(verbose):
+    """Tell me something interesting about programming or AI"""
     setup_environment()
-    api_key = os.getenv("OPENAI_API_KEY")
-    if verbose:
-        console.print(f"[bold yellow]Using API key: {api_key}[/bold yellow]")
+
+    prompt = load_prompt(Path(__file__).parent / "prompts" / "fun_fact.yaml")
+
+    llm = ChatOpenAI(temperature=1, max_tokens=1024)
+    # Set up the chain
+    chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+
+    with console.status("Thinking", spinner="point"):
+        # Select a random year from 1950 to current year so that we get a different answer each time
+        year = random.randint(1950, datetime.datetime.utcnow().year)
+        response = chat_chain.run(f"programming and artificial intelligence in the year {year}")
+        console.print(response, style=bot_style)
 
 
 if __name__ == "__main__":
