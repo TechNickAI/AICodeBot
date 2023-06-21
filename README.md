@@ -24,7 +24,7 @@ Behind the scenes, this is talking to the Open AI API and getting a response via
 
 ## Setup
 
-Follow the steps below to set up CrystalMind on your machine:
+Follow the steps below to set up AICodeBot on your machine:
 
 1. Clone the repository
 
@@ -47,7 +47,9 @@ pip install -r requirements/requirements.txt
 
 ## Usage
 
-Once the setup is complete, run the following command:
+Run the following command. The first time you do, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [api key settings](https://platform.openai.com/account/api-keys").
+
+```bash
 
 ```bash
 python3 cli.py --help
