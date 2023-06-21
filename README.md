@@ -4,6 +4,8 @@
 
 AICodeBot is a coding assistant designed to make your coding life easier. With capabilities to perform code reviews, manage dependencies, and even suggest improvements, think of it as your AI version of a pair programmer.
 
+⚠️ Status: This project is in its infancy with very limited features. Right now it only tells you fun facts, but you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
+
 ## MVP
 
 For the initial release, you can get a Fun Fact related to AI and Programming.
@@ -18,10 +20,12 @@ Behind the scenes, this is talking to the Open AI API and getting a response via
 
 Once we've set up the bot to be able to use Large Language Models as a decision making engine at the center of Github and Python APIs, we can start to build out the following features:
 
-### Code Improvements
+### Code Workflow Improvements
 
-- [ ] **Code Review**: Provides feedback on potential issues in code, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement.
+- [ ] **Smart Git Commit**: Run pre-commit on the file and handle fixable lint errors. Automatically generates a commit message based on the changes made to the code.
+- [ ] **Code Review**: Provides feedback on potential issues in code, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement. Eventually: FIX the code automatically and notify the team.
 - [ ] **Dependency Management**: Updating dependencies to their latest versions with pull requests that run tests.
+- [ ] **Assisted Debugging**: Run a command with aicodebot and it captures the log message and tries to figure out what's going on from the error message.  Eventually, it could also suggest fixes for the error and make the changes for you.
 - [ ] **Documentation Generation**: Generates comprehensive documentation for code, including docstrings, README files, and wiki pages.
 - [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
 - [ ] **Code Formatting**: Automatically formats code according to a specified style guide.
@@ -35,22 +39,25 @@ Once we've set up the bot to be able to use Large Language Models as a decision 
 
 ### User Interfaces
 
-- [ ] **Command line installable via pip**: autocode can be installed as a Python package using pip.
+- [ ] **Command line installable via pip**: aicodebot can be installed as a Python package using pip
+- [ ] **Chat**: CLI chat interface that knows the context of your code base and can answer questions about it. No more going back and forth between ChatGPT and command line.
 - [ ] **Callable as a Github action**: Can be called as a GitHub action to perform tasks on GitHub repositories.
 - [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
+- [ ] **Bug Report service integrations**: Listen for bug reports from Sentry, Honeybadger, and other bug reporting tools and automatically create issues, assign them to developers, and notify them via Slack. Eventually: FIX the bug automatically and notify the team.
 
 ### Repository Management
 
+- [ ] **Project best practices**: Suggest things like pre-commit, linting, license, CI/CD, etc. Eventually: Implement them for you.
 - [ ] **Handle Stale Issues**: Automatically detects and handles stale issues on GitHub by nudging the responsible parties.
 - [ ] **Triage Incoming Issues**: Provides Level 1 triage of incoming issues on GitHub, including tagging, assigning, and responding with FAQs. It could also escalate issues to human developers when necessary.
+- [ ] **Rate the complexity of PRs**: Rates the complexity of pull requests and assigns them to developers based on their skill level and context
 
 ### Fun
 
 - [X] **Fun Facts**: Provides fun facts about programming or AI. It could also share interesting news or articles related to AI and programming.
 - [ ] **Telling Jokes**: Tells programming jokes. :smiley:
-- [ ] **Gif Reaction**: Reacts to messages with relevant and fun gifs. It could also react to specific events in the repository, like the merging of a pull request or the closing of an issue.
-
 - [ ] **Supportive Encouragement**: High fives and kudos for a job well done
+- [ ] **Gif Reactions**: Reacts to messages with relevant and fun gifs. It could also react to specific events in the repository, like the merging of a pull request or the closing of an issue.
 
 <img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" style="width:25%">
 
