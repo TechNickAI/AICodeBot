@@ -1,7 +1,7 @@
 from pathlib import Path
 from setuptools import setup
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 
 # Get requirements from requirements.txt
 with Path.open("requirements/requirements.txt") as f:
