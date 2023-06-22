@@ -74,15 +74,28 @@ def commit(verbose, max_tokens):
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     # Get the changes from git
-    diff = exec_and_get_output(["git", "diff"])
+    staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+    if not staged_files:
+        # If no files are staged, stage all changed files
+        exec_and_get_output(["git", "add", "-A"])
+        # Get the diff for all changes since the last commit
+        diff = exec_and_get_output(["git", "diff", "HEAD"])
+        # Get the list of files to be committed
+        files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+    else:
+        # If some files are staged, get the diff for those files
+        diff = exec_and_get_output(["git", "diff", "--cached"])
+        # The list of files to be committed is the same as the list of staged files
+        files = staged_files
+
+    if not diff:
+        console.print("No changes to commit.")
+        sys.exit(0)
+
+    console.print("The following files will be committed:\n" + files)
 
     with console.status("Thinking", spinner="point"):
         response = chat_chain.run(diff)
-        console.print(response, style=bot_style)
-
-    # List the files that will be committed
-    files = exec_and_get_output(["git", "diff", "--name-only"])
-    console.print("The following files will be committed:\n" + files)
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:

@@ -4,14 +4,19 @@ input_variables: ["diff"]
 template: |
     I have a diff of a code change that I need to commit to a git repository. The diff is as follows:
 
+    BEGIN DIFF
     {diff}
+    END DIFF
 
-    I need you to generate a commit message for me. The commit message should follow best practices,
+    Generate a commit message for me. The commit message should follow best practices,
     which means it should have a short, single-line summary, followed by a blank line, and then a more
     detailed explanatory text if necessary. The text can be in GitHub-flavored markdown format.
-    Contextually appropriate emojis are encouraged!
+    Contextually appropriate emojis are encouraged, but not required.
 
     Important - the summary line should not be longer than 72 characters.
 
-    Start your response directly with the commit message. DO NOT INCLUDE ANY PREFIX OR INTRODUCTION.
+    Avoid redundancy between the summary line and the explanatory text. Don't repeat yourself.
+    If the detailed explanatory text is not necessary, then omit it and just do the summary
+
+    Start your response directly with the commit message. Do not include any prefix or introduction.
     Your entire response will be used as the commit message.
