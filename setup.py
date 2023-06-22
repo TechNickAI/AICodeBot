@@ -23,7 +23,7 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
         install_requires=requirements,
         entry_points={
             "console_scripts": [
-                "aicodebot = aicodebot.cli:main",
+                "aicodebot = aicodebot.cli:cli",
             ],
         },
         classifiers=[
