@@ -1,6 +1,6 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.helpers import exec_and_get_output
-from dotenv import find_dotenv, load_dotenv
+from dotenv import load_dotenv
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
@@ -14,11 +14,12 @@ import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowse
 console = Console()
 bot_style = Style(color="#30D5C8")
 
-# Load environment variables from .env file
-load_dotenv(find_dotenv())
-
 
 def setup_environment():
+    # Load environment variables from the config file
+    config_file = Path(Path.home() / ".aicodebot")
+    load_dotenv(config_file)
+
     if os.getenv("OPENAI_API_KEY"):
         openai.api_key = os.getenv("OPENAI_API_KEY")
         return True
@@ -27,24 +28,26 @@ def setup_environment():
 
     console.print(
         "[bold red]The OPENAI_API_KEY environment variable is not set.[/bold red]\n"
-        "Let's fix that for you by creating a .env file."
+        f"Let's fix that for you by creating a config file at {config_file}"
     )
 
     if click.confirm("Do you want me to open the OpenAI API keys page for you in a browser?"):
         webbrowser.open(openai_api_key_url)
 
-    if click.confirm("Do you want me to create the .env file for you?"):
+    if click.confirm(f"Do you want me to create the {config_file} file for you?"):
         api_key = click.prompt("Please enter your OpenAI API key")
 
         # Copy .env.template to .env and insert the API key
-        with Path.open(".env.template", "r") as template, Path.open(".env", "w") as env:
+        with Path.open(Path(__file__).parent / ".aicodebot.template", "r") as template, Path.open(
+            config_file, "w"
+        ) as env:
             for line in template:
                 if line.startswith("OPENAI_API_KEY="):
                     env.write(f"OPENAI_API_KEY={api_key}\n")
                 else:
                     env.write(line)
 
-        console.print("[bold green]Created .env file with your OpenAI API key. You're all set![/bold green]")
+        console.print(f"[bold green]Created {config_file} with your OpenAI API key. You're all set![/bold green]")
         sys.exit(0)
 
     raise click.ClickException("Please set an API key in the OPENAI_API_KEY environment variable or in a .env file.")
