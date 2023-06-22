@@ -21,6 +21,7 @@
         runs-on: ubuntu-latest
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}}
         timeout-minutes: 5
 
         steps:

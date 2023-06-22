@@ -1,5 +1,5 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.cli import fun_fact, version
+from aicodebot.cli import alignment, fun_fact, version
 from click.testing import CliRunner
 import os, pytest
 
@@ -15,4 +15,11 @@ def test_version():
 def test_funfact():
     runner = CliRunner()
     result = runner.invoke(fun_fact)
+    assert result.exit_code == 0
+
+
+@pytest.mark.skipif(os.getenv("OPENAI_API_KEY") is None, reason="Skipping live tests without an API key.")
+def test_alignment():
+    runner = CliRunner()
+    result = runner.invoke(alignment)
     assert result.exit_code == 0
