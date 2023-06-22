@@ -6,8 +6,8 @@ from setuptools import setup
 with Path("README.md").open("r", encoding="utf-8") as f:
     long_description = f.read()
 
-# Get requirements from requirements.txt
-with Path.open("requirements/requirements.txt") as f:
+# Get requirements from requirements.in
+with Path.open("requirements/requirements.in") as f:
     requirements = f.read().splitlines()
 
 if __name__ == "__main__":  # Only run setup if this is the main file (allows this file to be imported for __version__)

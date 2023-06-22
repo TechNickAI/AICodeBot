@@ -24,8 +24,6 @@ Automate your commits by having aicodebot generate a commit message for you.
 
 ## Features
 
-Once we've set up the bot to be able to use Large Language Models as a decision making engine at the center of GitHub and Python APIs, we can start to build out the following features:
-
 ### Code Workflow Improvements
 
 - [X] **Assisted Git Commit**: Automatically generate a commit message.
@@ -61,11 +59,12 @@ Once we've set up the bot to be able to use Large Language Models as a decision 
 ### Fun
 
 - [X] **Fun Facts**: Provides fun facts about programming or AI. It could also share interesting news or articles related to AI and programming.
+- [X] **Alignment**: Gives a heart-centered inspirational message about how we can build AI in a way that aligns with humanity.
 - [ ] **Telling Jokes**: Tells programming jokes. :smiley:
 - [ ] **Supportive Encouragement**: High fives and kudos for a job well done
 - [ ] **Gif Reactions**: Reacts to messages with relevant and fun gifs. It could also react to specific events in the repository, like the merging of a pull request or the closing of an issue.
 
-<img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" style="width:25%">
+<img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" width="25%">
 
 ## Setup and Usage
 

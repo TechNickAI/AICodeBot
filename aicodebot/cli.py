@@ -61,10 +61,32 @@ def cli():
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
+def alignment(verbose):
+    """Get a message about Heart-Centered AI Alignment ❤ + 🤖."""
+    setup_environment()
+
+    # Load the prompt
+    prompt = load_prompt(Path(__file__).parent / "prompts" / "alignment.yaml")
+
+    # Set up the language model
+    llm = OpenAI(temperature=1, max_tokens=1024)
+
+    # Set up the chain
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+
+    name = exec_and_get_output(["git", "config", "--get", "user.name"])
+
+    with console.status("Thinking", spinner="point"):
+        response = chain.run(name)
+        console.print(response, style=bot_style)
+
+
+@cli.command()
+@click.option("-v", "--verbose", count=True)
 @click.option("-t", "--max-tokens", type=int, default=250)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 def commit(verbose, max_tokens, yes):
-    """Generate a git commit message based on the diff, and then commit the changes after you approve."""
+    """Generate a git commit message and commit changes after you approve."""
     setup_environment()
 
     # Load the prompt
@@ -74,7 +96,7 @@ def commit(verbose, max_tokens, yes):
     llm = OpenAI(temperature=0.1, max_tokens=max_tokens)
 
     # Set up the chain
-    chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     # Get the changes from git
     staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
@@ -98,7 +120,7 @@ def commit(verbose, max_tokens, yes):
     console.print("The following files will be committed:\n" + files)
 
     with console.status("Thinking", spinner="point"):
-        response = chat_chain.run(diff)
+        response = chain.run(diff)
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
@@ -112,7 +134,7 @@ def commit(verbose, max_tokens, yes):
     # Ask the user if they want to commit the changes
     if yes or click.confirm("Do you want to commit the changes?"):
         # Commit the changes using the temporary file for the commit message
-        exec_and_get_output(["git", "commit", "-a", "-F", temp_file_name])
+        exec_and_get_output(["git", "commit", "-F", temp_file_name])
         console.print(f"✅ {len(files.splitlines())} files committed.")
 
     # Delete the temporary file
