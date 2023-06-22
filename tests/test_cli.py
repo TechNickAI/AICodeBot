@@ -40,5 +40,3 @@ def test_debug_failure(runner):
     assert result.exit_code == 0  # the debug command itself should still succeed
     assert "Running:\nls -9" in result.output
     assert "The command exited with status 1." in result.output
-    # You might also want to check that the output includes the expected error message,
-    # and that it includes some advice from ChatGPT.
