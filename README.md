@@ -6,15 +6,15 @@ AICodeBot is a coding assistant designed to make your coding life easier. With c
 
 ⚠️ Status: This project is in its infancy with very limited features. Sometimes it does dumb things.
 
-Right now, it only generates commit messages for you, but you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
+Even with limited functionality, it will still save you time, and you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
 
 ## Setup and Usage
+
+[![PyPI version](https://badge.fury.io/py/aicodebot.svg)](https://badge.fury.io/py/aicodebot)
 
 Follow the steps below to set up AICodeBot on your machine:
 
 `pip install aicodebot`
-
-The first time you run it, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [API key settings](https://platform.openai.com/account/api-keys").
 
 ```bash
 > aicodebot --help
@@ -31,6 +31,9 @@ Commands:
   fun-fact   Tell me something interesting about programming or AI.
   version    Print the version number.
 ```
+
+Note:
+The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys").
 
 ## Features
 
@@ -76,7 +79,30 @@ Commands:
 
 <img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" width="25%">
 
-## Development
+## Development / Contributing
+
+### The Stack
+
+#### Test and Build
+
+[![GitHub Build](https://github.com/novara-ai/aicodebot/actions/workflows/build.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions?query=build)
+[![Pytest](https://img.shields.io/badge/%F0%9F%A7%AA-Pytest-blue)](https://docs.pytest.org/en/stable/contents.html)
+
+#### Code Quality
+
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+[![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
+[![Super Linter](https://github.com/novara-ai/aicodebot/actions/workflows/linter.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions/workflows/linter.yml)
+
+#### Infrastructure
+
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
+
+[![Open AI](https://img.shields.io/badge/OpenAI-412991.svg?logo=OpenAI&logoColor=white)](https://openai.com)
+
+### Dev Environment
 
 1. Clone the repository
 
@@ -97,3 +123,31 @@ pip install -r requirements/requirements-dev.txt
 ```
 
 4. Use aicodebot to build aicodebot 😎
+
+### Testing
+
+Install the test dependencies with
+`pip install -r requirements/requirements-test.txt`
+
+We use `pytest` for testing. It will skip some tests if OPENAI_API_KEY is not set.
+
+### Coding Principles
+
+Borrowed from the [zen of python](http://c2.com/cgi/wiki?PythonPhilosophy), with a couple of changes.
+
+```text
+1. **Readability is the number 1 code quality metric**.
+2. Beautiful is better than ugly.
+3. Explicit is better than implicit.
+4. Simple is better than complex.
+5. Complex is better than complicated.
+6. Flat is better than nested.
+7. Sparse is better than dense.
+8. Special cases aren't special enough to break the rules.
+    * Although practicality beats purity.
+9. Errors should never pass silently.
+    * Unless explicitly silenced.
+10. In the face of ambiguity, refuse the temptation to guess.
+11. There should be one -- and preferably only one -- obvious way to do it.
+12. Now is better than never.
+```
