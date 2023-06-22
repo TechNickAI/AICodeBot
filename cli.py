@@ -1,6 +1,7 @@
 from dotenv import find_dotenv, load_dotenv
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 from langchain.prompts import load_prompt
 from pathlib import Path
 from rich.console import Console
@@ -60,7 +61,8 @@ def cli():
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-def commit(verbose):
+@click.option("-t", "--max-tokens", type=int, default=250)
+def commit(verbose, max_tokens):
     """Draft a commit message based on the changes."""
     setup_environment()
 
@@ -68,7 +70,7 @@ def commit(verbose):
     prompt = load_prompt(Path(__file__).parent / "prompts" / "commit_message.yaml")
 
     # Set up the language model
-    llm = ChatOpenAI(temperature=0.25, max_tokens=256)
+    llm = OpenAI(temperature=0.1, max_tokens=max_tokens)
 
     # Set up the chain
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)

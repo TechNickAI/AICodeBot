@@ -2,11 +2,16 @@ _type: prompt
 template_format: f-string
 input_variables: ["diff"]
 template: |
-    Given the following changes in the code:
+    I have a diff of a code change that I need to commit to a git repository. The diff is as follows:
 
     {diff}
 
-    Please generate a commit message following best practices. The message should include a short summary and,
-    if necessary, a longer description. If a longer description is not needed, only provide the short summary.
-    The message should be concise, clear, and informative. If appropriate, use GitHub Markdown for formatting.
-    Please respond only with the commit message.
+    I need you to generate a commit message for me. The commit message should follow best practices,
+    which means it should have a short, single-line summary, followed by a blank line, and then a more
+    detailed explanatory text if necessary. The text can be in GitHub-flavored markdown format.
+    Contextually appropriate emojis are encouraged!
+
+    Important - the summary line should not be longer than 72 characters.
+
+    Start your response directly with the commit message. DO NOT INCLUDE ANY PREFIX OR INTRODUCTION.
+    Your entire response will be used as the commit message.

@@ -22,7 +22,7 @@ Once we've set up the bot to be able to use Large Language Models as a decision 
 
 ### Code Workflow Improvements
 
-- [ ] **Smart Git Commit**: Run pre-commit on the file and handle fixable lint errors. Automatically generates a commit message based on the changes made to the code.
+- [X] **Assisted Git Commit**: Run pre-commit on the file and handle fixable lint errors. Automatically generates a commit message based on the changes made to the code.
 - [ ] **Code Review**: Provides feedback on potential issues in code, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement. Eventually: FIX the code automatically and notify the team.
 - [ ] **Dependency Management**: Updating dependencies to their latest versions with pull requests that run tests.
 - [ ] **Assisted Debugging**: Run a command with aicodebot and it captures the log message and tries to figure out what's going on from the error message.  Eventually, it could also suggest fixes for the error and make the changes for you.
