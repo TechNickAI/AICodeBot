@@ -19,6 +19,8 @@
       pytest-in-venv:
         name: Python tests
         runs-on: ubuntu-latest
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         timeout-minutes: 5
 
         steps:
@@ -34,5 +36,10 @@
           - name: Install dependencies
             run: pip install -r requirements/requirements-test.txt
 
-          - name: Run the tests
-            run: pytest
+          - name: Run the tests with coverage
+            run: pytest --cov=./ --cov-report=xml
+
+          - name: Upload coverage reports to Codecov
+            uses: codecov/codecov-action@v3
+            env:
+              CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
