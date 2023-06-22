@@ -6,4 +6,5 @@
 .vscode
 __pycache__
 aicodebot.egg-info/
+build/
 dist/
