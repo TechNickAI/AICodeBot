@@ -66,7 +66,7 @@ def cli():
 @click.option("-v", "--verbose", count=True)
 @click.option("-t", "--max-tokens", type=int, default=250)
 def commit(verbose, max_tokens):
-    """Draft a commit message based on the changes."""
+    """Generate a git commit message based on the diff, and then commit the changes after you approve."""
     setup_environment()
 
     # Load the prompt
