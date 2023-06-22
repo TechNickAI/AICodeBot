@@ -1,3 +1,4 @@
+from aicodebot import version as aicodebot_version
 from aicodebot.helpers import exec_and_get_output
 from dotenv import find_dotenv, load_dotenv
 from langchain.chains import LLMChain
@@ -7,7 +8,6 @@ from langchain.prompts import load_prompt
 from pathlib import Path
 from rich.console import Console
 from rich.style import Style
-from setup import __version__
 import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
 
 # Create a Console object
@@ -51,7 +51,7 @@ def setup_environment():
 
 
 @click.group()
-@click.version_option(__version__, "--version", "-V")
+@click.version_option(aicodebot_version, "--version", "-V")
 @click.help_option("--help", "-h")
 def cli():
     pass
@@ -140,7 +140,7 @@ def fun_fact(verbose):
 @cli.command()
 def version():
     """Print the version number."""
-    console.print(f"AICodeBot version {__version__}")
+    console.print(f"AICodeBot version {aicodebot_version}")
 
 
 if __name__ == "__main__":

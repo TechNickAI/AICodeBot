@@ -1,7 +1,6 @@
+from aicodebot import version
 from pathlib import Path
 from setuptools import find_packages, setup
-
-__version__ = "0.1.0"
 
 # Pull in the long description from the README
 with Path("README.md").open("r", encoding="utf-8") as f:
@@ -15,7 +14,7 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
     setup(
         name="aicodebot",
         packages=find_packages(),
-        version="0.2.0",
+        version=version,
         url="https://github.com/novara_ai/aicodebot",
         author="Nick Sullivan",
         description="Your AI-powered coding companion: AI Code Bot 🤖",
