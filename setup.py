@@ -12,8 +12,8 @@ with Path.open("requirements/requirements.txt") as f:
 
 if __name__ == "__main__":  # Only run setup if this is the main file (allows this file to be imported for __version__)
     setup(
+        python_requires=">=3.9",
         name="aicodebot",
-        packages=find_packages(),
         version=version,
         url="https://github.com/novara_ai/aicodebot",
         author="Nick Sullivan",
@@ -25,6 +25,10 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
             "console_scripts": [
                 "aicodebot = aicodebot.cli:cli",
             ],
+        },
+        packages=find_packages(exclude=["tests", "tests.*"]),
+        package_data={
+            "aicodebot": ["prompts/*.yaml"],
         },
         classifiers=[
             "Development Status :: 3 - Alpha",
