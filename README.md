@@ -92,3 +92,5 @@ mkvirtualenv --python=`which python3` aicodebot
 ```bash
 pip install -r requirements/requirements-dev.txt
 ```
+
+4. Use aicodebot to build aicodebot 😎
