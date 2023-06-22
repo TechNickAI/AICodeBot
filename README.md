@@ -6,21 +6,28 @@ AICodeBot is a coding assistant designed to make your coding life easier. With c
 
 ⚠️ Status: This project is in its infancy with very limited features. Right now it only generates commit messages for you, but you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
 
-## MVP
+## Setup and Usage
 
-For the initial release, you can get a Fun Fact related to AI and Programming.
+Follow the steps below to set up AICodeBot on your machine:
 
-`aicodebot fun-fact`
+`pip install aicodebot`
 
->>🤖 The first chess program written in Fortran for the IBM 704 computer in 1960 was beaten by a human in just four moves. The program relied heavily on brute force calculation, and had not yet developed sophisticated artificial intelligence algorithms.
+The first time you run it, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [API key settings](https://platform.openai.com/account/api-keys").
 
-Behind the scenes, this is talking to the Open AI API and getting a response via Langchain.
+```bash
+> aicodebot --help
+Usage: aicodebot [OPTIONS] COMMAND [ARGS]...
 
-#### Commit Message
+Options:
+  -V, --version  Show the version and exit.
+  -h, --help     Show this message and exit.
 
-Automate your commits by having aicodebot generate a commit message for you.
-
-`aicodebot commit`
+Commands:
+  alignment  Get a message about Heart-Centered AI Alignment ❤ + 🤖.
+  commit     Generate a git commit message and commit changes after you...
+  fun-fact   Tell me something interesting about programming or AI.
+  version    Print the version number.
+```
 
 ## Features
 
@@ -62,31 +69,9 @@ Automate your commits by having aicodebot generate a commit message for you.
 - [X] **Alignment**: Gives a heart-centered inspirational message about how we can build AI in a way that aligns with humanity.
 - [ ] **Telling Jokes**: Tells programming jokes. :smiley:
 - [ ] **Supportive Encouragement**: High fives and kudos for a job well done
-- [ ] **Gif Reactions**: Reacts to messages with relevant and fun gifs. It could also react to specific events in the repository, like the merging of a pull request or the closing of an issue.
+- [ ] **GIF Reactions**: Reacts to messages with relevant and fun gifs. We've gotta figure out how to teach LLMs about humor.
 
 <img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" width="25%">
-
-## Setup and Usage
-
-Follow the steps below to set up AICodeBot on your machine:
-
-`pip install aicodebot`
-
-The first time you run it, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [API key settings](https://platform.openai.com/account/api-keys").
-
-```bash
-> aicodebot --help
-Usage: aicodebot [OPTIONS] COMMAND [ARGS]...
-
-Options:
-  -V, --version  Show the version and exit.
-  -h, --help     Show this message and exit.
-
-Commands:
-  commit    Generate a git commit message based on the diff, and then...
-  fun-fact  Tell me something interesting about programming or AI.
-  version   Print the version number.
-```
 
 ## Development
 
@@ -106,5 +91,4 @@ mkvirtualenv --python=`which python3` aicodebot
 
 ```bash
 pip install -r requirements/requirements-dev.txt
-# Use requirements-dev.txt if you want to contribute to the project
 ```
