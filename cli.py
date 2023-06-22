@@ -87,11 +87,11 @@ def commit(verbose, max_tokens):
 
     # List the files that will be committed
     files = os.popen("git diff --name-only").read()
-    console.print("The following files will be committed:\n" + files, style=bot_style)
+    console.print("The following files will be committed:\n" + files)
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
-        temp.write(response)
+        temp.write(str(response).strip())
         temp_file_name = temp.name
 
     # Open the temporary file in the user's editor
