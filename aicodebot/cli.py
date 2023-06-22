@@ -13,6 +13,7 @@ import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowse
 # Create a Console object
 console = Console()
 bot_style = Style(color="#30D5C8")
+DEFAULT_MAX_TOKENS = 1024
 
 
 def setup_environment():
@@ -69,7 +70,7 @@ def alignment(verbose):
     prompt = load_prompt(Path(__file__).parent / "prompts" / "alignment.yaml")
 
     # Set up the language model
-    llm = OpenAI(temperature=1, max_tokens=1024)
+    llm = OpenAI(temperature=1, max_tokens=DEFAULT_MAX_TOKENS)
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
@@ -142,6 +143,45 @@ def commit(verbose, max_tokens, yes):
     Path.unlink(temp_file_name)
 
 
+@cli.command(context_settings={"ignore_unknown_options": True})
+@click.argument("command", nargs=-1)
+@click.option("-v", "--verbose", count=True)
+def debug(command, verbose):
+    """Run a command and get debugging advice if it fails."""
+    setup_environment()
+
+    # Load the prompt
+    prompt = load_prompt(Path(__file__).parent / "prompts" / "debug.yaml")
+
+    # Set up the language model
+    llm = OpenAI(temperature=0.1, max_tokens=DEFAULT_MAX_TOKENS)
+
+    # Set up the chain
+    chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+    command_str = " ".join(command)
+
+    # Run the command and capture its output
+    console.print(f"Running:\n{command_str}")
+    process = subprocess.run(command_str, shell=True, capture_output=True, text=True)  # noqa: S602
+
+    # Print the output of the command
+    output = f"Standard Output:\n{process.stdout}\nStandard Error:\n{process.stderr}"
+    console.print(f"Output:\n{output}")
+
+    # Print a message about the exit status
+    if process.returncode == 0:
+        console.print("The command completed successfully.")
+    else:
+        console.print(f"The command exited with status {process.returncode}.")
+
+    # If the command failed, send its output to ChatGPT for analysis
+    if process.returncode != 0:
+        error_output = process.stderr
+        with console.status("Thinking", spinner="point"):
+            response = chat_chain.run(error_output)
+            console.print(response, style=bot_style)
+
+
 @cli.command()
 @click.option("-v", "--verbose", count=True)
 def fun_fact(verbose):
@@ -152,7 +192,7 @@ def fun_fact(verbose):
     prompt = load_prompt(Path(__file__).parent / "prompts" / "fun_fact.yaml")
 
     # Set up the language model
-    llm = ChatOpenAI(temperature=1, max_tokens=1024)
+    llm = ChatOpenAI(temperature=1, max_tokens=DEFAULT_MAX_TOKENS)
 
     # Set up the chain
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)

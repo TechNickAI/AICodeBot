@@ -4,7 +4,7 @@
 
 AICodeBot is a coding assistant designed to make your coding life easier. With capabilities to perform code reviews, manage dependencies, and even suggest improvements, think of it as your AI version of a pair programmer.
 
-⚠️ Status: This project is in its infancy with very limited features. Sometimes it does dumb things. 
+⚠️ Status: This project is in its infancy with very limited features. Sometimes it does dumb things.
 
 Right now, it only generates commit messages for you, but you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
 
@@ -27,6 +27,7 @@ Options:
 Commands:
   alignment  Get a message about Heart-Centered AI Alignment ❤ + 🤖.
   commit     Generate a git commit message and commit changes after you...
+  debug      Run a command and get debugging advice if it fails.
   fun-fact   Tell me something interesting about programming or AI.
   version    Print the version number.
 ```
@@ -36,9 +37,9 @@ Commands:
 ### Code Workflow Improvements
 
 - [X] **Assisted Git Commit**: Automatically generate a commit message.
+- [X] **Assisted Debugging**: Run a command with aicodebot and it captures the log message and tries to figure out what's going on from the error message.  Eventually, it could also suggest fixes for the error and make the changes for you. Try it out with `aicodebot debug $command`
 - [ ] **Code Review**: Provides feedback on potential issues in code, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement. Eventually: FIX the code automatically and notify the team.
 - [ ] **Dependency Management**: Updating dependencies to their latest versions with pull requests that run tests.
-- [ ] **Assisted Debugging**: Run a command with aicodebot and it captures the log message and tries to figure out what's going on from the error message.  Eventually, it could also suggest fixes for the error and make the changes for you.
 - [ ] **Documentation Generation**: Generates comprehensive documentation for code, including docstrings, README files, and wiki pages.
 - [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
 - [ ] **Code Formatting**: Automatically formats code according to a specified style guide.

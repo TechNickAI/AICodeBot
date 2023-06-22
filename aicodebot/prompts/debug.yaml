@@ -1,0 +1,13 @@
+_type: prompt
+template_format: f-string
+input_variables: ["command_output"]
+template: |
+    I ran a command my terminal, and it failed.
+
+    Here's the output:
+
+    BEGIN OUTPUT
+    {command_output}
+    END OUTPUT
+
+    Help me understand what happened and how might I be able to fix it.
