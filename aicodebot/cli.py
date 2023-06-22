@@ -113,7 +113,7 @@ def commit(verbose, max_tokens, yes):
     if yes or click.confirm("Do you want to commit the changes?"):
         # Commit the changes using the temporary file for the commit message
         exec_and_get_output(["git", "commit", "-a", "-F", temp_file_name])
-        console.print(f"✅ {len(files)} files committed.")
+        console.print(f"✅ {len(files.splitlines())} files committed.")
 
     # Delete the temporary file
     Path.unlink(temp_file_name)
