@@ -8,6 +8,9 @@ from rich.console import Console
 from rich.style import Style
 from setup import __version__
 import click, datetime, openai, os, random, sys, webbrowser
+import tempfile
+import subprocess
+
 
 # Create a Console object
 console = Console()
@@ -81,6 +84,27 @@ def commit(verbose, max_tokens):
     with console.status("Thinking", spinner="point"):
         response = chat_chain.run(diff)
         console.print(response, style=bot_style)
+
+    # List the files that will be committed
+    files = os.popen("git diff --name-only").read()
+    console.print("The following files will be committed:\n" + files, style=bot_style)
+
+    # Write the commit message to a temporary file
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
+        temp.write(response)
+        temp_file_name = temp.name
+
+    # Open the temporary file in the user's editor
+    editor = os.getenv("EDITOR", "vim")
+    subprocess.call([editor, temp_file_name])
+
+    # Ask the user if they want to commit the changes
+    if click.confirm("Do you want to commit the changes?"):
+        # Commit the changes using the temporary file for the commit message
+        os.system(f"git commit -a -F {temp_file_name}")
+
+    # Delete the temporary file
+    os.unlink(temp_file_name)
 
 
 @cli.command()
