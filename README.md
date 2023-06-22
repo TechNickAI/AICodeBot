@@ -20,9 +20,11 @@ Behind the scenes, this is talking to the Open AI API and getting a response via
 
 Automate your commits by having aicodebot generate a commit message for you.
 
+`aicodebot commit`
+
 ## Features
 
-Once we've set up the bot to be able to use Large Language Models as a decision making engine at the center of Github and Python APIs, we can start to build out the following features:
+Once we've set up the bot to be able to use Large Language Models as a decision making engine at the center of GitHub and Python APIs, we can start to build out the following features:
 
 ### Code Workflow Improvements
 
@@ -36,16 +38,16 @@ Once we've set up the bot to be able to use Large Language Models as a decision 
 - [ ] **Error Detection**: Detects errors in code and suggests potential fixes.
 - [ ] **Test Generation**: Generates unit tests for code.
 - [ ] **Code Generation**: Generates boilerplate code for common tasks.
-- [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via Github Actions)
+- [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via GitHub Actions)
 - [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems.
 - [ ] **Linting**: Checks code for linting errors and automatically fixes them where possible.
-- [ ] **Handle Github Issues**: Handles issues that you assign to @aicodebot. It could also suggest labels for new issues based on their content.
+- [ ] **Handle GitHub Issues**: Handles issues that you assign to @aicodebot. It could also suggest labels for new issues based on their content.
 
 ### User Interfaces
 
-- [ ] **Command line installable via pip**: aicodebot can be installed as a Python package using pip
-- [ ] **Chat**: CLI chat interface that knows the context of your code base and can answer questions about it. No more going back and forth between ChatGPT and command line.
-- [ ] **Callable as a Github action**: Can be called as a GitHub action to perform tasks on GitHub repositories.
+- [X] **Command-line installable via pip**: aicodebot can be installed as a Python package using `pip install aicodebot`
+- [ ] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
+- [ ] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories.
 - [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
 - [ ] **Bug Report service integrations**: Listen for bug reports from Sentry, Honeybadger, and other bug reporting tools and automatically create issues, assign them to developers, and notify them via Slack. Eventually: FIX the bug automatically and notify the team.
 
