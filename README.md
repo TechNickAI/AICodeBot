@@ -10,11 +10,15 @@ AICodeBot is a coding assistant designed to make your coding life easier. With c
 
 For the initial release, you can get a Fun Fact related to AI and Programming.
 
-`python cli.py funfact`
+`aicodebot fun-fact`
 
 >>🤖 The first chess program written in Fortran for the IBM 704 computer in 1960 was beaten by a human in just four moves. The program relied heavily on brute force calculation, and had not yet developed sophisticated artificial intelligence algorithms.
 
 Behind the scenes, this is talking to the Open AI API and getting a response via Langchain.
+
+#### Commit Message
+
+Automate your commits by having aicodebot generate a commit message for you.
 
 ## Features
 
@@ -61,9 +65,29 @@ Once we've set up the bot to be able to use Large Language Models as a decision 
 
 <img src="https://camo.githubusercontent.com/6fc1e79b4aa226b24a756c4c8e20e5b049301a930449a7321d3e45f516e61601/68747470733a2f2f74656e6f722e636f6d2f766965772f6b746f2d6b6f756e6f746f72692d6b6f756e6f746f7269746f6b656e2d6c626f772d73746f726b686f6c646572732d6769662d32353637363438332e676966" style="width:25%">
 
-## Setup
+## Setup and Usage
 
 Follow the steps below to set up AICodeBot on your machine:
+
+`pip install aicodebot`
+
+The first time you run it, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [API key settings](https://platform.openai.com/account/api-keys").
+
+```bash
+> aicodebot --help
+Usage: aicodebot [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  -V, --version  Show the version and exit.
+  -h, --help     Show this message and exit.
+
+Commands:
+  commit    Generate a git commit message based on the diff, and then...
+  fun-fact  Tell me something interesting about programming or AI.
+  version   Print the version number.
+```
+
+## Development
 
 1. Clone the repository
 
@@ -80,14 +104,6 @@ mkvirtualenv --python=`which python3` aicodebot
 3. Install the dependencies:
 
 ```bash
-pip install -r requirements/requirements.txt
+pip install -r requirements/requirements-dev.txt
 # Use requirements-dev.txt if you want to contribute to the project
-```
-
-## Usage
-
-Run the following command. The first time you do, you'll be prompted to enter your OpenAI API key, which is required. You can get one for free on your [API key settings](https://platform.openai.com/account/api-keys").
-
-```bash
-python3 cli.py
 ```
