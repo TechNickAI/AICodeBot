@@ -1,4 +1,4 @@
-from cli import fun_fact, version
+from aicodebot.cli import fun_fact, version
 from click.testing import CliRunner
 from setup import __version__
 import os, pytest
