@@ -1,6 +1,6 @@
 from aicodebot import version
 from pathlib import Path
-from setuptools import find_packages, setup
+from setuptools import setup
 
 # Pull in the long description from the README
 with Path("README.md").open("r", encoding="utf-8") as f:
@@ -12,8 +12,8 @@ with Path.open("requirements/requirements.txt") as f:
 
 if __name__ == "__main__":  # Only run setup if this is the main file (allows this file to be imported for __version__)
     setup(
-        python_requires=">=3.9",
         name="aicodebot",
+        python_requires=">=3.9",
         version=version,
         url="https://github.com/novara_ai/aicodebot",
         author="Nick Sullivan",
@@ -26,9 +26,8 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
                 "aicodebot = aicodebot.cli:cli",
             ],
         },
-        packages=find_packages(exclude=["tests", "tests.*"]),
         package_data={
-            "aicodebot": ["prompts/*.yaml"],
+            "aicodebot": ["prompts/*.yaml", ".aicodebot.template"],
         },
         classifiers=[
             "Development Status :: 3 - Alpha",
