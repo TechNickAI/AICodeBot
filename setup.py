@@ -1,21 +1,32 @@
 from pathlib import Path
-from setuptools import setup
+from setuptools import find_packages, setup
 
 __version__ = "0.1.0"
+
+# Pull in the long description from the README
+with Path("README.md").open("r", encoding="utf-8") as f:
+    long_description = f.read()
 
 # Get requirements from requirements.txt
 with Path.open("requirements/requirements.txt") as f:
     requirements = f.read().splitlines()
 
-# Only run setup if this is the main file (allows this file to be imported for __version__)
-if __name__ == "__main__":
+if __name__ == "__main__":  # Only run setup if this is the main file (allows this file to be imported for __version__)
     setup(
         name="aicodebot",
-        version="0.1.0",
+        packages=find_packages(),
+        version="0.2.0",
         url="https://github.com/novara_ai/aicodebot",
         author="Nick Sullivan",
-        description="Your AI-powered coding companion",
+        description="Your AI-powered coding companion: AI Code Bot 🤖",
+        long_description=long_description,
+        long_description_content_type="text/markdown",
         install_requires=requirements,
+        entry_points={
+            "console_scripts": [
+                "aicodebot = aicodebot.cli:main",
+            ],
+        },
         classifiers=[
             "Development Status :: 3 - Alpha",
             "Intended Audience :: Developers",
