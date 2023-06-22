@@ -38,9 +38,8 @@ def setup_environment():
         api_key = click.prompt("Please enter your OpenAI API key")
 
         # Copy .env.template to .env and insert the API key
-        with Path.open(Path(__file__).parent / ".aicodebot.template", "r") as template, Path.open(
-            config_file, "w"
-        ) as env:
+        template_file = Path(__file__).parent / ".aicodebot.template"
+        with Path.open(template_file, "r") as template, Path.open(config_file, "w") as env:
             for line in template:
                 if line.startswith("OPENAI_API_KEY="):
                     env.write(f"OPENAI_API_KEY={api_key}\n")
@@ -63,7 +62,8 @@ def cli():
 @cli.command()
 @click.option("-v", "--verbose", count=True)
 @click.option("-t", "--max-tokens", type=int, default=250)
-def commit(verbose, max_tokens):
+@click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
+def commit(verbose, max_tokens, yes):
     """Generate a git commit message based on the diff, and then commit the changes after you approve."""
     setup_environment()
 
@@ -110,7 +110,7 @@ def commit(verbose, max_tokens):
     subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
-    if click.confirm("Do you want to commit the changes?"):
+    if yes or click.confirm("Do you want to commit the changes?"):
         # Commit the changes using the temporary file for the commit message
         exec_and_get_output(["git", "commit", "-a", "-F", temp_file_name])
 
