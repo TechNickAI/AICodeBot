@@ -1,4 +1,5 @@
 from dotenv import find_dotenv, load_dotenv
+from helpers import exec_and_get_output
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
@@ -7,10 +8,7 @@ from pathlib import Path
 from rich.console import Console
 from rich.style import Style
 from setup import __version__
-import click, datetime, openai, os, random, sys, webbrowser
-import tempfile
-import subprocess
-
+import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
 
 # Create a Console object
 console = Console()
@@ -49,10 +47,7 @@ def setup_environment():
         console.print("[bold green]Created .env file with your OpenAI API key. You're all set![/bold green]")
         sys.exit(0)
 
-    console.print(
-        "[bold red]Please set an API key in the OPENAI_API_KEY environment variable or in a .env file.[/bold red]"
-    )
-    sys.exit(1)
+    raise click.ClickException("Please set an API key in the OPENAI_API_KEY environment variable or in a .env file.")
 
 
 @click.group()
@@ -79,14 +74,14 @@ def commit(verbose, max_tokens):
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     # Get the changes from git
-    diff = os.popen("git diff").read()
+    diff = exec_and_get_output(["git", "diff"])
 
     with console.status("Thinking", spinner="point"):
         response = chat_chain.run(diff)
         console.print(response, style=bot_style)
 
     # List the files that will be committed
-    files = os.popen("git diff --name-only").read()
+    files = exec_and_get_output(["git", "diff", "--name-only"])
     console.print("The following files will be committed:\n" + files)
 
     # Write the commit message to a temporary file
@@ -96,15 +91,15 @@ def commit(verbose, max_tokens):
 
     # Open the temporary file in the user's editor
     editor = os.getenv("EDITOR", "vim")
-    subprocess.call([editor, temp_file_name])
+    subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
     if click.confirm("Do you want to commit the changes?"):
         # Commit the changes using the temporary file for the commit message
-        os.system(f"git commit -a -F {temp_file_name}")
+        exec_and_get_output(["git", "commit", "-a", "-F", temp_file_name])
 
     # Delete the temporary file
-    os.unlink(temp_file_name)
+    Path.unlink(temp_file_name)
 
 
 @cli.command()
