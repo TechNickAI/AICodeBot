@@ -103,7 +103,7 @@ def commit(verbose, max_tokens, yes):
     staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
     base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
     if not staged_files:
-        # If no files are staged, stage all changed files
+        # If no files are staged, Assume they want to commit all changed files
         exec_and_get_output(["git", "add", "-A"])
         # Get the diff for all changes since the last commit
         diff = exec_and_get_output(base_git_diff + ["HEAD"])
