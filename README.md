@@ -4,7 +4,9 @@
 
 AICodeBot is a coding assistant designed to make your coding life easier. With capabilities to perform code reviews, manage dependencies, and even suggest improvements, think of it as your AI version of a pair programmer.
 
-⚠️ Status: This project is in its infancy with very limited features. Right now it only generates commit messages for you, but you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
+⚠️ Status: This project is in its infancy with very limited features. Sometimes it does dumb things. 
+
+Right now, it only generates commit messages for you, but you can look at the Features list below to get an idea of where it is going. Give the project a star and follow along while we build out more of the foundation.
 
 ## Setup and Usage
 
