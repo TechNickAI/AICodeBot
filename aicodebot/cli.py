@@ -100,16 +100,17 @@ def commit(verbose, max_tokens, yes):
 
     # Get the changes from git
     staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+    base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
     if not staged_files:
         # If no files are staged, stage all changed files
         exec_and_get_output(["git", "add", "-A"])
         # Get the diff for all changes since the last commit
-        diff = exec_and_get_output(["git", "diff", "HEAD"])
+        diff = exec_and_get_output(base_git_diff + ["HEAD"])
         # Get the list of files to be committed
         files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
     else:
         # If some files are staged, get the diff for those files
-        diff = exec_and_get_output(["git", "diff", "--cached"])
+        diff = exec_and_get_output(base_git_diff + ["--cached"])
         # The list of files to be committed is the same as the list of staged files
         files = staged_files
 
