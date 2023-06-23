@@ -39,4 +39,5 @@ def test_debug_failure(runner):
     result = runner.invoke(cli, ["debug", "ls", "-9"])
     assert result.exit_code == 0  # the debug command itself should still succeed
     assert "Running:\nls -9" in result.output
-    assert "The command exited with status 1." in result.output
+    assert "The command exited with status 1" in result.output
+    # TODO: Something to check the AI response that is reliable. Hard because it changes every time.
