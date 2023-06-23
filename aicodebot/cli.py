@@ -75,10 +75,8 @@ def alignment(verbose):
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-    name = exec_and_get_output(["git", "config", "--get", "user.name"])
-
     with console.status("Thinking", spinner="point"):
-        response = chain.run(name)
+        response = chain.run({})
         console.print(response, style=bot_style)
 
 
@@ -170,7 +168,7 @@ def debug(command, verbose):
 
     # Print a message about the exit status
     if process.returncode == 0:
-        console.print("The command completed successfully.")
+        console.print("✅ The command completed successfully.")
     else:
         console.print(f"The command exited with status {process.returncode}.")
 
