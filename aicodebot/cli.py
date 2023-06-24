@@ -178,6 +178,7 @@ def debug(command, verbose):
         with console.status("Thinking", spinner="point"):
             response = chat_chain.run(error_output)
             console.print(response, style=bot_style)
+        sys.exit(process.returncode)
 
 
 @cli.command()

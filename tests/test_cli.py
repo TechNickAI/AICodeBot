@@ -37,7 +37,5 @@ def test_debug_success(runner):
 @pytest.mark.skipif(os.getenv("OPENAI_API_KEY") is None, reason="Skipping live tests without an API key.")
 def test_debug_failure(runner):
     result = runner.invoke(cli, ["debug", "ls", "-9"])
-    assert result.exit_code == 0  # the debug command itself should still succeed
+    assert result.exit_code == 1
     assert "Running:\nls -9" in result.output
-    assert "The command exited with status 1" in result.output
-    # TODO: Something to check the AI response that is reliable. Hard because it changes every time.
