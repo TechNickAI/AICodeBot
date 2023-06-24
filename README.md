@@ -41,7 +41,8 @@ The first time you run it, you'll be prompted to enter your OpenAI API Key, whic
 
 - [X] **Assisted Git Commit**: Automatically generate a commit message.
 - [X] **Assisted Debugging**: Run a command with aicodebot and it captures the log message and tries to figure out what's going on from the error message.  Eventually, it could also suggest fixes for the error and make the changes for you. Try it out with `aicodebot debug $command`
-- [ ] **Code Review**: Provides feedback on potential issues in code, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement. Eventually: FIX the code automatically and notify the team.
+- [ ] **Code Review**: Provides feedback on potential issues in cod, such as style violations, potential bugs, and performance issues. It could also suggest best practices for code improvement. Eventually: FIX the code automatically and notify the team.
+- [ ] **Fix the Build**: Check the CI/CD pipeline and fix the build.
 - [ ] **Dependency Management**: Updating dependencies to their latest versions with pull requests that run tests.
 - [ ] **Documentation Generation**: Generates comprehensive documentation for code, including docstrings, README files, and wiki pages.
 - [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
@@ -50,7 +51,7 @@ The first time you run it, you'll be prompted to enter your OpenAI API Key, whic
 - [ ] **Test Generation**: Generates unit tests for code.
 - [ ] **Code Generation**: Generates boilerplate code for common tasks.
 - [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via GitHub Actions)
-- [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems.
+- [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems
 - [ ] **Linting**: Checks code for linting errors and automatically fixes them where possible.
 - [ ] **Handle GitHub Issues**: Handles issues that you assign to @aicodebot. It could also suggest labels for new issues based on their content.
 
