@@ -1,4 +1,5 @@
 click
+GitPython
 langchain
 openai
 python-dotenv
