@@ -33,10 +33,6 @@
             with:
               python-version: "3.11"
               cache: pip
-          - name: Set up Git user
-            run: |
-              git config --global user.email "test@aicodebot.dev"
-              git config --global user.name "AI Code Bot Test"
 
           - name: Install dependencies
             run: pip install -r requirements/requirements-test.txt
