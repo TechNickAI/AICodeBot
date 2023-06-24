@@ -84,9 +84,18 @@ def alignment(verbose):
 @click.option("-v", "--verbose", count=True)
 @click.option("-t", "--max-tokens", type=int, default=250)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
-def commit(verbose, max_tokens, yes):
+@click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
+def commit(verbose, max_tokens, yes, skip_pre_commit):
     """Generate a git commit message and commit changes after you approve."""
     setup_environment()
+
+    # Check if pre-commit is installed and .pre-commit-config.yaml exists
+    if not skip_pre_commit and Path(".pre-commit-config.yaml").exists():
+        console.print("Running pre-commit checks...")
+        result = subprocess.run(["pre-commit", "run", "--all-files"])
+        if result.returncode != 0:
+            console.print("Pre-commit checks failed. Please fix the issues and try again.")
+            return
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "commit_message.yaml")

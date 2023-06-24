@@ -38,6 +38,8 @@ extend-ignore = [
     "S308",    # Trust us with mark_safe
     "S311",    # Trust us with random
     "S324",    # Trust us with hashlib
+    "S603",    # Trust us with subprocess
+    "S607",    # Trust us with subprocess with partial commands
     "SIM108",  # Don't force ternary operators
     "TRY003",  # long messages in exceptions are ok
 ]
