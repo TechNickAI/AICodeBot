@@ -1,7 +1,6 @@
 version: 2
 updates:
-  - package-echosystem: 'pip'
-    directories:
-      - '/'
+  - package-echosystem: "pip"
+    directory: "/"
     schedule:
-      interval: 'daily'
+      interval: "daily"
