@@ -81,11 +81,14 @@ python-dotenv==1.0.0
     # via -r requirements.in
 pyyaml==6.0
     # via langchain
+regex==2023.6.3
+    # via tiktoken
 requests==2.31.0
     # via
     #   langchain
     #   langchainplus-sdk
     #   openai
+    #   tiktoken
 rich==13.4.2
     # via -r requirements.in
 smmap==5.0.0
@@ -98,6 +101,8 @@ tenacity==8.2.2
     # via
     #   langchain
     #   langchainplus-sdk
+tiktoken==0.4.0
+    # via -r requirements.in
 tqdm==4.65.0
     # via openai
 typing-extensions==4.6.3
