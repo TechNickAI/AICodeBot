@@ -1,5 +1,5 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.helpers import exec_and_get_output
+from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -81,10 +81,10 @@ def alignment(verbose):
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-@click.option("-t", "--max-tokens", type=int, default=250)
+@click.option("-t", "--response-token-size", type=int, default=250)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
-def commit(verbose, max_tokens, yes, skip_pre_commit):
+def commit(verbose, response_token_size, yes, skip_pre_commit):
     """Generate a git commit message and commit changes after you approve."""
     setup_environment()
 
@@ -99,36 +99,45 @@ def commit(verbose, max_tokens, yes, skip_pre_commit):
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "commit_message.yaml")
 
+    # Get the changes from git
+    staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+    if not staged_files:
+        # If no files are staged, Assume they want to commit all changed files
+        exec_and_get_output(["git", "add", "-A"])
+        # Get the list of files to be committed
+        files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+    else:
+        # The list of files to be committed is the same as the list of staged files
+        files = staged_files
+
+    diff_context = git_diff_context()
+
+    if not diff_context:
+        console.print("No changes to commit.")
+        sys.exit(0)
+
+    # Check the size of the diff context and adjust accordingly
+    diff_context_token_size = get_token_length(diff_context)
+    if verbose:
+        console.print(f"Diff context token size: {diff_context_token_size}")
+
+    if diff_context_token_size + response_token_size > 16_000:
+        console.print("The diff context is too large to review. Bigger models coming soon.")
+        sys.exit(1)
+    elif diff_context_token_size + response_token_size > 4_000:
+        model = "gpt-3.5-turbo-16k"  # supports 16k tokens but is a bit slower and more expensive
+    else:
+        model = "gpt-3.5-turbo"  # supports 4k tokens
+
     # Set up the language model
-    llm = OpenAI(temperature=0.1, max_tokens=max_tokens)
+    llm = ChatOpenAI(temperature=0.1, model=model, max_tokens=response_token_size)
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-    # Get the changes from git
-    staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
-    base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
-    if not staged_files:
-        # If no files are staged, Assume they want to commit all changed files
-        exec_and_get_output(["git", "add", "-A"])
-        # Get the diff for all changes since the last commit
-        diff = exec_and_get_output(base_git_diff + ["HEAD"])
-        # Get the list of files to be committed
-        files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
-    else:
-        # If some files are staged, get the diff for those files
-        diff = exec_and_get_output(base_git_diff + ["--cached"])
-        # The list of files to be committed is the same as the list of staged files
-        files = staged_files
-
-    if not diff:
-        console.print("No changes to commit.")
-        sys.exit(0)
-
     console.print("The following files will be committed:\n" + files)
-
     with console.status("Thinking", spinner="point"):
-        response = chain.run(diff)
+        response = chain.run(diff_context)
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
@@ -212,41 +221,42 @@ def fun_fact(verbose):
 
 
 @cli.command
-@click.option("--commit", "-c", help="The commit hash to review.")
-@click.option("--verbose", "-v")
+@click.option("-c", "--commit", help="The commit hash to review.")
+@click.option("-v", "--verbose", count=True)
 def review(commit, verbose):
     """Use AI to do a code review, with [un]staged changes, or a specified commit."""
     setup_environment()
 
-    if commit:
-        # If a commit hash is specified, get the diff for that commit
-        diff = exec_and_get_output(["git", "show", commit])
-    else:
-        # If no commit hash is specified, get the diff for changes, staged or not
-        staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
-        base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
-        if not staged_files:
-            # Get the diff for all changes since the last commit
-            diff = exec_and_get_output(base_git_diff + ["HEAD"])
-        else:
-            # If some files are staged, get the diff for those files
-            diff = exec_and_get_output(base_git_diff + ["--cached"])
-
-        if not diff:
-            console.print("No changes to commit.")
-            sys.exit(0)
+    diff_context = git_diff_context(commit)
+    if not diff_context:
+        console.print("No changes to commit.")
+        sys.exit(0)
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "review.yaml")
 
+    # Check the size of the diff context and adjust accordingly
+    response_token_size = DEFAULT_MAX_TOKENS / 2
+    diff_context_token_size = get_token_length(diff_context)
+    if verbose:
+        console.print(f"Diff context token size: {diff_context_token_size}")
+
+    if diff_context_token_size + response_token_size > 16_000:
+        console.print("The diff context is too large to review. Bigger models coming soon.")
+        sys.exit(1)
+    elif diff_context_token_size + response_token_size > 4_000:
+        model = "gpt-3.5-turbo-16k"  # supports 16k tokens but is a bit slower and more expensive
+    else:
+        model = "gpt-3.5-turbo"  # supports 4k tokens
+
     # Set up the language model
-    llm = OpenAI(temperature=0.1, max_tokens=DEFAULT_MAX_TOKENS)
+    llm = ChatOpenAI(temperature=0.1, model=model, max_tokens=response_token_size)
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     with console.status("Reviewing", spinner="point"):
-        response = chain.run(diff)
+        response = chain.run(diff_context)
         console.print(response, style=bot_style)
 
 

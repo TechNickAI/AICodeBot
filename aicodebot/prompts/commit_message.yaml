@@ -1,11 +1,12 @@
 _type: prompt
 template_format: f-string
-input_variables: ["diff"]
+input_variables: ["diff_context"]
 template: |
-    I have a diff of a code change that I need to commit to a git repository. The diff is as follows:
+    I have a diff of a code change that I need to commit to a git repository. The relevant diff context is as follows,
+    between the BEGIN DIFF and END DIFF markers:
 
     BEGIN DIFF
-    {diff}
+    {diff_context}
     END DIFF
 
     Generate a commit message for me. The commit message should follow best practices,
@@ -13,6 +14,7 @@ template: |
     detailed explanatory text, but only if necessary.
     Avoid redundancy between the summary line and the explanatory text. Don't repeat yourself.
     If the detailed explanatory text is not necessary, then omit it and just do the summary
+    Use imperative mood for the commit message, e.g. "Add feature" instead of "Added feature".
 
     The text can be in GitHub-flavored markdown format.
 
