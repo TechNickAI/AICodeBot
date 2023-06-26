@@ -10,7 +10,6 @@ from rich.console import Console
 from rich.style import Style
 import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
 
-# Create a Console object
 console = Console()
 bot_style = Style(color="#30D5C8")
 DEFAULT_MAX_TOKENS = 1024
@@ -209,6 +208,45 @@ def fun_fact(verbose):
         # Select a random year so that we get a different answer each time
         year = random.randint(1942, datetime.datetime.utcnow().year)
         response = chat_chain.run(f"programming and artificial intelligence in the year {year}")
+        console.print(response, style=bot_style)
+
+
+@cli.command
+@click.option("--commit", "-c", help="The commit hash to review.")
+@click.option("--verbose", "-v")
+def review(commit, verbose):
+    """Use AI to do a code review, with [un]staged changes, or a specified commit."""
+    setup_environment()
+
+    if commit:
+        # If a commit hash is specified, get the diff for that commit
+        diff = exec_and_get_output(["git", "show", commit])
+    else:
+        # If no commit hash is specified, get the diff for changes, staged or not
+        staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+        base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
+        if not staged_files:
+            # Get the diff for all changes since the last commit
+            diff = exec_and_get_output(base_git_diff + ["HEAD"])
+        else:
+            # If some files are staged, get the diff for those files
+            diff = exec_and_get_output(base_git_diff + ["--cached"])
+
+        if not diff:
+            console.print("No changes to commit.")
+            sys.exit(0)
+
+    # Load the prompt
+    prompt = load_prompt(Path(__file__).parent / "prompts" / "review.yaml")
+
+    # Set up the language model
+    llm = OpenAI(temperature=0.1, max_tokens=DEFAULT_MAX_TOKENS)
+
+    # Set up the chain
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+
+    with console.status("Reviewing", spinner="point"):
+        response = chain.run(diff)
         console.print(response, style=bot_style)
 
 
