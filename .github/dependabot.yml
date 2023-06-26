@@ -1,0 +1,7 @@
+version: 2
+updates:
+  - package-echosystem: 'python'
+    directories:
+      - '/'
+    schedule:
+      interval: 'daily'
