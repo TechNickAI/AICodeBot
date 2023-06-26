@@ -18,9 +18,12 @@ def git_diff_context(commit=None):
     else:
         staged_files = exec_and_get_output(["git", "diff", "--cached", "--name-only"]).splitlines()
         if staged_files:
-            file_status = exec_and_get_output(["git", "diff", "--cached", "--name-status"]).splitlines()
+            # If there are staged files, get the diff for those files
+            diff_type = "--cached"
         else:
-            file_status = exec_and_get_output(["git", "diff", "--name-status"]).splitlines()
+            diff_type = "HEAD"
+
+        file_status = exec_and_get_output(["git", "diff", diff_type, "--name-status"]).splitlines()
 
         diffs = []
         for status in file_status:
@@ -33,7 +36,7 @@ def git_diff_context(commit=None):
             else:
                 # If the file is not new, get the diff
                 diffs.append(f"## File changed: {file_name}")
-                diffs.append(exec_and_get_output(base_git_diff + ["--cached", "--", file_name]))
+                diffs.append(exec_and_get_output(base_git_diff + [diff_type, "--", file_name]))
 
         return "\n".join(diffs)
 

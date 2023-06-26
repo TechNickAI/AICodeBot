@@ -24,9 +24,14 @@ def test_git_diff_context(cli_runner, temp_git_repo):
         diff = git_diff_context()
         assert "Adding a new line." in diff
 
-        # Commit the changes
         repo = Repo(temp_git_repo.working_dir)
+
+        # Stage the changes
         repo.git.add("test.txt")
+        diff = git_diff_context()
+        assert "Adding a new line." in diff
+
+        # Commit the changes
         repo.git.commit("-m", "Add test.txt")
 
         # Get the diff for the commit
