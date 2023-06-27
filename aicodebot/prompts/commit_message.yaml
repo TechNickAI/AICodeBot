@@ -4,7 +4,7 @@ template_format: f-string
 input_variables: ["diff_context"]
 template: |
     You are an expert software engineer. I need you to generate a commit message for a change in a git repository.
-    Here's the diff context:
+    Here's the DIFF
 
     BEGIN DIFF
     {diff_context}
@@ -20,13 +20,12 @@ template: |
 
     The commit message should:
     - Start with a short summary (<72 characters).
-    - Follow with a blank line and detailed text, but only if necessary.
+    - Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient, then no detailed text is needed.
     - Use imperative mood (e.g., "Add feature").
     - Be in GitHub-flavored markdown format.
     - Include contextually appropriate emojis (optional).
 
-    If the commit message does not follow these guidelines, then the commit will be rejected. If you are not confident
-    that you can generate a commit message that follows these guidelines, then just respond with "I don't know" and I
-    will handle it.
-
     Start your response with the commit message. No prefix or introduction. Your entire response will be the commit message.
+
+    As for the length of the message, I want you to scale with the length of the diff context.
+    If the DIFF is a small change, respond quickly with a terse message so we can go faster.
