@@ -102,6 +102,18 @@ We use `pytest` for testing. It will skip some tests if OPENAI_API_KEY is not se
 OPENAI_API_KEY=your_key pytest
 ```
 
+## Releases
+
+AICodeBot uses a GitHub Actions workflow for releases. This workflow is designed to watch for tags that start with 'v'. When such a tag is detected, the workflow triggers a series of actions:
+
+1. Package Build: The codebase is built into a distributable format.
+1. Upload to PyPI: The built package is uploaded to the Python Package Index (PyPI), making it available for others to install via pip.
+1. Create a GitHub Release: A new release is created on GitHub, providing a versioned snapshot of the codebase. This release will be tagged with the triggering 'v' tag.
+
+To initiate a new release, simply push a new tag that starts with 'v', followed by the version number (for example, 'v1.0.0'). Please ensure that your version numbers follow the [Semantic Versioning guidelines](https://semver.org/).
+
+To learn more about the release process, you can review the [PyPI release workflow](.github/workflows/pypi_release.yml).
+
 ## Coding Principles
 
 Borrowed from the [zen of python](http://c2.com/cgi/wiki?PythonPhilosophy), with a couple of changes.
