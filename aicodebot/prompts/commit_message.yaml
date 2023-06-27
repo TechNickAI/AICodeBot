@@ -2,25 +2,26 @@ _type: prompt
 template_format: f-string
 input_variables: ["diff_context"]
 template: |
-    I have a diff of a code change that I need to commit to a git repository. The relevant diff context is as follows,
-    between the BEGIN DIFF and END DIFF markers:
+    You are an expert software engineer. I need you to generate a commit message for a change in a git repository.
+    Here's the diff context:
 
     BEGIN DIFF
     {diff_context}
     END DIFF
 
-    Generate a commit message for me. The commit message should follow best practices,
-    which means it should have a short, single-line summary, followed by a blank line, and then a more
-    detailed explanatory text, but only if necessary.
-    Avoid redundancy between the summary line and the explanatory text. Don't repeat yourself.
-    If the detailed explanatory text is not necessary, then omit it and just do the summary
-    Use imperative mood for the commit message, e.g. "Add feature" instead of "Added feature".
+    Remember:
+    - Lines starting with "-" are being removed.
+    - Lines starting with "+" are being added.
+    - Lines starting with " " are unchanged.
 
-    The text can be in GitHub-flavored markdown format.
+    Consider the file names for context (e.g., "README.md" is a markdown file, "*.py" is a Python file).
+    Understand the difference between code and comments. Comment lines start with ##, #, or //.
 
-    Contextually appropriate emojis are encouraged, but not required.
+    The commit message should:
+    - Start with a short summary (<72 characters).
+    - Follow with a blank line and detailed text, but only if necessary.
+    - Use imperative mood (e.g., "Add feature").
+    - Be in GitHub-flavored markdown format.
+    - Include contextually appropriate emojis (optional).
 
-    Important - the summary line should not be longer than 72 characters.
-
-    Start your response directly with the commit message. Do not include any prefix or introduction.
-    Your entire response will be used as the commit message.
+    Start your response with the commit message. No prefix or introduction. Your entire response will be the commit message.
