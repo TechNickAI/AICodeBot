@@ -9,56 +9,19 @@ from rich.console import Console
 from rich.style import Style
 import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
 
+# ----------------------------- Default settings ----------------------------- #
+
 DEFAULT_MAX_TOKENS = 1024
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_MODEL = "gpt-3.5-turbo"  # Can't wait to use GPT-4, as the results are much better. On the waitlist.
 DEFAULT_SPINNER = "point"
 
+# ----------------------- Setup for rich console output ---------------------- #
 console = Console()
 bot_style = Style(color="#30D5C8")
 
 
-def setup_environment():
-    # Load environment variables from the config file
-    config_file = Path(Path.home() / ".aicodebot")
-    load_dotenv(config_file)
-
-    if os.getenv("OPENAI_API_KEY"):
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        return True
-
-    openai_api_key_url = "https://platform.openai.com/account/api-keys"
-
-    console.print(
-        "[bold red]The OPENAI_API_KEY environment variable is not set.[/bold red]\n"
-        f"The OpenAI API key is required to use aicodebot. You can get one for free on the OpenAI website.\n"
-        f"Let's create a config file for you at {config_file}"
-    )
-
-    if click.confirm("Open the OpenAI API keys page for you in a browser?"):
-        webbrowser.open(openai_api_key_url)
-
-    if click.confirm(f"Create the {config_file} file for you?"):
-        api_key = click.prompt("Please enter your OpenAI API key")
-
-        # Copy .env.template to .env and insert the API key
-        template_file = Path(__file__).parent / ".aicodebot.template"
-        with Path.open(template_file, "r") as template, Path.open(config_file, "w") as env:
-            for line in template:
-                if line.startswith("OPENAI_API_KEY="):
-                    env.write(f"OPENAI_API_KEY={api_key}\n")
-                else:
-                    env.write(line)
-
-        console.print(
-            f"[bold green]Created {config_file} with your OpenAI API key.[/bold green] "
-            "Now, please re-run aicodebot and let's get started!"
-        )
-        sys.exit(0)
-
-    raise click.ClickException(
-        "🛑 Please set an API key in the OPENAI_API_KEY environment variable or in a .aicodebot file."
-    )
+# -------------------------- Top level command group ------------------------- #
 
 
 @click.group()
@@ -66,6 +29,15 @@ def setup_environment():
 @click.help_option("--help", "-h")
 def cli():
     pass
+
+
+# ---------------------------------------------------------------------------- #
+#                                   Commands                                   #
+# ---------------------------------------------------------------------------- #
+
+# Commands are defined as functions with the @click decorator.
+# The function name is the command name, and the docstring is the help text.
+# Keep the commands in alphabetical order.
 
 
 @cli.command()
@@ -273,6 +245,52 @@ def review(commit, verbose):
     with console.status("Reviewing code", spinner=DEFAULT_SPINNER):
         response = chain.run(diff_context)
         console.print(response, style=bot_style)
+
+
+# ------------------------------- End Commands ------------------------------- #
+
+
+def setup_environment():
+    # Load environment variables from the config file
+    config_file = Path(Path.home() / ".aicodebot")
+    load_dotenv(config_file)
+
+    if os.getenv("OPENAI_API_KEY"):
+        openai.api_key = os.getenv("OPENAI_API_KEY")
+        return True
+
+    openai_api_key_url = "https://platform.openai.com/account/api-keys"
+
+    console.print(
+        "[bold red]The OPENAI_API_KEY environment variable is not set.[/bold red]\n"
+        f"The OpenAI API key is required to use aicodebot. You can get one for free on the OpenAI website.\n"
+        f"Let's create a config file for you at {config_file}"
+    )
+
+    if click.confirm("Open the OpenAI API keys page for you in a browser?"):
+        webbrowser.open(openai_api_key_url)
+
+    if click.confirm(f"Create the {config_file} file for you?"):
+        api_key = click.prompt("Please enter your OpenAI API key")
+
+        # Copy .env.template to .env and insert the API key
+        template_file = Path(__file__).parent / ".aicodebot.template"
+        with Path.open(template_file, "r") as template, Path.open(config_file, "w") as env:
+            for line in template:
+                if line.startswith("OPENAI_API_KEY="):
+                    env.write(f"OPENAI_API_KEY={api_key}\n")
+                else:
+                    env.write(line)
+
+        console.print(
+            f"[bold green]Created {config_file} with your OpenAI API key.[/bold green] "
+            "Now, please re-run aicodebot and let's get started!"
+        )
+        sys.exit(0)
+
+    raise click.ClickException(
+        "🛑 Please set an API key in the OPENAI_API_KEY environment variable or in a .aicodebot file."
+    )
 
 
 if __name__ == "__main__":

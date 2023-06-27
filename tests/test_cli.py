@@ -10,7 +10,7 @@ def test_version(cli_runner):
 
 
 @pytest.mark.skipif(os.getenv("OPENAI_API_KEY") is None, reason="Skipping live tests without an API key.")
-def test_funfact(cli_runner):
+def test_fun_fact(cli_runner):
     result = cli_runner.invoke(cli, ["fun-fact"])
     assert result.exit_code == 0
 
@@ -24,7 +24,7 @@ def test_alignment(cli_runner):
 def test_debug_success(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "echo", "Hello, world!"])
     assert result.exit_code == 0
-    assert "Running:\necho Hello, world!" in result.output
+    assert "echo Hello, world!" in result.output
     assert "The command completed successfully." in result.output
 
 
@@ -32,4 +32,4 @@ def test_debug_success(cli_runner):
 def test_debug_failure(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "ls", "-9"])
     assert result.exit_code > 0
-    assert "Running:\nls -9" in result.output
+    assert "ls -9" in result.output

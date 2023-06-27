@@ -6,7 +6,7 @@ AICodeBot is a coding assistant designed to make your coding life easier. With c
 
 ⚠️ Status: This project is in its infancy with very limited features, but it already improves the software development workflow.
 
-⚠️  It uses OpenAI's ChatGPT large language model, which can hallucinate and be confidently wrong. Sometimes it does dumb things, which is why we have you confirm before it does anything permanent.
+⚠️ It uses OpenAI's ChatGPT large language model, which can hallucinate and be confidently wrong. Sometimes it does dumb things, which is why we have you confirm before it does anything permanent.
 
 We're working on it and it's getting better all the time.
 
@@ -93,7 +93,7 @@ The first time you run it, you'll be prompted to enter your OpenAI API Key, whic
 #### Test and Build
 
 [![GitHub Build](https://github.com/novara-ai/aicodebot/actions/workflows/build.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions?query=build)
-[![CodeCov](https://codecov.io/gh/novara-ai/aicodebot/branch/main/graph/badge.svg)](https://codecov.io/gh/novara_ai/aicodebot)
+[![CodeCov](https://codecov.io/gh/novara-ai/aicodebot/branch/main/graph/badge.svg)](https://codecov.io/gh/novara-ai/aicodebot)
 [![Pytest](https://img.shields.io/badge/%F0%9F%A7%AA-Pytest-blue)](https://docs.pytest.org/en/stable/contents.html)
 
 #### Code Quality

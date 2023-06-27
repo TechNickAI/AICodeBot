@@ -1,5 +1,12 @@
+# We use pip-tools to manage dependencies, which means that this
+# file just lists them without version numbers. If you add a new
+# dependency, you need to run `pip-compile` to update the
+# requirements.txt file.
+
+# Keep this list sorted alphabetically.
+
 beautifulsoup4 # needed by langchain
-click
+click # command line interface helpers
 GitPython
 langchain
 openai
