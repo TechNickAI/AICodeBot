@@ -1,3 +1,4 @@
 # Obtain your API key from https://platform.openai.com/account/api-keys
 # sk-...
 OPENAI_API_KEY=
+GPT_4_SUPPORTED=false
