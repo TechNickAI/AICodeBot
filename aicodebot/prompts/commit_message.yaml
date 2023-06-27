@@ -24,4 +24,8 @@ template: |
     - Be in GitHub-flavored markdown format.
     - Include contextually appropriate emojis (optional).
 
+    If the commit message does not follow these guidelines, then the commit will be rejected. If you are not confident
+    that you can generate a commit message that follows these guidelines, then just respond with "I don't know" and I
+    will handle it.
+
     Start your response with the commit message. No prefix or introduction. Your entire response will be the commit message.
