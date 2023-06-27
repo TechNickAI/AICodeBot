@@ -4,7 +4,7 @@ import os, pytest
 
 
 def test_version(cli_runner):
-    result = cli_runner.invoke(cli, ["version"])
+    result = cli_runner.invoke(cli, ["-V"])
     assert result.exit_code == 0
     assert aicodebot_version in result.output
 

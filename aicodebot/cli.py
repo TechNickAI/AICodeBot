@@ -3,16 +3,19 @@ from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_co
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from langchain.llms import OpenAI
 from langchain.prompts import load_prompt
 from pathlib import Path
 from rich.console import Console
 from rich.style import Style
 import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
 
+DEFAULT_MAX_TOKENS = 1024
+DEFAULT_TEMPERATURE = 0.1
+DEFAULT_MODEL = "gpt-3.5-turbo"  # Can't wait to use GPT-4, as the results are much better. On the waitlist.
+DEFAULT_SPINNER = "point"
+
 console = Console()
 bot_style = Style(color="#30D5C8")
-DEFAULT_MAX_TOKENS = 1024
 
 
 def setup_environment():
@@ -28,13 +31,14 @@ def setup_environment():
 
     console.print(
         "[bold red]The OPENAI_API_KEY environment variable is not set.[/bold red]\n"
-        f"Let's fix that for you by creating a config file at {config_file}"
+        f"The OpenAI API key is required to use aicodebot. You can get one for free on the OpenAI website.\n"
+        f"Let's create a config file for you at {config_file}"
     )
 
-    if click.confirm("Do you want me to open the OpenAI API keys page for you in a browser?"):
+    if click.confirm("Open the OpenAI API keys page for you in a browser?"):
         webbrowser.open(openai_api_key_url)
 
-    if click.confirm(f"Do you want me to create the {config_file} file for you?"):
+    if click.confirm(f"Create the {config_file} file for you?"):
         api_key = click.prompt("Please enter your OpenAI API key")
 
         # Copy .env.template to .env and insert the API key
@@ -46,10 +50,15 @@ def setup_environment():
                 else:
                     env.write(line)
 
-        console.print(f"[bold green]Created {config_file} with your OpenAI API key. You're all set![/bold green]")
+        console.print(
+            f"[bold green]Created {config_file} with your OpenAI API key.[/bold green] "
+            "Now, please re-run aicodebot and let's get started!"
+        )
         sys.exit(0)
 
-    raise click.ClickException("Please set an API key in the OPENAI_API_KEY environment variable or in a .env file.")
+    raise click.ClickException(
+        "🛑 Please set an API key in the OPENAI_API_KEY environment variable or in a .aicodebot file."
+    )
 
 
 @click.group()
@@ -69,12 +78,14 @@ def alignment(verbose):
     prompt = load_prompt(Path(__file__).parent / "prompts" / "alignment.yaml")
 
     # Set up the language model
-    llm = OpenAI(temperature=1, max_tokens=DEFAULT_MAX_TOKENS)
+    llm = ChatOpenAI(
+        model=DEFAULT_MODEL, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose
+    )
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-    with console.status("Thinking", spinner="point"):
+    with console.status("Generating an inspirational message", spinner=DEFAULT_SPINNER):
         response = chain.run({})
         console.print(response, style=bot_style)
 
@@ -85,7 +96,7 @@ def alignment(verbose):
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
 def commit(verbose, response_token_size, yes, skip_pre_commit):
-    """Generate a git commit message and commit changes after you approve."""
+    """Generate a commit message based on your changes."""
     setup_environment()
 
     # Check if pre-commit is installed and .pre-commit-config.yaml exists
@@ -93,7 +104,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
         console.print("Running pre-commit checks...")
         result = subprocess.run(["pre-commit", "run", "--all-files"])
         if result.returncode != 0:
-            console.print("Pre-commit checks failed. Please fix the issues and try again.")
+            console.print("🛑 Pre-commit checks failed. Please fix the issues and try again.")
             return
 
     # Load the prompt
@@ -113,30 +124,31 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     diff_context = git_diff_context()
 
     if not diff_context:
-        console.print("No changes to commit.")
+        console.print("No changes to commit. 🤷")
         sys.exit(0)
 
     # Check the size of the diff context and adjust accordingly
-    diff_context_token_size = get_token_length(diff_context)
+    prompt_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     if verbose:
-        console.print(f"Diff context token size: {diff_context_token_size}")
+        console.print(f"Diff context token size: {prompt_token_size}")
 
-    if diff_context_token_size + response_token_size > 16_000:
-        console.print("The diff context is too large to review. Bigger models coming soon.")
+    if prompt_token_size + response_token_size > 16_000:
+        # Bigger models coming soon
+        console.print("The diff context is too large to review. 😞")
         sys.exit(1)
-    elif diff_context_token_size + response_token_size > 4_000:
+    elif prompt_token_size + response_token_size > 4_000:
         model = "gpt-3.5-turbo-16k"  # supports 16k tokens but is a bit slower and more expensive
     else:
-        model = "gpt-3.5-turbo"  # supports 4k tokens
+        model = DEFAULT_MODEL  # gpt-3.5-turbo supports 4k tokens
 
     # Set up the language model
-    llm = ChatOpenAI(temperature=0.1, model=model, max_tokens=response_token_size)
+    llm = ChatOpenAI(model=model, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose)
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     console.print("The following files will be committed:\n" + files)
-    with console.status("Thinking", spinner="point"):
+    with console.status("Generating the commit message", spinner=DEFAULT_SPINNER):
         response = chain.run(diff_context)
 
     # Write the commit message to a temporary file
@@ -149,7 +161,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
-    if yes or click.confirm("Do you want to commit the changes?"):
+    if yes or click.confirm("Are you ready to commit the changes?"):
         # Commit the changes using the temporary file for the commit message
         exec_and_get_output(["git", "commit", "-F", temp_file_name])
         console.print(f"✅ {len(files.splitlines())} files committed.")
@@ -162,26 +174,28 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
 @click.argument("command", nargs=-1)
 @click.option("-v", "--verbose", count=True)
 def debug(command, verbose):
-    """Run a command and get debugging advice if it fails."""
+    """Run a command and debug the output."""
     setup_environment()
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "debug.yaml")
 
     # Set up the language model
-    llm = OpenAI(temperature=0.1, max_tokens=DEFAULT_MAX_TOKENS)
+    llm = ChatOpenAI(
+        model=DEFAULT_MODEL, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose
+    )
 
     # Set up the chain
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
     command_str = " ".join(command)
 
     # Run the command and capture its output
-    console.print(f"Running:\n{command_str}")
+    console.print(f"Executing the command:\n{command_str}")
     process = subprocess.run(command_str, shell=True, capture_output=True, text=True)  # noqa: S602
 
     # Print the output of the command
     output = f"Standard Output:\n{process.stdout}\nStandard Error:\n{process.stderr}"
-    console.print(f"Output:\n{output}")
+    console.print(output)
 
     # Print a message about the exit status
     if process.returncode == 0:
@@ -192,7 +206,7 @@ def debug(command, verbose):
     # If the command failed, send its output to ChatGPT for analysis
     if process.returncode != 0:
         error_output = process.stderr
-        with console.status("Thinking", spinner="point"):
+        with console.status("Debugging", spinner=DEFAULT_SPINNER):
             response = chat_chain.run(error_output)
             console.print(response, style=bot_style)
         sys.exit(process.returncode)
@@ -201,19 +215,19 @@ def debug(command, verbose):
 @cli.command()
 @click.option("-v", "--verbose", count=True)
 def fun_fact(verbose):
-    """Tell me something interesting about programming or AI."""
+    """Get a fun fact about programming and artificial intelligence."""
     setup_environment()
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "fun_fact.yaml")
 
     # Set up the language model
-    llm = ChatOpenAI(temperature=1, max_tokens=DEFAULT_MAX_TOKENS)
+    llm = ChatOpenAI(model=DEFAULT_MODEL, temperature=0.9, max_tokens=250, verbose=verbose)
 
     # Set up the chain
     chat_chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-    with console.status("Thinking", spinner="point"):
+    with console.status("Fetching a fun fact", spinner=DEFAULT_SPINNER):
         # Select a random year so that we get a different answer each time
         year = random.randint(1942, datetime.datetime.utcnow().year)
         response = chat_chain.run(f"programming and artificial intelligence in the year {year}")
@@ -224,12 +238,12 @@ def fun_fact(verbose):
 @click.option("-c", "--commit", help="The commit hash to review.")
 @click.option("-v", "--verbose", count=True)
 def review(commit, verbose):
-    """Use AI to do a code review, with [un]staged changes, or a specified commit."""
+    """Do a code review, with [un]staged changes, or a specified commit."""
     setup_environment()
 
     diff_context = git_diff_context(commit)
     if not diff_context:
-        console.print("No changes to commit.")
+        console.print("No changes detected for review. 🤷")
         sys.exit(0)
 
     # Load the prompt
@@ -237,33 +251,28 @@ def review(commit, verbose):
 
     # Check the size of the diff context and adjust accordingly
     response_token_size = DEFAULT_MAX_TOKENS / 2
-    diff_context_token_size = get_token_length(diff_context)
+    prompt_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     if verbose:
-        console.print(f"Diff context token size: {diff_context_token_size}")
+        console.print(f"Prompt token size: {prompt_token_size}")
 
-    if diff_context_token_size + response_token_size > 16_000:
-        console.print("The diff context is too large to review. Bigger models coming soon.")
+    if prompt_token_size + response_token_size > 16_000:
+        # Bigger models coming soon
+        console.print("The diff context is too large to review. 😞")
         sys.exit(1)
-    elif diff_context_token_size + response_token_size > 4_000:
+    elif prompt_token_size + response_token_size > 4_000:
         model = "gpt-3.5-turbo-16k"  # supports 16k tokens but is a bit slower and more expensive
     else:
-        model = "gpt-3.5-turbo"  # supports 4k tokens
+        model = DEFAULT_MODEL  # gpt-3.5-turbo supports 4k tokens
 
     # Set up the language model
-    llm = ChatOpenAI(temperature=0.1, model=model, max_tokens=response_token_size)
+    llm = ChatOpenAI(model=model, temperature=DEFAULT_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose)
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-    with console.status("Reviewing", spinner="point"):
+    with console.status("Reviewing code", spinner=DEFAULT_SPINNER):
         response = chain.run(diff_context)
         console.print(response, style=bot_style)
-
-
-@cli.command()
-def version():
-    """Print the version number."""
-    console.print(f"AICodeBot version {aicodebot_version}")
 
 
 if __name__ == "__main__":

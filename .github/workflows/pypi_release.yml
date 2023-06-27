@@ -35,7 +35,7 @@ jobs:
     - name: Smoke Test
       run: |
         pip install dist/*.whl
-        aicodebot version
+        aicodebot -V
 
     - name: Publish to PyPi
       env:
