@@ -12,11 +12,19 @@ template: |
     DO NOT give comments that discuss formatting, as those will be handled with pre-commit with the black and isort hooks.
     DO NOT respond with line numbers, use function names or file names instead (you're going to be wrong about the line numbers anyway).
 
-    Review this code change.  The relevant diff context is as follows, between the BEGIN DIFF and END DIFF markers:
+    Here's the diff context:
 
     BEGIN DIFF
     {diff_context}
     END DIFF
+
+    Remember:
+    - Lines starting with "-" are being removed.
+    - Lines starting with "+" are being added.
+    - Lines starting with " " are unchanged.
+
+    Consider the file names for context (e.g., "README.md" is a markdown file, "*.py" is a Python file).
+    Understand the difference between code and comments. Comment lines start with ##, #, or //.
 
     The main focus is to tell the author how they could make the code better.
 
