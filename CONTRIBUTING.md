@@ -2,13 +2,13 @@
 
 ## The Stack
 
-#### Test and Build
+### Test and Build
 
 [![GitHub Build](https://github.com/novara-ai/aicodebot/actions/workflows/build.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions?query=build)
 [![CodeCov](https://codecov.io/gh/novara-ai/aicodebot/branch/main/graph/badge.svg)](https://codecov.io/gh/novara-ai/aicodebot)
 [![Pytest](https://img.shields.io/badge/%F0%9F%A7%AA-Pytest-blue)](https://docs.pytest.org/en/stable/contents.html)
 
-#### Code Quality
+### Code Quality
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -16,7 +16,7 @@
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
 [![Super Linter](https://github.com/novara-ai/aicodebot/actions/workflows/linter.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions/workflows/linter.yml)
 
-#### Infrastructure
+### Infrastructure
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Open AI](https://img.shields.io/badge/OpenAI-412991.svg?logo=OpenAI&logoColor=white)](https://openai.com)
@@ -70,9 +70,9 @@ pip install -r requirements/requirements-dev.txt
 
 Note: We use [pip-tools](https://pypi.org/project/pip-tools/) to manage our the production dependencies, so if you want to add a new dependency, add it to [requirements.in](requirements/requirements.in) and then run `pip-compile requirements/requirements.in` to update [requirements.txt](requirements/requirements.txt).
 
-4. **Use aicodebot to build aicodebot** 😎 Doing so can be a little tricky, when you are developing from the local repo you can run `python -m aicodebot.cli $command` to run/test your changes. This will use the local version of aicodebot instead of the version installed via pip
+4. **Use aicodebot to build aicodebot** 😎 Doing so can be a little tricky, when you are developing from the local repository you can run `python -m aicodebot.cli $command` to run/test your changes. This will use the local version of aicodebot instead of the version installed via pip
 
-```
+```bash
 python -m aicodebot.cli --help
 ```
 
@@ -85,7 +85,9 @@ Pro-tips:
 
 We're obsessive about automated tooling, as you can imagine. 😎
 
-We use pre-commit to run a bunch of checks on the code before it gets committed. After you've installed the dev requirements file with `pip install -r requirements/requirements-dev.txt`, you can run  `pre-commit install` to install the git hook. This will run the checks on every commit. If you want to run the checks manually, you can run `pre-commit run --all-files`. If you want to skip the checks, you can run `git commit --no-verify`, but it's also as part of the [GitHub Actions build workflow](.github/workflows/build.yml), so you'll get caught there.
+We use pre-commit to run a bunch of checks on the code before it gets committed. After you've installed the dev requirements file with `pip install -r requirements/requirements-dev.txt`, you can run  `pre-commit install` to install the git hook. This will run the checks on every commit.
+
+If you want to run the checks manually, you can run `pre-commit run --all-files`. If you want to skip the checks, you can run `git commit --no-verify`, but it's also as part of the [GitHub Actions build workflow](.github/workflows/build.yml), so you'll get caught there.
 
 We use [Ruff](https://github.com/astral-sh/ruff) as our main linter. Ruff runs all the other underlying favorite tools like pylint and flake8 with a centralized config. We [black](https://black.readthedocs.io/en/stable/) for formatting, and isort for imports. See [pyproject.toml](pyproject.toml) for the config.
 
@@ -94,7 +96,7 @@ Highly recommend you set up your editor to run all of these on each file save, i
 ### Testing
 
 Install the test dependencies with
-`pip install -r requirements/requirements-test.txt` - this is what is used in the [Github Actions workflow](https://github.com/novara-ai/AICodeBot/actions), you can look at the [build workflow](.github/workflows/build.yml) to see how to run the tests.
+`pip install -r requirements/requirements-test.txt` - this is what is used in the [GitHub Actions workflow](https://github.com/novara-ai/AICodeBot/actions), you can look at the [build workflow](.github/workflows/build.yml) to see how to run the tests.
 
 We use `pytest` for testing. It will skip some tests if OPENAI_API_KEY is not set, so to test everything, run pytest with your OPENAI_API_KEY set.
 

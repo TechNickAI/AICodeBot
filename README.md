@@ -16,7 +16,7 @@ We're using AICodeBot to build AICodeBot, and it's getting better all the time.�
 
 `aicodebot` is a tool for developers, not a replacement for them. It's not going to replace your job, but it will make your job easier and more fun. It's not going to take over the world, but it will help us build a better one. See the *Alignment* section below for more.
 
-It's also not a "build a website for me in 5 minutes" tool that takes a well constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that, Instead, AICodeBot is built to work with existing code bases and help you improve them at the git-commit level. It's designed to multiply the effectiveness of capable engineers.
+It's also not a "build a site for me in 5 minutes" tool that takes a well constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that, Instead, AICodeBot is built to work with existing code bases and help you improve them at the git-commit level. It's designed to multiply the effectiveness of capable engineers.
 
 ## Current features - how you can use it
 
@@ -75,14 +75,14 @@ Pro tip: You can also set the `OPENAI_API_KEY` environment variable to your API 
 - [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
 - [ ] **Test Generation**: Generates unit tests for code, improve test coverage.
 - [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via GitHub Actions). Eventually: Fix the build automatically when there are small errors.
-- [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems, using data from the current repo.
+- [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems, using data from the current repository.
 - [X] **Linting/Formatting**: Checks code for linting errors and automatically fixes them where possible (via pre-commit)
 - [ ] **Handle GitHub Issues**: Handles basic tasks that you assign to [@aicodebot](https://pypi.org/project/aicodebot/)
 
 ### User Interfaces
 
 - [X] **Command-line, installable via pip**: aicodebot can be installed as a Python package using `pip install aicodebot`
-- [ ] **Mention the @aicodebot GitHub user**: Mentioning the [@aicodebot](https://pypi.org/project/aicodebot/) GitHub user in a comment will trigger it to perform a task, review code, or pull in an appropriate gif.
+- [ ] **Mention the @aicodebot GitHub user**: Mentioning the [@aicodebot](https://pypi.org/project/aicodebot/) GitHub user in a comment will trigger it to perform a task, review code, or pull in an appropriate GIF.
 - [ ] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories.
 - [ ] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
 - [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
@@ -107,7 +107,7 @@ Pro tip: You can also set the `OPENAI_API_KEY` environment variable to your API 
 
 ## Alignment ❤️ + 🤖
 
-Technology itself is amoral, it just imbues the values of the engineers who create it. We believe that AI should be built in a way that aligns with humanity, and we're building aicodebot to help us do just that. We're building from a heart-centered space, and contributing to the healthy intersection of AI and humanity.
+Technology itself is amoral, it just imbues the values of the engineers who create it. We believe that AI should be built-in a way that aligns with humanity, and we're building aicodebot to help us do just that. We're building from a heart-centered space, and contributing to the healthy intersection of AI and humanity.
 
 ## Development / Contributing
 
