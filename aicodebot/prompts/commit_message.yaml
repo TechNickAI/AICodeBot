@@ -1,3 +1,4 @@
+# LLM Prompt for the commit command prompts the AI to generate a commit message for the supplied diff context
 _type: prompt
 template_format: f-string
 input_variables: ["diff_context"]

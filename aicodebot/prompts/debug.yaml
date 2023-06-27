@@ -1,3 +1,5 @@
+# LLM Prompt for the debug command that is run when a command fails
+
 _type: prompt
 template_format: f-string
 input_variables: ["command_output"]
@@ -10,4 +12,4 @@ template: |
     {command_output}
     END OUTPUT
 
-    Help me understand what happened and how might I be able to fix it.
+    Help me understand what happened and how might I be able to fix it
