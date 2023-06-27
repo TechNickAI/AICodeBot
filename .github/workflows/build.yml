@@ -1,46 +1,45 @@
 ---
-    name: Build
+# Build and test the code
+name: Build
 
-    on: [push, pull_request]
+on: [push, pull_request]
 
-    jobs:
-      pre-commit:
-        name: Pre-commit (linting)
-        runs-on: ubuntu-latest
-        timeout-minutes: 5
+jobs:
+  pre-commit:
+    name: Pre-commit (linting)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
 
-        steps:
-          - name: Checkout Code
-            uses: actions/checkout@v3
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-          - name: Run pre-commit
-            uses: pre-commit/action@v3.0.0
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
 
-      pytest-in-venv:
-        name: Python tests
-        runs-on: ubuntu-latest
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        timeout-minutes: 5
+  pytest-in-venv:
+    name: Python tests
+    runs-on: ubuntu-latest
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    timeout-minutes: 5
 
-        steps:
-          - name: Checkout Code
-            uses: actions/checkout@v3
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-          - name: Setup Python
-            uses: actions/setup-python@v4
-            with:
-              python-version: "3.11"
-              cache: pip
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: pip
 
-          - name: Install dependencies
-            run: pip install -r requirements/requirements-test.txt
+      - name: Install dependencies
+        run: pip install -r requirements/requirements-test.txt
 
-          - name: Run the tests with coverage
-            run: pytest --cov=./ --cov-report=xml
+      - name: Run the tests with coverage
+        run: pytest --cov=./ --cov-report=xml
 
-          - name: Upload coverage reports to Codecov
-            uses: codecov/codecov-action@v3
-            env:
-              CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
