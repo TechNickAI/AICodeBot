@@ -2,6 +2,9 @@
 -r requirements.txt
 -r requirements-test.txt
 
+# Install aicodebot so we can use aicodebot to build itself! 🤖
+aicodebot
+
 # For committing, formatting, and dependency management
 black
 isort
