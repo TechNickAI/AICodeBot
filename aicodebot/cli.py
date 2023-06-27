@@ -108,7 +108,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
         # Bigger models coming soon
         console.print("The diff context is too large to review. 😞")
         sys.exit(1)
-    elif prompt_token_size + response_token_size > 4_000:
+    elif prompt_token_size + response_token_size > 3_500:  # It's actually 4k, but we want a buffer
         model = "gpt-3.5-turbo-16k"  # supports 16k tokens but is a bit slower and more expensive
     else:
         model = DEFAULT_MODEL  # gpt-3.5-turbo supports 4k tokens
@@ -231,7 +231,7 @@ def review(commit, verbose):
         # Bigger models coming soon
         console.print("The diff context is too large to review. 😞")
         sys.exit(1)
-    elif prompt_token_size + response_token_size > 4_000:
+    elif prompt_token_size + response_token_size > 3_500:  # It's actually 4k, but we want a buffer
         model = "gpt-3.5-turbo-16k"  # supports 16k tokens but is a bit slower and more expensive
     else:
         model = DEFAULT_MODEL  # gpt-3.5-turbo supports 4k tokens
