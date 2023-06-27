@@ -108,7 +108,6 @@ The first time you run it, you'll be prompted to enter your OpenAI API Key, whic
 
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Open AI](https://img.shields.io/badge/OpenAI-412991.svg?logo=OpenAI&logoColor=white)](https://openai.com)
-[![LangChain](https://img.shields.io/badge/LangChain.svg?logoColor=white)](https://github.com/hwchase17/langchain)
 
 ## Alignment ❤️ + 🤖
 
