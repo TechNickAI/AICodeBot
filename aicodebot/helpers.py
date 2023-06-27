@@ -14,8 +14,10 @@ def git_diff_context(commit=None):
     base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
 
     if commit:
+        # If a commit is provided, just get the diff for that commit
         return exec_and_get_output(["git", "show", commit])
     else:
+        # Otherwise, get the diff for the staged files, or if there are none, the diff for the unstaged files
         staged_files = exec_and_get_output(["git", "diff", "--cached", "--name-only"]).splitlines()
         if staged_files:
             # If there are staged files, get the diff for those files
