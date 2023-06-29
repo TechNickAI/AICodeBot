@@ -306,6 +306,10 @@ def get_llm_model(token_size):
         "gpt-3.5-turbo-16k": 16384,
     }
     gpt_4_supported = os.getenv("GPT_4_SUPPORTED") == "true"
+
+    # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
+    token_size = int(token_size * 1.1)
+
     if gpt_4_supported:
         if token_size <= model_options["gpt-4"]:
             return "gpt-4"
