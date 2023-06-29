@@ -98,6 +98,7 @@ Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot wil
 * [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems, using data from the current repository.
 * [X] **Linting/Formatting**: Checks code for linting errors and automatically fixes them where possible (via pre-commit)
 * [ ] **Handle GitHub Issues**: Handles basic tasks that you assign to [@aicodebot](https://pypi.org/project/aicodebot/)
+* [ ] **Automatically Generate ChangeLogs and Release Notes**: Generates release notes and changelogs based on commit messages and code changes.
 
 ### User Interfaces
 
