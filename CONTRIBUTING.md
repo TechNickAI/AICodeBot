@@ -35,11 +35,10 @@ In particular, we need help with:
   * Self verifying/validating responses. Reflection.
 * Building additional commands in the [CLI](aicodebot/cli.py)
   * `aicodebot code` - translate natural language to local changes in code
-  * `aicodebot learn` - Read the local codebase or online documentation and use that to improve the quality of the answers.
 * Adding additional interfaces
-  * GitHub Action
-  * The @aicodebot mention
-* Documentation. We don't even have a docs folder yet. Setting up an automated process for this.
+  * GitHub Action to run AICodeBot on a pull request or commit
+  * The @aicodebot mention to allow you to interact with AICodeBot in a GitHub issue or pull request, or assign it a task.
+* Documentation. We don't even have a docs folder yet. Setting up an automated process for this would be great.
 * YouTube walk-throughs of using AICodeBot
 
 ## Code Contributions
