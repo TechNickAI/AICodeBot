@@ -34,19 +34,9 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 
 ### AI-Assisted Code Creation (Work in Progress)
 
-`aicodebot code` is a feature designed to automate coding tasks based on your instructions. It's a work in progress, but here's how it works:
+The aicodebot code feature is an AI-powered tool that automates coding tasks. It understands your task, formulates a plan, learns necessary information, and generates code that fits your codebase style. It also reviews its own work, modifies the local code, and creates unit tests. This feature is designed to streamline your coding process and boost productivity. In the future, we plan to enhance its performance through a continuous learning system based on user feedback and interaction outcomes.
 
-1. **Task Understanding**: The bot collects your task instructions.
-2. **Planning**: It devises a plan based on your task.
-3. **Learning**: It learns necessary information by searching the internet, reading the local codebase, and researching libraries/APIs.
-4. **Clarification**: It asks questions if any aspect of the task is unclear.
-5. **Code Generation**: It generates code consistent with your codebase style.
-6. **Self-Review**: It reviews and improves the generated code.
-7. **Code Modification**: It modifies the local code, allowing you to review changes before committing.
-8. **Test Creation**: It writes and runs unit tests for the new code, modifying the code until all tests pass.
-9. **Continuous Learning (v2)**: We plan to implement a system where the bot learns from each interaction, improving its performance over time based on feedback like code acceptance, compilation success, and test results.
-
-This feature is a work in progress, and we're excited about its potential to boost developer productivity. If you'd like to help, see [CONTRIBUTING](CONTRIBUTING.md).
+This feature is a work in progress, and it's more thoroughly documented [here](docs/code_agent.md) and we're excited about its potential to boost developer productivity. If you'd like to help, see [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Getting Started
 
