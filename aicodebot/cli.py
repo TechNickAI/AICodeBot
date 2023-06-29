@@ -12,7 +12,7 @@ import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowse
 
 # ----------------------------- Default settings ----------------------------- #
 
-DEFAULT_MAX_TOKENS = 1024
+DEFAULT_MAX_TOKENS = 512
 DEFAULT_TEMPERATURE = 0.1
 DEFAULT_SPINNER = "point"
 
