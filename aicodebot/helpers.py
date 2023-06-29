@@ -32,7 +32,7 @@ def git_diff_context(commit=None):
             status_code, file_name = status.split("\t")
             if status_code == "A":
                 # If the file is new, include the entire file content
-                contents = Path.read_text(file_name)
+                contents = Path(file_name).read_text()
                 diffs.append(f"## New file added: {file_name}")
                 diffs.append(contents)
             else:
