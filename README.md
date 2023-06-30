@@ -32,15 +32,9 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 
 `aicodebot debug $command` will run the command and capture the log message. It will pass the error message, stack trace, comand output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to stackoverflow in a separate window, allowing you to stay in terminal with all the context.
 
-### AI-Assisted Code Creation (Work in Progress)
+[![PyPI version](https://badge.fury.io/py/aicodebot.svg?0.6.2)](https://badge.fury.io/py/aicodebot)
 
-The aicodebot code feature is an AI-powered tool that automates coding tasks. It understands your task, formulates a plan, learns necessary information, and generates code that fits your codebase style. It also reviews its own work, modifies the local code, and creates unit tests. This feature is designed to streamline your coding process and boost productivity. In the future, we plan to enhance its performance through a continuous learning system based on user feedback and interaction outcomes.
-
-This feature is a work in progress, and it's more thoroughly documented [here](docs/code_agent.md) and we're excited about its potential to boost developer productivity. If you'd like to help, see [CONTRIBUTING](CONTRIBUTING.md).
-
-## Getting Started
-
-[![PyPI version](https://badge.fury.io/py/aicodebot.svg)](https://badge.fury.io/py/aicodebot)
+## Installation and Usage
 
 To install AICodeBot, run:
 
@@ -67,11 +61,13 @@ Commands:
 
 The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI's large language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys").
 
-#### GPT-3.5 vs GPT-4
+#### Which Language Model? GPT-3.5 vs GPT-4
 
 When using AICodeBot, you have the option to use either GPT-3.5 or GPT-4. While GPT-4 can often provide more accurate and detailed responses, GPT-3.5 is faster and might be sufficient for simpler tasks. We highly recommend GPT-4.
 
 Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4 if your OpenAI account supports it, we will check the first time you run it. Tip: If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api)
+
+Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
 ## Roadmap of Upcoming Features
 

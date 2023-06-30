@@ -1,9 +1,15 @@
 # AICodeBot Code Agent
 
-The 'code' command is a new feature of AICodeBot designed to automate coding
+Note: The `code` feature does not exist, yet. It is a vision for the future,
+ala [README driven development](https://tom.preston-werner.com/2010/08/23/readme-driven-development.html)
+
+The 'code' command for AICodeBot is designed to automate coding
 tasks based on instructions from you. This feature aims to boost developer
 productivity by handling various aspects of the coding process, but keeping you
-in charge of the process.
+in charge of the process and commiting the code.
+
+It's not intended to build entire applications, but instead improve existing
+code bases one git commit at a time.
 
 ## Feature Overview
 
