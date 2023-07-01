@@ -1,4 +1,5 @@
 from aicodebot import version as aicodebot_version
+from aicodebot.agents import get_agent
 from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context
 from dotenv import load_dotenv
 from langchain.chains import LLMChain
@@ -200,7 +201,7 @@ def fun_fact(verbose):
 
 
 @cli.command
-@click.option("-c", "--commit", help="The commit hash to review.")
+@click.option("-c", "--commit", help="The commit hash to review (otherwise look at [un]staged changes).")
 @click.option("-v", "--verbose", count=True)
 def review(commit, verbose):
     """Do a code review, with [un]staged changes, or a specified commit."""
@@ -230,6 +231,22 @@ def review(commit, verbose):
     with console.status("Reviewing code", spinner=DEFAULT_SPINNER):
         response = chain.run(diff_context)
         console.print(response, style=bot_style)
+
+
+@cli.command
+@click.option("--task", "-t", help="The task you want to perform - a description of what you want to do.")
+@click.option("-v", "--verbose", count=True)
+def sidekick(task, verbose):
+    """Get help with a task from your AI sidekick."""
+    setup_environment()
+
+    model = get_llm_model()
+    llm = ChatOpenAI(model=model, temperature=DEFAULT_TEMPERATURE, max_tokens=3500, verbose=verbose)
+
+    agent = get_agent("sidekick", llm, True)
+
+    response = agent({"input": task})
+    console.print(response, style=bot_style)
 
 
 # ---------------------------------------------------------------------------- #
@@ -295,7 +312,7 @@ def setup_environment():
     )
 
 
-def get_llm_model(token_size):
+def get_llm_model(token_size=0):
     # https://platform.openai.com/docs/models/gpt-3-5
     # We want to use GPT-4, if it is available for this OPENAI_API_KEY, otherwise GPT-3.5
     # We also want to use the largest model that supports the token size we need
