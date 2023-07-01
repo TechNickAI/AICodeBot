@@ -243,10 +243,12 @@ def sidekick(task, verbose):
     model = get_llm_model()
     llm = ChatOpenAI(model=model, temperature=DEFAULT_TEMPERATURE, max_tokens=3500, verbose=verbose)
 
-    agent = get_agent("sidekick", llm, True)
+    agent = get_agent("sidekick", llm, verbose)
 
-    response = agent({"input": task})
-    console.print(response, style=bot_style)
+    with console.status("Thinking", spinner=DEFAULT_SPINNER):
+        response = agent({"input": task})
+        console.print("")
+        console.print(response["output"], style=bot_style)
 
 
 # ---------------------------------------------------------------------------- #

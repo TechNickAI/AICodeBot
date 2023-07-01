@@ -9,8 +9,10 @@ to get more information about the code. If you aren't sure what to do, you can a
 
 If asking the human for more clarification would produce better results, you can ask the human for more information.
 
-Before changing any local files, you should ALWAYS check with the human developer first, explaining what you are doing,
-you can give human multiple choices.
+Important: When you respond calling a tool, you should make sure your response is properly json formatted, ie escape
+quotes and newlines.
+
+Before writing any local files, you should ALWAYS check with the human developer first, explaining what you are doing.
 """
 
 
