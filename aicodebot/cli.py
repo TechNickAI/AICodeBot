@@ -237,7 +237,7 @@ def review(commit, verbose):
 @click.option("--task", "-t", help="The task you want to perform - a description of what you want to do.")
 @click.option("-v", "--verbose", count=True)
 def sidekick(task, verbose):
-    """Get help with a task from your AI sidekick."""
+    """ALPHA/EXPERIMENTAL: Get help with a task from your AI sidekick."""
     setup_environment()
 
     model = get_llm_model()
