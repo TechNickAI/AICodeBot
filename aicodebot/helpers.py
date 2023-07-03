@@ -29,14 +29,26 @@ def git_diff_context(commit=None):
 
         diffs = []
         for status in file_status:
-            status_code, file_name = status.split("\t")
+            status_parts = status.split("\t")
+            status_code = status_parts[0][0]  # Get the first character of the status code
             if status_code == "A":
                 # If the file is new, include the entire file content
+                file_name = status_parts[1]
                 contents = Path(file_name).read_text()
                 diffs.append(f"## New file added: {file_name}")
                 diffs.append(contents)
+            elif status_code == "R":
+                # If the file is renamed, get the diff and note the old and new names
+                old_file_name, new_file_name = status_parts[1], status_parts[2]
+                diffs.append(f"## File renamed: {old_file_name} -> {new_file_name}")
+                diffs.append(exec_and_get_output(base_git_diff + [diff_type, "--", new_file_name]))
+            elif status_code == "D":
+                # If the file is deleted, note the deletion
+                file_name = status_parts[1]
+                diffs.append(f"## File deleted: {file_name}")
             else:
-                # If the file is not new, get the diff
+                # If the file is not new, renamed, or deleted, get the diff
+                file_name = status_parts[1]
                 diffs.append(f"## File changed: {file_name}")
                 diffs.append(exec_and_get_output(base_git_diff + [diff_type, "--", file_name]))
 

@@ -61,10 +61,25 @@ def test_git_diff_context(temp_git_repo):
     diff = git_diff_context()
     assert diff == ""
 
+    # Rename the file but don't stage it
+    temp_git_repo.git.mv("newfile.txt", "renamedfile.txt")
+    diff = git_diff_context()
+    assert "## File renamed: newfile.txt -> renamedfile.txt" in diff
+
+    # Stage the renamed file
+    temp_git_repo.git.add("renamedfile.txt")
+    diff = git_diff_context()
+    assert "## File renamed: newfile.txt -> renamedfile.txt" in diff
+
+    # Commit the renamed file
+    temp_git_repo.git.commit("-m", "Rename newfile.txt to renamedfile.txt")
+    diff = git_diff_context()
+    assert diff == ""
+
     # Test diff for a specific commit
     commit = temp_git_repo.head.commit.hexsha
     diff = git_diff_context(commit)
-    assert "This is a modified file." in diff
+    assert "renamedfile.txt" in diff
 
 
 def test_exec_and_get_output_success():
