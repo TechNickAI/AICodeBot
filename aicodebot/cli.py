@@ -8,6 +8,7 @@ from langchain.prompts import load_prompt
 from openai.api_resources import engine
 from pathlib import Path
 from rich.console import Console
+from rich.markdown import Markdown
 from rich.style import Style
 import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
 
@@ -61,7 +62,7 @@ def alignment(verbose):
 
     with console.status("Generating an inspirational message", spinner=DEFAULT_SPINNER):
         response = chain.run({})
-        console.print(response, style=bot_style)
+        console.print(Markdown(response), style=bot_style)
 
 
 @cli.command()
@@ -174,7 +175,7 @@ def debug(command, verbose):
 
     with console.status("Debugging", spinner=DEFAULT_SPINNER):
         response = chat_chain.run(error_output)
-        console.print(response, style=bot_style)
+        console.print(Markdown(response), style=bot_style)
 
     sys.exit(process.returncode)
 
@@ -199,7 +200,7 @@ def fun_fact(verbose):
         # Select a random year so that we get a different answer each time
         year = random.randint(1942, datetime.datetime.utcnow().year)
         response = chat_chain.run(f"programming and artificial intelligence in the year {year}")
-        console.print(response, style=bot_style)
+        console.print(Markdown(response), style=bot_style)
 
 
 @cli.command
@@ -232,7 +233,7 @@ def review(commit, verbose):
 
     with console.status("Reviewing code", spinner=DEFAULT_SPINNER):
         response = chain.run(diff_context)
-        console.print(response, style=bot_style)
+        console.print(Markdown(response), style=bot_style)
 
 
 @cli.command

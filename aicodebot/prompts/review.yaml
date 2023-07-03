@@ -29,3 +29,5 @@ template: |
     The main focus is to tell me how I could make the code better.
 
     If the changes look good overall and don't require any feedback, then just respond with "LGTM" (looks good to me).
+
+    Respond in markdown format.
