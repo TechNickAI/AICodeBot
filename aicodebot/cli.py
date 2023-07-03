@@ -20,6 +20,8 @@ DEFAULT_SPINNER = "point"
 # ----------------------- Setup for rich console output ---------------------- #
 console = Console()
 bot_style = Style(color="#30D5C8")
+error_style = Style(color="#FF0000")
+warning_style = Style(color="#FFA500")
 
 
 # -------------------------- Top level command group ------------------------- #
@@ -237,7 +239,16 @@ def review(commit, verbose):
 @click.option("--task", "-t", help="The task you want to perform - a description of what you want to do.")
 @click.option("-v", "--verbose", count=True)
 def sidekick(task, verbose):
-    """ALPHA/EXPERIMENTAL: Get help with a task from your AI sidekick."""
+    """ALPHA/EXPERIMENTAL: Get coding help from your AI sidekick."""
+    console.print(
+        "⚠️ WARNING: The 'sidekick' feature is currently experimental and, frankly, it sucks right now. "
+        "Due to the token limitations with large language models, the amount of context "
+        "that can be sent back and forth is limited, and slow. This means that sidekick will struggle with "
+        "complex tasks and will take longer than a human for simpler tasks.\n"
+        "Play with it, but don't expect too much. Do you feel like contributing? 😃",
+        style=warning_style,
+    )
+
     setup_environment()
 
     model = get_llm_model()
