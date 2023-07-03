@@ -1,9 +1,16 @@
-# AICodeBot Code Agent
+# AICodeBot Sidekick
 
-Note: The `code` feature does not exist, yet. It is a vision for the future,
-ala [README driven development](https://tom.preston-werner.com/2010/08/23/readme-driven-development.html)
+⚠️ WARNING: The 'sidekick' feature is currently experimental and, frankly, it sucks right now.
+Due to the token limitations with large language models, the amount of context
+that can be sent back and forth is limited, and slow. This means that sidekick will struggle with
+complex tasks and will take longer than a human for simpler tasks.
 
-The 'code' command for AICodeBot is designed to automate coding
+Play with it, but don't expect too much. Do you feel like [contributing](../CONTRIBUTING.md)? 😃
+
+We'll document it here anyway, so you can see where we're going with it, ala
+[README driven development](https://tom.preston-werner.com/2010/08/23/readme-driven-development.html)
+
+The `sidekick` command for AICodeBot is designed to automate coding
 tasks based on instructions from you. This feature aims to boost developer
 productivity by handling various aspects of the coding process, but keeping you
 in charge of the process and commiting the code.
@@ -13,7 +20,7 @@ code bases one git commit at a time.
 
 ## Feature Overview
 
-`aicodebot code` has several steps:
+`aicodebot sidekick` works as an agent with several steps:
 
 1. **Task Understanding**: AICodeBot interprets the coding task by prompting you
    for requirements.
@@ -58,25 +65,21 @@ test results.
 
 These are example prompts that you can use to guide AICodeBot in performing various coding tasks, ranging from practical code improvements to fun and whimsical modifications.
 
-1. "Identify areas in the code where additional logging would be beneficial."
-1. "Find places that make API calls and add a link to the documentation for the API."
-1. "Replace all instances of the variable name 'foo' with 'bar'."
+1. "Add thorough and helpful logging"
+1. "Find places that make API calls and add a link to the documentation for the API endpoint."
 1. "Find all instances of the word 'bug' in the comments and replace them with 'feature'."
-1. "Identify areas in the code where more descriptive variable names could be used."
+1. "Update the README.md file to include a link to the project's documentation."
+1. "Replace the non descript variable names with more descriptive names and make sure the tests pass when you are done"
 1. "Identify potential performance improvements in the code."
-1. "Scan the codebase for potential security vulnerabilities."
-1. "Identify areas where comments could be added for better understanding."
-1. "Find sections of code that lack comments and add appropriate comments."
-1. "Identify sections of code that could be refactored for better readability or efficiency."
+1. "Scan the code for potential security vulnerabilities."
+1. "Find sections of code that lack comments and add appropriate, helpful comments."
 1. "Find complex sections of code and suggest ways to simplify them."
 1. "Check codecov.io for code coverage and suggest areas where additional tests could be added."
-1. "Find and remove any dead or unused code."
-1. "Review the project's documentation and suggest improvements."
-1. "Look at Honeybadger.io for error reports and suggest improvements."
-1. "Find all the sad comments in the code and add a happy emoji next to them."
-1. "Find areas in the code that could be made more efficient by using a different data structure."
+1. "Review the project's documentation and tell me what's undocumented."
+1. "Look at Honeybadger.io for error reports and fix bugs that you can, suggest pointers for the ones that you can't"
 1. "Identify areas where the use of a library or framework could simplify the code."
-1. "Review the codebase and suggest improvements based on best practices for Python 3.11"
-1. "Find instances where concurrency or parallelism could be used for efficiency."
+1. "Review the codebase and suggest improvements based on best practices for the latest version of Python, Javascript, etc. Update the code to use the latest best practices."
 1. "Identify areas where error handling could be improved."
 1. "Find areas where the code could be made more robust against failure."
+1. "Find and remove any dead or unused code."
+1. "Emojis. Emojis everywhere."

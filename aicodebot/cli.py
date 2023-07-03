@@ -245,7 +245,8 @@ def sidekick(task, verbose):
         "Due to the token limitations with large language models, the amount of context "
         "that can be sent back and forth is limited, and slow. This means that sidekick will struggle with "
         "complex tasks and will take longer than a human for simpler tasks.\n"
-        "Play with it, but don't expect too much. Do you feel like contributing? 😃",
+        "Play with it, but don't expect too much. Do you feel like contributing? 😃\n"
+        "See docs/sidekick.md for more information.",
         style=warning_style,
     )
 
