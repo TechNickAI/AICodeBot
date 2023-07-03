@@ -10,7 +10,7 @@ We've planned to build out multiple different interfaces for interacting with AI
 
 ⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes it does dumb things, which is why we have you confirm before it does anything permanent. Much like Tesla's Full Self Driving, you have to keep your hands on the wheel.
 
-We're using AICodeBot to build AICodeBot, and it's getting better all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/novara-ai/AICodeBot/blob/main/CONTRIBUTING.md) for more.
+We're using AICodeBot to build AICodeBot, and it's getting better all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more.
 
 ### What it's not
 
@@ -118,4 +118,4 @@ Technology itself is amoral, it just imbues the values of the people who create 
 
 ## Development / Contributing
 
-We'd love your help! If you're interested in contributing, here's how to get started. See [CONTRIBUTING](https://github.com/novara-ai/AICodeBot/blob/main/CONTRIBUTING.md) for more details.
+We'd love your help! If you're interested in contributing, here's how to get started. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more details.

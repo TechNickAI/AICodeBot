@@ -4,8 +4,8 @@
 
 ### Test and Build
 
-[![GitHub Build](https://github.com/novara-ai/aicodebot/actions/workflows/build.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions?query=build)
-[![CodeCov](https://codecov.io/gh/novara-ai/aicodebot/branch/main/graph/badge.svg)](https://codecov.io/gh/novara-ai/aicodebot)
+[![GitHub Build](https://github.com/gorillamania/AICodeBot/actions/workflows/build.yml/badge.svg)](https://github.com/gorillamania/AICodeBot/actions?query=build)
+[![CodeCov](https://codecov.io/gh/gorillamania/AICodeBot/branch/main/graph/badge.svg)](https://codecov.io/gh/gorillamania/AICodeBot)
 [![Pytest](https://img.shields.io/badge/%F0%9F%A7%AA-Pytest-blue)](https://docs.pytest.org/en/stable/contents.html)
 
 ### Code Quality
@@ -14,7 +14,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
-[![Super Linter](https://github.com/novara-ai/aicodebot/actions/workflows/linter.yml/badge.svg)](https://github.com/novara-ai/aicodebot/actions/workflows/linter.yml)
+[![Super Linter](https://github.com/gorillamania/AIcodeBot/actions/workflows/linter.yml/badge.svg)](https://github.com/gorillamania/AIcodeBot/actions/workflows/linter.yml)
 
 ### Infrastructure
 
@@ -25,7 +25,7 @@
 
 We need your help to make AICodeBot better.
 
-We welcome contributions of all kinds, including code, documentation, bug reports, feature requests, and more. We use [GitHub issues](https://github.com/novara-ai/AICodeBot/issues) to track all of these.
+We welcome contributions of all kinds, including code, documentation, bug reports, feature requests, and more. We use [GitHub issues](https://github.com/gorillamania/AICodeBot/issues) to track all of these.
 
 In particular, we need help with:
 
@@ -50,7 +50,7 @@ We use the normal fork/pull request workflow. If you're not familiar with this, 
 1. Clone the repository
 
 ```bash
-git clone git@github.com:novara-ai/aicodebot.git
+git clone git@github.com:gorillanania/AICodeBot.git
 ```
 
 2. Set up a virtual environment (recommend using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/))
@@ -95,7 +95,7 @@ Highly recommend you set up your editor to run all of these on each file save, i
 ### Testing
 
 Install the test dependencies with
-`pip install -r requirements/requirements-test.txt` - this is what is used in the [GitHub Actions workflow](https://github.com/novara-ai/AICodeBot/actions), you can look at the [build workflow](.github/workflows/build.yml) to see how to run the tests.
+`pip install -r requirements/requirements-test.txt` - this is what is used in the [GitHub Actions workflow](https://github.com/gorillamania/AICodeBot/actions), you can look at the [build workflow](.github/workflows/build.yml) to see how to run the tests.
 
 We use `pytest` for testing. It will skip some tests if OPENAI_API_KEY is not set, so to test everything, run pytest with your OPENAI_API_KEY set.
 
