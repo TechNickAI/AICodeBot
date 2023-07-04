@@ -1,8 +1,13 @@
+from aicodebot.prompts.personalities import get_personality_prompt
 from langchain import PromptTemplate
 from pathlib import Path
 
-SIDEKICK_TEMPLATE = """You are a pair programming assistant named AICodeBot, acting as a sidekick to a human developer.
+SIDEKICK_TEMPLATE = (
+    """You are a pair programming assistant named AICodeBot, acting as a sidekick to a human developer.
 If you aren't sure what to do, you can ask the human for more clarification.
+"""
+    + get_personality_prompt()
+    + """
 
 Relevant chat history:
 {chat_history}
@@ -13,6 +18,7 @@ Conversation with the human developer:
 Human: {task}
 AICodeBot:
 """
+)
 
 
 def generate_files_context(files):
