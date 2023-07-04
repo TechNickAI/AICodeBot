@@ -1,10 +1,11 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.agents import get_agent
 from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context
+from aicodebot.prompts import generate_sidekick_prompt
 from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.memory import ConversationTokenBufferMemory
 from langchain.prompts import load_prompt
 from openai.api_resources import engine
 from pathlib import Path
@@ -264,31 +265,53 @@ def review(commit, verbose):
 
 
 @cli.command
-@click.option("--task", "-t", help="The task you want to perform - a description of what you want to do.")
+@click.option("--request", "-r", help="What to ask your sidekick to do")
 @click.option("-v", "--verbose", count=True)
-def sidekick(task, verbose):
-    """ALPHA/EXPERIMENTAL: Get coding help from your AI sidekick."""
-    console.print(
-        "⚠️ WARNING: The 'sidekick' feature is currently experimental and, frankly, it sucks right now. "
-        "Due to the token limitations with large language models, the amount of context "
-        "that can be sent back and forth is limited, and slow. This means that sidekick will struggle with "
-        "complex tasks and will take longer than a human for simpler tasks.\n"
-        "Play with it, but don't expect too much. Do you feel like contributing? 😃\n"
-        "See docs/sidekick.md for more information.",
-        style=warning_style,
-    )
+def sidekick(request, verbose):
+    """EXPERIMENTAL: Coding help from your AI sidekick"""
+    console.print("This is an experimental feature. Play with it, but don't count on it.", style=warning_style)
 
     setup_environment()
 
-    model = get_llm_model()
-    llm = ChatOpenAI(model=model, temperature=PRECISE_TEMPERATURE, max_tokens=2000, verbose=verbose)
+    # Generate the prompt with the appropriate context
+    prompt = generate_sidekick_prompt(request)
+    model = get_llm_model(get_token_length(prompt.template))
 
-    agent = get_agent("sidekick", llm, verbose)
+    llm = ChatOpenAI(
+        model=model,
+        temperature=PRECISE_TEMPERATURE,
+        max_tokens=DEFAULT_MAX_TOKENS * 2,
+        verbose=verbose,
+        streaming=True,
+    )
 
-    with console.status("Thinking", spinner=DEFAULT_SPINNER):
-        response = agent({"input": task})
-        console.print("")
-        console.print(response["output"], style=bot_style)
+    # Set up the chain
+    chain = LLMChain(
+        llm=llm,
+        prompt=prompt,
+        memory=ConversationTokenBufferMemory(llm=llm, max_token_limit=DEFAULT_MAX_TOKENS),
+        verbose=verbose,
+    )
+
+    while True:  # continuous loop for multiple questions
+        if request:
+            user_input = request
+            request = None  # clear the command line request once we've handled it
+        else:
+            user_input = click.prompt(
+                "Enter a question OR (q) quit, OR (e) edit for entering a question in your editor\n>>>",
+                prompt_suffix="",
+            )
+            if user_input.lower() == "q":
+                break
+            elif user_input.lower() == "e":
+                user_input = click.edit()
+
+        with Live(Markdown(""), auto_refresh=True) as live:
+            callback = RichLiveCallbackHandler(live)
+            callback.buffer = []
+            llm.callbacks = [callback]
+            chain.run(user_input)
 
 
 # ---------------------------------------------------------------------------- #
@@ -393,7 +416,7 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
 
     def on_llm_new_token(self, token, **kwargs):
         self.buffer.append(token)
-        self.live.update(Markdown("".join(self.buffer)))
+        self.live.update(Markdown("".join(self.buffer), style=bot_style))
 
 
 if __name__ == "__main__":
