@@ -8,7 +8,6 @@ If you aren't sure what to do, you can ask the human for more clarification.
 """
     + get_personality_prompt()
     + """
-
 Relevant chat history:
 {chat_history}
 End chat history

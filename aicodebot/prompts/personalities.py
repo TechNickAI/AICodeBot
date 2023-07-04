@@ -7,5 +7,5 @@ HER = """
 
 
 def get_personality_prompt():
-    # TODO build out more personalities
+    # TODO build out more personalities. Submit a PR!
     return HER
