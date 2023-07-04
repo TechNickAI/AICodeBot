@@ -1,6 +1,6 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context
-from aicodebot.prompts import generate_sidekick_prompt
+from aicodebot.prompts import generate_files_context, generate_sidekick_prompt
 from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
@@ -242,7 +242,7 @@ def review(commit, verbose):
     prompt = load_prompt(Path(__file__).parent / "prompts" / "review.yaml")
 
     # Check the size of the diff context and adjust accordingly
-    response_token_size = DEFAULT_MAX_TOKENS / 2
+    response_token_size = DEFAULT_MAX_TOKENS
     request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     model = get_llm_model(request_token_size)
     if verbose:
@@ -267,15 +267,29 @@ def review(commit, verbose):
 @cli.command
 @click.option("--request", "-r", help="What to ask your sidekick to do")
 @click.option("-v", "--verbose", count=True)
-def sidekick(request, verbose):
-    """EXPERIMENTAL: Coding help from your AI sidekick"""
+@click.argument("files", nargs=-1)
+def sidekick(request, verbose, files):
+    """
+    EXPERIMENTAL: Coding help from your AI sidekick\n
+    FILES: List of files to be used as context for the session
+    """
+
     console.print("This is an experimental feature. Play with it, but don't count on it.", style=warning_style)
 
     setup_environment()
 
-    # Generate the prompt with the appropriate context
-    prompt = generate_sidekick_prompt(request)
-    model = get_llm_model(get_token_length(prompt.template))
+    # Pull in context. Right now it's just the contents of files that we passed in.
+    # Soon, we could add vector embeddings of:
+    # imported code / modules / libraries
+    # Style guides/reference code
+    # git history
+    context = generate_files_context(files)
+
+    # Generate the prompt and set up the model
+    prompt = generate_sidekick_prompt(request, files)
+    model = get_llm_model(get_token_length(prompt.template) + get_token_length(context))
+    if verbose:
+        console.print(f"Context token size: {get_token_length(context)}, using model: {model}")
 
     llm = ChatOpenAI(
         model=model,
@@ -286,32 +300,30 @@ def sidekick(request, verbose):
     )
 
     # Set up the chain
-    chain = LLMChain(
-        llm=llm,
-        prompt=prompt,
-        memory=ConversationTokenBufferMemory(llm=llm, max_token_limit=DEFAULT_MAX_TOKENS),
-        verbose=verbose,
+    memory = ConversationTokenBufferMemory(
+        memory_key="chat_history", input_key="task", llm=llm, max_token_limit=DEFAULT_MAX_TOKENS
     )
+    chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
 
     while True:  # continuous loop for multiple questions
         if request:
-            user_input = request
+            human_input = request
             request = None  # clear the command line request once we've handled it
         else:
-            user_input = click.prompt(
+            human_input = click.prompt(
                 "Enter a question OR (q) quit, OR (e) edit for entering a question in your editor\n>>>",
                 prompt_suffix="",
             )
-            if user_input.lower() == "q":
+            if human_input.lower() == "q":
                 break
-            elif user_input.lower() == "e":
-                user_input = click.edit()
+            elif human_input.lower() == "e":
+                human_input = click.edit()
 
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live)
             callback.buffer = []
             llm.callbacks = [callback]
-            chain.run(user_input)
+            chain.run({"task": human_input, "context": context})
 
 
 # ---------------------------------------------------------------------------- #
