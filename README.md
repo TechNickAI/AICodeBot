@@ -20,6 +20,23 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 
 ## Current features - how you can use it today
 
+### AI Sidekick
+
+ `aicodebot sidekick` Your AI-powered coding assistant. It's designed to help you with your coding tasks by providing context-aware suggestions and solutions. Think ChatGPT with the ability to read local files for context.
+
+ ```bash
+ aicodebot sidekick file1.py file2.py
+ ```
+
+In this example, the sidekick will read in the contents of file1.py and file2.py and use them to provide context-aware answers. For example:
+
+* How can I make this code better?
+* Tell me how to add a new feature to this code.
+* Fix an issue that I'm having when... (describe the issue)
+* Write unit tests for the xyz function.
+
+Please note that this feature is still in its experimental stage. While it can already provide valuable assistance, it's not perfect and we're continuously working on improving it.
+
 ### AI-Assisted Git Commit
 
 `aicodebot commit` will run pre-commit for you to check syntax, and then generate a commit message for you based on the changes you've made. In about as much effort as typing "fix bug" for the commit message, you will get a high quality commit message that thoroughly describes the change.
