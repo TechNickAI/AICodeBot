@@ -32,7 +32,7 @@ In this example, the sidekick will read in the contents of file1.py and file2.py
 
 * How can I make this code better?
 * Tell me how to add a new feature to this code.
-* Fix an issue that I'm having when... (describe the issue)
+* Fix an issue that I'm having... (paste the error, stack trace, etc)
 * Write unit tests for the xyz function.
 
 Please note that this feature is still in its experimental stage. While it can already provide valuable assistance, it's not perfect and we're continuously working on improving it.
@@ -47,7 +47,7 @@ Please note that this feature is still in its experimental stage. While it can a
 
 ### AI-Assisted Debugging
 
-`aicodebot debug $command` will run the command and capture the log message. It will pass the error message, stack trace, command output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to stackoverflow in a separate window, allowing you to stay in terminal with all the context.
+`aicodebot debug $command` will run the command and capture the log message. It will pass the error message, stack trace, command output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to Stack Overflow in a separate window, allowing you to stay in terminal with all the context.
 
 [![PyPI version](https://badge.fury.io/py/aicodebot.svg?0.6.2)](https://badge.fury.io/py/aicodebot)
 
@@ -72,6 +72,7 @@ Commands:
   debug      Run a command and debug the output.
   fun-fact   Get a fun fact about programming and artificial intelligence.
   review     Do a code review, with [un]staged changes, or a specified...
+  sidekick   EXPERIMENTAL: Coding help from your AI sidekick
   ```
 
 ### Open AI key setup
@@ -116,7 +117,7 @@ Note: We'll be adding more options for AI models in the future, including those 
 ### Repository / Project Management
 
 * [ ] **Project best practices**: Suggest things like pre-commit, linting, license, CI/CD, etc. Eventually: Implement them for you.
-* [ ] **Manage Github Issues**: Provides Level 1 triage of incoming issues on GitHub, including tagging, assigning, and responding with FAQs. It could also escalate issues to human developers when necessary, and provide nudges for tasks that need more input.
+* [ ] **Manage GitHub Issues**: Provides Level 1 triage of incoming issues on GitHub, including tagging, assigning, and responding with FAQs. It could also escalate issues to human developers when necessary, and provide nudges for tasks that need more input.
 * [ ] **Welcome new contributors**: Automatically welcome new contributors to the project, find out what they're interested in, and suggest issues for them to work on.
 
 ### Fun
