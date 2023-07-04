@@ -2,21 +2,21 @@
 
 ## Your AI-powered coding sidekick
 
-AICodeBot is a coding assistant designed to make your coding life easier. With capabilities to perform code reviews, manage dependencies, and even suggest improvements, think of it as your AI version of a pair programmer - a team member that accelerates the pace of development and helps you write better code.
+AICodeBot is a coding assistant designed to make your coding life easier. Think of it as your AI version of a pair programmer. Perform code reviews, create helpful commit messages, debug problems, and help you think through building new features. A team member that accelerates the pace of development and helps you write better code.
 
-We've planned to build out multiple different interfaces for interacting with AICodeBot. To start, it's a [command-line tool](https://pypi.org/project/aicodebot/) that you can use to generate commit messages, debug code, and review code. In the future, we plan to integrate it with GitHub Actions, Slack, and other tools to make it even more useful.
+We've planned to build out multiple different interfaces for interacting with AICodeBot. To start, it's a [command-line tool](https://pypi.org/project/aicodebot/). In the future, we plan to integrate it with GitHub Actions, Slack, and other tools to make it even more useful.
 
-⚠️ Status: This project is in its infancy with very limited features, but it already improves the software development workflow, and has a healthy Roadmap of features.
+Status: This project is in its early stages with limited features, but it already improves the software development workflow, and has a healthy roadmap of features (below).
 
-⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes it does dumb things, which is why we have you confirm before it does anything permanent. Much like Tesla's Full Self Driving, you have to keep your hands on the wheel.
+We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more.
 
-We're using AICodeBot to build AICodeBot, and it's getting better all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more.
-
-### What it's not
+### What it's NOT
 
 `aicodebot` is a tool for developers, not a replacement for them. It's not going to replace your job, but it will make your job easier and more fun. It's not going to take over the world, but it will help us build a better one. See the *Alignment* section below for more.
 
-It's also not a "build a site for me in 5 minutes" tool that takes a well constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that, Instead, AICodeBot is built to work with existing code bases and help you improve them at the git-commit level. It's designed to multiply the effectiveness of capable engineers.
+⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes AICodeBot does dumb things, which is why it's mostly *reading* and *advising* and not yet *writing*. Much like Tesla's "Full Self Driving", you have to keep your hands on the wheel.
+
+It's also not a "build a site for me in 5 minutes" tool that takes a well constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that. It's not a no-code platform. Instead, AICodeBot is built to work with existing code bases and the git-commit level. It's designed to multiply the effectiveness of capable engineers.
 
 ## Current features - how you can use it today
 
@@ -32,14 +32,14 @@ In this example, the sidekick will read in the contents of file1.py and file2.py
 
 * How can I make this code better?
 * Tell me how to add a new feature to this code.
-* Fix an issue that I'm having... (paste the error, stack trace, etc)
+* Fix an issue that I'm having... (paste the error, stack trace, etc.)
 * Write unit tests for the xyz function.
 
-Please note that this feature is still in its experimental stage. While it can already provide valuable assistance, it's not perfect and we're continuously working on improving it.
+This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingeseting repo specific domain knowledge, writing local files, and more.
 
 ### AI-Assisted Git Commit
 
-`aicodebot commit` will run pre-commit for you to check syntax, and then generate a commit message for you based on the changes you've made. In about as much effort as typing "fix bug" for the commit message, you will get a high quality commit message that thoroughly describes the change.
+`aicodebot commit` improves the git commit process. It will run pre-commit for you to check syntax, and then generate a commit message for you based on the changes you've made. In about as much effort as typing "fix bug" for the commit message, you will get a high quality commit message that thoroughly describes the change.
 
 ### AI-Assisted Code Review
 
@@ -48,7 +48,7 @@ It's goal is to suggest how to make the code better, and we've found that it oft
 
 ### AI-Assisted Debugging
 
-`aicodebot debug $command` will run the command and capture the log message. It will pass the error message, stack trace, command output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to Stack Overflow in a separate window, allowing you to stay in terminal with all the context.
+`aicodebot debug $command` will run the command and capture the log output. It will pass the error message, stack trace, command output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to Stack Overflow in a separate window, allowing you to stay in terminal with all the context.
 
 [![PyPI version](https://badge.fury.io/py/aicodebot.svg?0.6.2)](https://badge.fury.io/py/aicodebot)
 
@@ -100,7 +100,7 @@ Note: We'll be adding more options for AI models in the future, including those 
 * [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
 * [ ] **Test Generation**: Generates unit tests for code, improve test coverage.
 * [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via GitHub Actions). Eventually: Fix the build automatically when there are small errors.
-* [ ] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems, using data from the current repository.
+* [X] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems, using data from the current repository.
 * [X] **Linting/Formatting**: Checks code for linting errors and automatically fixes them where possible (via pre-commit)
 * [ ] **Handle GitHub Issues**: Handles basic tasks that you assign to [@aicodebot](https://pypi.org/project/aicodebot/)
 * [ ] **Automatically Generate ChangeLogs and Release Notes**: Generates release notes and changelogs based on commit messages and code changes.
@@ -109,7 +109,7 @@ Note: We'll be adding more options for AI models in the future, including those 
 
 * [X] **Command-line, installable via pip**: aicodebot can be installed as a Python package using `pip install aicodebot`
 * [ ] **Mention the @aicodebot GitHub user**: Mentioning the [@aicodebot](https://pypi.org/project/aicodebot/) GitHub user in a comment will trigger it to perform a task, review code, or pull in an appropriate GIF.
-* [ ] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories.
+* [ ] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories. [WIP](https://github.com/gorillamania/AICodeBot-action)
 * [ ] **Jupyter Notebook Extension**: Provides a Jupyter Notebook extension that can be used to debug code in the notebook.
 * [ ] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
 * [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.

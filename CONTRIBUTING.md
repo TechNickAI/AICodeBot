@@ -30,16 +30,19 @@ We welcome contributions of all kinds, including code, documentation, bug report
 In particular, we need help with:
 
 * Improving the intelligence of the responses from the language model
-  * Better [prompts](prompts)
+  * Better [prompts](aicodebot/prompts)
   * Explore different language models
   * Self verifying/validating responses. Reflection.
 * Building additional commands in the [CLI](aicodebot/cli.py)
-  * `aicodebot code` - translate natural language to local changes in code
+  * `aicodebot sidekick` - translate natural language to local changes in code
+  * `aicodebot setup` - walk users through first time set up. Collecting API keys, etc.
 * Adding additional interfaces
   * GitHub Action to run AICodeBot on a pull request or commit
   * The @aicodebot mention to allow you to interact with AICodeBot in a GitHub issue or pull request, or assign it a task.
-* Documentation. We don't even have a docs folder yet. Setting up an automated process for this would be great.
+* Documentation. Setting up an automated process for this would be great
 * YouTube walk-throughs of using AICodeBot
+
+See the [issues](https://github.com/gorillamania/AICodeBot/issues) for an up-to-date list of tasks that need help.
 
 ## Code Contributions
 
