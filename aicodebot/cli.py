@@ -1,7 +1,13 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.helpers import exec_and_get_output, get_llm_model, get_token_length, git_diff_context, logger
+from aicodebot.helpers import (
+    exec_and_get_output,
+    get_llm_model,
+    get_token_length,
+    git_diff_context,
+    logger,
+    read_config,
+)
 from aicodebot.prompts import generate_files_context, get_prompt
-from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -12,7 +18,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.style import Style
-import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser
+import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser, yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -20,6 +26,7 @@ DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0
 CREATIVE_TEMPERATURE = 0.7
 DEFAULT_SPINNER = "point"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # ----------------------- Setup for rich console output ---------------------- #
 
@@ -53,7 +60,7 @@ def cli():
 @click.option("-t", "--response-token-size", type=int, default=350)
 def alignment(response_token_size, verbose):
     """Get a message about Heart-Centered AI Alignment ❤ + 🤖."""
-    setup_environment()
+    config = setup_config()
 
     # Load the prompt
     prompt = get_prompt("alignment")
@@ -66,6 +73,7 @@ def alignment(response_token_size, verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=CREATIVE_TEMPERATURE,
+            openai_api_key=config["OPENAI_API_KEY"],
             max_tokens=response_token_size,
             verbose=verbose,
             streaming=True,
@@ -85,7 +93,7 @@ def alignment(response_token_size, verbose):
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
 def commit(verbose, response_token_size, yes, skip_pre_commit):
     """Generate a commit message based on your changes."""
-    setup_environment()
+    config = setup_config()
 
     # Check if pre-commit is installed and .pre-commit-config.yaml exists
     if not skip_pre_commit and Path(".pre-commit-config.yaml").exists():
@@ -126,7 +134,13 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
         )
 
     # Set up the language model
-    llm = ChatOpenAI(model=model, temperature=PRECISE_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose)
+    llm = ChatOpenAI(
+        model=model,
+        openai_api_key=config["OPENAI_API_KEY"],
+        temperature=PRECISE_TEMPERATURE,
+        max_tokens=DEFAULT_MAX_TOKENS,
+        verbose=verbose,
+    )
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
@@ -159,7 +173,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
 @click.option("-v", "--verbose", count=True)
 def debug(command, verbose):
     """Run a command and debug the output."""
-    setup_environment()
+    config = setup_config()
 
     # Run the command and capture its output
     command_str = " ".join(command)
@@ -194,6 +208,7 @@ def debug(command, verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=PRECISE_TEMPERATURE,
+            openai_api_key=config["OPENAI_API_KEY"],
             max_tokens=DEFAULT_MAX_TOKENS,
             verbose=verbose,
             streaming=True,
@@ -211,7 +226,7 @@ def debug(command, verbose):
 @click.option("-v", "--verbose", count=True)
 def fun_fact(verbose):
     """Get a fun fact about programming and artificial intelligence."""
-    setup_environment()
+    config = setup_config()
 
     # Load the prompt
     prompt = get_prompt("fun_fact")
@@ -225,6 +240,7 @@ def fun_fact(verbose):
             model=model,
             temperature=PRECISE_TEMPERATURE,
             max_tokens=DEFAULT_MAX_TOKENS / 2,
+            openai_api_key=config["OPENAI_API_KEY"],
             verbose=verbose,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live)],
@@ -242,7 +258,7 @@ def fun_fact(verbose):
 @click.option("-v", "--verbose", count=True)
 def review(commit, verbose):
     """Do a code review, with [un]staged changes, or a specified commit."""
-    setup_environment()
+    config = setup_config()
 
     diff_context = git_diff_context(commit)
     if not diff_context:
@@ -264,6 +280,7 @@ def review(commit, verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=PRECISE_TEMPERATURE,
+            openai_api_key=config["OPENAI_API_KEY"],
             max_tokens=response_token_size,
             verbose=verbose,
             streaming=True,
@@ -274,6 +291,27 @@ def review(commit, verbose):
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
         chain.run(diff_context)
+
+
+@cli.command()
+@click.option("--openai-api-key", "-k", help="Your OpenAI API key")
+def setup(openai_api_key):
+    """Set up the configuration file with your OpenAI API key
+    If the config file already exists, it will ask you if you want to remove it and recreate it.
+    """
+    config_file = Path(read_config.CONFIG_FILE)
+    if config_file.exists():
+        if not click.confirm(
+            f"The config file already exists at {config_file}. Do you want to remove it and recreate it?"
+        ):
+            console.print("Setup cancelled. 🚫")
+            return
+
+        # Remove the existing config file
+        config_file.unlink()
+
+    # Call the setup_config function with the provided arguments
+    setup_config(openai_api_key)
 
 
 @cli.command
@@ -288,7 +326,7 @@ def sidekick(request, verbose, files):
 
     console.print("This is an experimental feature. Play with it, but don't count on it.", style=warning_style)
 
-    setup_environment()
+    config = setup_config()
 
     # Pull in context. Right now it's just the contents of files that we passed in.
     # Soon, we could add vector embeddings of:
@@ -308,6 +346,7 @@ def sidekick(request, verbose, files):
 
     llm = ChatOpenAI(
         model=model,
+        openai_api_key=config["OPENAI_API_KEY"],
         temperature=PRECISE_TEMPERATURE,
         max_tokens=DEFAULT_MAX_TOKENS * 2,
         verbose=verbose,
@@ -353,64 +392,55 @@ def sidekick(request, verbose, files):
 # ---------------------------------------------------------------------------- #
 
 
-def setup_environment():
-    # Load environment variables from the config file
-    config_file = Path(Path.home() / ".aicodebot")
-    load_dotenv(config_file)
-
-    if os.getenv("OPENAI_API_KEY"):
-        logger.debug("OPENAI_API_KEY environment variable is set")
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-        return True
-
-    openai_api_key_url = "https://platform.openai.com/account/api-keys"
+def setup_config(openai_api_key=OPENAI_API_KEY):
+    config = read_config()
+    if config:
+        openai.api_key = config["OPENAI_API_KEY"]
+        return config
+    elif openai_api_key:
+        openai.api_key = openai_api_key
 
     console.print(
-        "[bold red]The OPENAI_API_KEY environment variable is not set.[/bold red]\n"
-        f"The OpenAI API key is required to use aicodebot. You can get one for free on the OpenAI website.\n"
-        f"Let's create a config file for you at {config_file}"
+        f"[bold red]The config file does not exist.[/bold red]\n"
+        f"Let's set that up for you at {read_config.CONFIG_FILE}\n"
     )
 
-    if click.confirm("Open the OpenAI API keys page for you in a browser?"):
-        webbrowser.open(openai_api_key_url)
-
-    if click.confirm(f"Create the {config_file} file for you?"):
-        api_key = click.prompt("Please enter your OpenAI API key")
-
-        # Validate the API key and check if it supports GPT-4
-        openai.api_key = api_key
-        try:
-            click.echo("Validating the API key, and checking if GPT-4 is supported...")
-            engines = engine.Engine.list()
-            logger.trace(f"Engines: {engines}")
-            gpt_4_supported = "true" if "gpt-4" in [engine.id for engine in engines.data] else "false"
-            if gpt_4_supported == "true":
-                click.echo("✅ The API key is valid and supports GPT-4.")
-            else:
-                click.echo("✅ The API key is valid, but does not support GPT-4. GPT-3.5 will be used instead.")
-        except Exception as e:
-            raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
-
-        # Copy .env.template to .env and insert the API key and gpt_4_supported
-        template_file = Path(__file__).parent / ".aicodebot.template"
-        with Path.open(template_file, "r") as template, Path.open(config_file, "w") as env:
-            for line in template:
-                if line.startswith("OPENAI_API_KEY="):
-                    env.write(f"OPENAI_API_KEY={api_key}\n")
-                elif line.startswith("GPT_4_SUPPORTED="):
-                    env.write(f"GPT_4_SUPPORTED={gpt_4_supported}\n")
-                else:
-                    env.write(line)
+    if not openai.api_key:
+        openai_api_key_url = "https://platform.openai.com/account/api-keys"
 
         console.print(
-            f"[bold green]Created {config_file} with your OpenAI API key and GPT-4 support status.[/bold green] "
-            "Now, please re-run aicodebot and let's get started!"
+            "First, an OpenAI API key is required to use AICodeBot. You can get one for free on the OpenAI website.\n"
         )
-        sys.exit(0)
 
-    raise click.ClickException(
-        "🛑 Please set an API key in the OPENAI_API_KEY environment variable or in a .aicodebot file."
+        if click.confirm("Open the OpenAI API keys page for you in a browser?"):
+            webbrowser.open(openai_api_key_url)
+
+        openai.api_key = click.prompt("Please enter your OpenAI API key")
+
+    # Validate the API key and check if it supports GPT-4
+    try:
+        click.echo("Validating the API key, and checking if GPT-4 is supported...")
+        engines = engine.Engine.list()
+        logger.trace(f"Engines: {engines}")
+        gpt_4_supported = "gpt-4" in [engine.id for engine in engines.data]
+        if gpt_4_supported:
+            click.echo("✅ The API key is valid and supports GPT-4.")
+        else:
+            click.echo("✅ The API key is valid, but does not support GPT-4. GPT-3.5 will be used instead.")
+    except Exception as e:
+        raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
+
+    config_data = {"config_version": 1, "OPENAI_API_KEY": openai.api_key, "gpt_4_supported": gpt_4_supported}
+
+    with Path.open(read_config.CONFIG_FILE, "w") as f:
+        yaml.dump(config_data, f)
+
+    console.print(
+        f"[bold green]Created {read_config.CONFIG_FILE} with your OpenAI API key.[/bold green] "
+        "Now, please re-run aicodebot and let's get started!"
     )
+    sys.exit(0)
+    return config_data
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):

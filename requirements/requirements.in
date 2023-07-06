@@ -11,6 +11,6 @@ GitPython
 langchain
 loguru
 openai
-python-dotenv
+pyyaml
 rich
 tiktoken

@@ -79,10 +79,10 @@ pydantic==1.10.9
     #   openapi-schema-pydantic
 pygments==2.15.1
     # via rich
-python-dotenv==1.0.0
-    # via -r requirements.in
 pyyaml==6.0
-    # via langchain
+    # via
+    #   -r requirements.in
+    #   langchain
 regex==2023.6.3
     # via tiktoken
 requests==2.31.0

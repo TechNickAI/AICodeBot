@@ -1,6 +1,6 @@
 from loguru import logger
 from pathlib import Path
-import os, subprocess, sys, tiktoken
+import os, subprocess, sys, tiktoken, yaml
 
 # ---------------------------------------------------------------------------- #
 #                    Global logging configuration for loguru                   #
@@ -30,7 +30,8 @@ def get_llm_model(token_size=0):
         "gpt-3.5-turbo": 4096,
         "gpt-3.5-turbo-16k": 16384,
     }
-    gpt_4_supported = os.getenv("GPT_4_SUPPORTED") == "true"
+    config = read_config()
+    gpt_4_supported = config["gpt_4_supported"]
 
     # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
     token_size = int(token_size * 1.1)
@@ -121,3 +122,16 @@ def exec_and_get_output(command):
     if result.returncode != 0:
         raise Exception(f"Command '{' '.join(command)}' failed with error:\n{result.stderr}")  # noqa: TRY002
     return result.stdout
+
+
+def read_config():
+    if read_config.CONFIG_FILE.exists():
+        logger.debug(f"Config file {read_config.CONFIG_FILE} exists")
+        with Path(read_config.CONFIG_FILE).open("r") as f:
+            return yaml.safe_load(f)
+    else:
+        logger.debug(f"Config file {read_config.CONFIG_FILE} does not exist")
+        return None
+
+
+read_config.CONFIG_FILE = Path(Path.home() / ".aicodebot.yaml")
