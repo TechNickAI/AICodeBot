@@ -299,6 +299,9 @@ def sidekick(request, verbose, files):
         streaming=True,
     )
 
+    # Open the temporary file in the user's editor
+    editor = Path(os.getenv("EDITOR", "/usr/bin/vim")).name
+
     # Set up the chain
     memory = ConversationTokenBufferMemory(
         memory_key="chat_history", input_key="task", llm=llm, max_token_limit=DEFAULT_MAX_TOKENS
@@ -311,13 +314,17 @@ def sidekick(request, verbose, files):
             request = None  # clear the command line request once we've handled it
         else:
             human_input = click.prompt(
-                "Enter a question OR (q) quit, OR (e) edit for entering a question in your editor\n>>>",
+                f"Enter a question OR (q) quit, OR (e) to edit using {editor}\n>>>",
                 prompt_suffix="",
             )
-            if human_input.lower() == "q":
-                break
-            elif human_input.lower() == "e":
-                human_input = click.edit()
+            if len(human_input) == 1:
+                if human_input.lower() == "q":
+                    break
+                elif human_input.lower() == "e":
+                    human_input = click.edit()
+            elif human_input.lower()[-2:] == r"\e":
+                # If the text ends with \e then we want to edit it
+                human_input = click.edit(human_input[:-2])
 
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live)
