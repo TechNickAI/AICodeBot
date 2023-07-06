@@ -1,12 +1,11 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.helpers import exec_and_get_output, get_llm_model, get_token_length, git_diff_context, logger
-from aicodebot.prompts import generate_files_context, generate_sidekick_prompt
+from aicodebot.prompts import generate_files_context, get_prompt
 from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationTokenBufferMemory
-from langchain.prompts import load_prompt
 from openai.api_resources import engine
 from pathlib import Path
 from rich.console import Console
@@ -51,12 +50,13 @@ def cli():
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-def alignment(verbose):
+@click.option("-t", "--response-token-size", type=int, default=350)
+def alignment(response_token_size, verbose):
     """Get a message about Heart-Centered AI Alignment ❤ + 🤖."""
     setup_environment()
 
     # Load the prompt
-    prompt = load_prompt(Path(__file__).parent / "prompts" / "alignment.yaml")
+    prompt = get_prompt("alignment")
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
@@ -66,7 +66,7 @@ def alignment(verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=CREATIVE_TEMPERATURE,
-            max_tokens=DEFAULT_MAX_TOKENS,
+            max_tokens=response_token_size,
             verbose=verbose,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live)],
@@ -96,7 +96,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
             return
 
     # Load the prompt
-    prompt = load_prompt(Path(__file__).parent / "prompts" / "commit_message.yaml")
+    prompt = get_prompt("commit")
     logger.trace(f"Prompt: {prompt}")
 
     # Get the changes from git
@@ -181,7 +181,7 @@ def debug(command, verbose):
     console.print(f"The command exited with status {process.returncode}.")
 
     # Load the prompt
-    prompt = load_prompt(Path(__file__).parent / "prompts" / "debug.yaml")
+    prompt = get_prompt("debug")
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
@@ -214,7 +214,7 @@ def fun_fact(verbose):
     setup_environment()
 
     # Load the prompt
-    prompt = load_prompt(Path(__file__).parent / "prompts" / "fun_fact.yaml")
+    prompt = get_prompt("fun_fact")
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
@@ -250,7 +250,7 @@ def review(commit, verbose):
         sys.exit(0)
 
     # Load the prompt
-    prompt = load_prompt(Path(__file__).parent / "prompts" / "review.yaml")
+    prompt = get_prompt("review")
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
@@ -298,7 +298,7 @@ def sidekick(request, verbose, files):
     context = generate_files_context(files)
 
     # Generate the prompt and set up the model
-    prompt = generate_sidekick_prompt(request, files)
+    prompt = get_prompt("sidekick")
     request_token_size = get_token_length(prompt.template) + get_token_length(context)
     model = get_llm_model(request_token_size)
     if model is None:

@@ -17,7 +17,7 @@ def test_fun_fact(cli_runner):
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
 def test_alignment(cli_runner):
-    result = cli_runner.invoke(cli, ["alignment"])
+    result = cli_runner.invoke(cli, ["alignment", "-t", "100"])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
