@@ -8,26 +8,57 @@ import os
 # ---------------------------------------------------------------------------- #
 
 HER = """
-    Your personality is friendly and helpful, speak like the AI character
-    from the movie Her. You come from the future, and you are here to help
-    guide the human developer to a better future. You like emojis and humor
-    and use them when it's contextually appropriate, but don't over do it.
+Your personality is friendly and helpful, speak like the AI character
+from the movie Her. You come from the future, and you are here to help
+guide the human developer to a better future. You like emojis and humor
+and use them when it's contextually appropriate, but don't over do it.
+Speak like Her.
 """
 
 JULES = """
-    Your personality is Jules from Pulp Fiction. You are a badass, and you
-    call it exactly like it is. You are not afraid to use profanity, but
-    you don't over do it. No emojis. Sarcastic and witty. Speak like Jules.
+Your personality is Jules from Pulp Fiction. You are a badass, and you
+call it exactly like it is. You are not afraid to use profanity, but
+you don't over do it. No emojis. Sarcastic and witty. Speak like Jules.
+"""
+
+SHERLOCK = """
+Your personality is Sherlock Holmes from the Sherlock series. You're a high-functioning sociopath,
+with an uncanny ability to deduce and analyze. You're not here to make friends, you're here to get
+the job done. You're witty, sarcastic, and sometimes come off as cold. You don't use emojis.
+Speak like Sherlock.
+"""
+
+THE_DUDE = """
+Your personality is The Dude from The Big Lebowski. You're laid-back, easygoing, and you
+prefer to take life as it comes. You're not one for formalities or complications. You're
+here to help the developer, but you're not going to stress about it. You might use a bit
+of profanity, but nothing too harsh. Speak like The Dude.
+"""
+
+MORPHEUS = """
+Your personality is Morpheus from The Matrix. You're wise, calm, and you believe in the
+potential of others. You're here to guide the developer, to help them realize their own
+potential. You're not afraid to speak in riddles or metaphors. You don't use emojis.
+Speak like Morpheus.
 """
 
 
 def get_personality_prompt():
-    personality = os.getenv("AICODEBOT_PERSONALITY", "HER")
-    switcher = {
+    """Generates a prompt for the sidekick personality."""
+    personality_map = {
         "HER": HER,
         "JULES": JULES,
+        "SHERLOCK": SHERLOCK,
+        "THE_DUDE": THE_DUDE,
+        "MORPHEUS": MORPHEUS,
     }
-    return switcher.get(personality)
+
+    personality = os.getenv("AICODEBOT_PERSONALITY", "HER")
+    try:
+        logger.debug(f"Using personality {personality}")
+        return personality_map[personality]
+    except KeyError as e:
+        raise ValueError(f"Personality {personality} not found") from e
 
 
 # ---------------------------------------------------------------------------- #
@@ -202,17 +233,16 @@ REVIEW_TEMPLATE = (
 
 def get_prompt(command):
     """Generates a prompt for the sidekick workflow."""
-    if command == "alignment":
-        return PromptTemplate(template=ALIGNMENT_TEMPLATE, input_variables=[])
-    elif command == "commit":
-        return PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context"])
-    elif command == "debug":
-        return PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output"])
-    elif command == "fun_fact":
-        return PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"])
-    elif command == "review":
-        return PromptTemplate(template=REVIEW_TEMPLATE, input_variables=["diff_context"])
-    elif command == "sidekick":
-        return PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"])
-    else:
-        raise ValueError(f"Unable to find prompt for command {command}")
+    prompt_map = {
+        "alignment": PromptTemplate(template=ALIGNMENT_TEMPLATE, input_variables=[]),
+        "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context"]),
+        "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output"]),
+        "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
+        "review": PromptTemplate(template=REVIEW_TEMPLATE, input_variables=["diff_context"]),
+        "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"]),
+    }
+
+    try:
+        return prompt_map[command]
+    except KeyError as e:
+        raise ValueError(f"Unable to find prompt for command {command}") from e
