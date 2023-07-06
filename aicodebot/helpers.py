@@ -1,12 +1,32 @@
+from loguru import logger
 from pathlib import Path
-import subprocess, tiktoken
+import os, subprocess, sys, tiktoken
+
+# ---------------------------------------------------------------------------- #
+#                    Global logging configuration for loguru                   #
+# ---------------------------------------------------------------------------- #
+
+
+logger.remove()
+logger_format = (
+    "<level>{time}</level> {message} | <level>{level}</level> "
+    "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>"
+)
+logger.add(sys.stderr, catch=True, format=logger_format, level=os.getenv("LOG_LEVEL", "WARNING"))
+logger = logger.opt(colors=True)
+
+# ---------------------------------------------------------------------------- #
+#                                Misc functions                                #
+# ---------------------------------------------------------------------------- #
 
 
 def get_token_length(text, model="gpt-3.5-turbo"):
     """Get the number of tokens in a string using the tiktoken library."""
     encoding = tiktoken.encoding_for_model(model)
     tokens = encoding.encode(text)
-    return len(tokens)
+    token_length = len(tokens)
+    logger.debug(f"Token length for text {text[0:10]}...: {token_length}")
+    return token_length
 
 
 def git_diff_context(commit=None):
@@ -15,14 +35,16 @@ def git_diff_context(commit=None):
 
     if commit:
         # If a commit is provided, just get the diff for that commit
+        logger.debug(f"Getting diff for commit {commit}")
         return exec_and_get_output(["git", "show", commit])
     else:
         # Otherwise, get the diff for the staged files, or if there are none, the diff for the unstaged files
         staged_files = exec_and_get_output(["git", "diff", "--cached", "--name-only"]).splitlines()
         if staged_files:
-            # If there are staged files, get the diff for those files
+            logger.debug(f"Getting diff for staged files: {staged_files}")
             diff_type = "--cached"
         else:
+            logger.debug(f"Getting diff for unstaged files: {staged_files}")
             diff_type = "HEAD"
 
         file_status = exec_and_get_output(["git", "diff", diff_type, "--name-status"]).splitlines()
@@ -57,6 +79,7 @@ def git_diff_context(commit=None):
 
 def exec_and_get_output(command):
     """Execute a command and return its output as a string."""
+    logger.debug(f"Executing command: {' '.join(command)}")
     result = subprocess.run(command, capture_output=True, text=True)  # noqa: S603
     if result.returncode != 0:
         raise Exception(f"Command '{' '.join(command)}' failed with error:\n{result.stderr}")  # noqa: TRY002

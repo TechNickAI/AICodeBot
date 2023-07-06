@@ -1,5 +1,5 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context
+from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context, logger
 from aicodebot.prompts import generate_files_context, generate_sidekick_prompt
 from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
@@ -29,6 +29,7 @@ bot_style = Style(color="#30D5C8")
 error_style = Style(color="#FF0000")
 warning_style = Style(color="#FFA500")
 
+
 # -------------------------- Top level command group ------------------------- #
 
 
@@ -56,6 +57,7 @@ def alignment(verbose):
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "alignment.yaml")
+    logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
     model = get_llm_model(get_token_length(prompt.template))
@@ -95,11 +97,13 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "commit_message.yaml")
+    logger.trace(f"Prompt: {prompt}")
 
     # Get the changes from git
     staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
     if not staged_files:
         # If no files are staged, Assume they want to commit all changed files
+        logger.info("No files staged, assuming we want to commit all changed files, running git add -A")
         exec_and_get_output(["git", "add", "-A"])
         # Get the list of files to be committed
         files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
@@ -116,8 +120,6 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     # Check the size of the diff context and adjust accordingly
     request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     model = get_llm_model(request_token_size)
-    if verbose:
-        console.print(f"Diff context token size: {request_token_size}, using model: {model}")
 
     # Set up the language model
     llm = ChatOpenAI(model=model, temperature=PRECISE_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose)
@@ -176,6 +178,7 @@ def debug(command, verbose):
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "debug.yaml")
+    logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
     model = get_llm_model(get_token_length(error_output) + get_token_length(prompt.template))
@@ -205,6 +208,7 @@ def fun_fact(verbose):
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "fun_fact.yaml")
+    logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
     model = get_llm_model(get_token_length(prompt.template))
@@ -240,13 +244,13 @@ def review(commit, verbose):
 
     # Load the prompt
     prompt = load_prompt(Path(__file__).parent / "prompts" / "review.yaml")
+    logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
     response_token_size = DEFAULT_MAX_TOKENS
     request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     model = get_llm_model(request_token_size)
-    if verbose:
-        console.print(f"Diff context token size: {request_token_size}, using model: {model}")
+    logger.info(f"Diff context token size: {request_token_size}, using model: {model}")
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
@@ -288,8 +292,6 @@ def sidekick(request, verbose, files):
     # Generate the prompt and set up the model
     prompt = generate_sidekick_prompt(request, files)
     model = get_llm_model(get_token_length(prompt.template) + get_token_length(context))
-    if verbose:
-        console.print(f"Context token size: {get_token_length(context)}, using model: {model}")
 
     llm = ChatOpenAI(
         model=model,
@@ -344,6 +346,7 @@ def setup_environment():
     load_dotenv(config_file)
 
     if os.getenv("OPENAI_API_KEY"):
+        logger.debug("OPENAI_API_KEY environment variable is set")
         openai.api_key = os.getenv("OPENAI_API_KEY")
         return True
 
@@ -366,6 +369,7 @@ def setup_environment():
         try:
             click.echo("Validating the API key, and checking if GPT-4 is supported...")
             engines = engine.Engine.list()
+            logger.trace(f"Engines: {engines}")
             gpt_4_supported = "true" if "gpt-4" in [engine.id for engine in engines.data] else "false"
             if gpt_4_supported == "true":
                 click.echo("✅ The API key is valid and supports GPT-4.")
@@ -413,15 +417,19 @@ def get_llm_model(token_size=0):
 
     if gpt_4_supported:
         if token_size <= model_options["gpt-4"]:
+            logger.info(f"Using GPT-4 for token size {token_size}")
             return "gpt-4"
         elif token_size <= model_options["gpt-4-32k"]:
+            logger.info(f"Using GPT-4-32k for token size {token_size}")
             return "gpt-4-32k"
         else:
             raise click.ClickException("🛑 The context is too large to for the Model. 😞")
     else:
         if token_size <= model_options["gpt-3.5-turbo"]:  # noqa: PLR5501
+            logger.info(f"Using GPT-3.5-turbo for token size {token_size}")
             return "gpt-3.5-turbo"
         elif token_size <= model_options["gpt-3.5-turbo-16k"]:
+            logger.info(f"Using GPT-3.5-turbo-16k for token size {token_size}")
             return "gpt-3.5-turbo-16k"
         else:
             raise click.ClickException("🛑 The context is too large to for the Model. 😞")

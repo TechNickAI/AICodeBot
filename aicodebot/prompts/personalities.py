@@ -1,3 +1,5 @@
+import os
+
 HER = """
     Your personality is friendly and helpful, speak like the AI character
     from the movie Her. You come from the future, and you are here to help
@@ -12,9 +14,10 @@ JULES = """
 """
 
 
-def get_personality_prompt(who="HER"):
+def get_personality_prompt():
+    personality = os.getenv("AICODEBOT_PERSONALITY", "HER")
     switcher = {
         "HER": HER,
         "JULES": JULES,
     }
-    return switcher.get(who.upper(), HER)
+    return switcher.get(personality)
