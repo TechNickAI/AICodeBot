@@ -20,6 +20,43 @@ logger = logger.opt(colors=True)
 # ---------------------------------------------------------------------------- #
 
 
+def get_llm_model(token_size=0):
+    # https://platform.openai.com/docs/models/gpt-3-5
+    # We want to use GPT-4, if it is available for this OPENAI_API_KEY, otherwise GPT-3.5
+    # We also want to use the largest model that supports the token size we need
+    model_options = {
+        "gpt-4": 8192,
+        "gpt-4-32k": 32768,
+        "gpt-3.5-turbo": 4096,
+        "gpt-3.5-turbo-16k": 16384,
+    }
+    gpt_4_supported = os.getenv("GPT_4_SUPPORTED") == "true"
+
+    # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
+    token_size = int(token_size * 1.1)
+
+    if gpt_4_supported:
+        if token_size <= model_options["gpt-4"]:
+            logger.info(f"Using GPT-4 for token size {token_size}")
+            return "gpt-4"
+        elif token_size <= model_options["gpt-4-32k"]:
+            logger.info(f"Using GPT-4-32k for token size {token_size}")
+            return "gpt-4-32k"
+        else:
+            logger.critical("🛑 The context is too large to for the Model. 😞")
+            return None
+    else:
+        if token_size <= model_options["gpt-3.5-turbo"]:  # noqa: PLR5501
+            logger.info(f"Using GPT-3.5-turbo for token size {token_size}")
+            return "gpt-3.5-turbo"
+        elif token_size <= model_options["gpt-3.5-turbo-16k"]:
+            logger.info(f"Using GPT-3.5-turbo-16k for token size {token_size}")
+            return "gpt-3.5-turbo-16k"
+        else:
+            logger.critical("🛑 The context is too large to for the Model. 😞")
+            return None
+
+
 def get_token_length(text, model="gpt-3.5-turbo"):
     """Get the number of tokens in a string using the tiktoken library."""
     encoding = tiktoken.encoding_for_model(model)

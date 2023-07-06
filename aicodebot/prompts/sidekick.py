@@ -1,3 +1,4 @@
+from aicodebot.helpers import get_token_length, logger
 from aicodebot.prompts.personalities import get_personality_prompt
 from langchain import PromptTemplate
 from pathlib import Path
@@ -25,6 +26,11 @@ def generate_files_context(files):
     files_context = "Here are the relevant files we are working with in this session:\n"
     for file_name in files:
         contents = Path(file_name).read_text()
+        token_length = get_token_length(contents)
+        if token_length > 2_000:
+            logger.warning(f"File {file_name} is large, using {token_length} tokens")
+        else:
+            logger.debug(f"File {file_name} is {token_length} tokens")
         files_context += f"--- START OF FILE: {file_name} ---\n"
         files_context += contents
         files_context += f"\n--- END OF FILE: {file_name} ---\n\n"

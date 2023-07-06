@@ -1,5 +1,5 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context, logger
+from aicodebot.helpers import exec_and_get_output, get_llm_model, get_token_length, git_diff_context, logger
 from aicodebot.prompts import generate_files_context, generate_sidekick_prompt
 from dotenv import load_dotenv
 from langchain.callbacks.base import BaseCallbackHandler
@@ -120,6 +120,10 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     # Check the size of the diff context and adjust accordingly
     request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     model = get_llm_model(request_token_size)
+    if model is None:
+        raise click.ClickException(
+            f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
+        )
 
     # Set up the language model
     llm = ChatOpenAI(model=model, temperature=PRECISE_TEMPERATURE, max_tokens=DEFAULT_MAX_TOKENS, verbose=verbose)
@@ -181,7 +185,10 @@ def debug(command, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    model = get_llm_model(get_token_length(error_output) + get_token_length(prompt.template))
+    request_token_size = get_token_length(error_output) + get_token_length(prompt.template)
+    model = get_llm_model(request_token_size)
+    if model is None:
+        raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
@@ -250,7 +257,8 @@ def review(commit, verbose):
     response_token_size = DEFAULT_MAX_TOKENS
     request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     model = get_llm_model(request_token_size)
-    logger.info(f"Diff context token size: {request_token_size}, using model: {model}")
+    if model is None:
+        raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
@@ -291,7 +299,12 @@ def sidekick(request, verbose, files):
 
     # Generate the prompt and set up the model
     prompt = generate_sidekick_prompt(request, files)
-    model = get_llm_model(get_token_length(prompt.template) + get_token_length(context))
+    request_token_size = get_token_length(prompt.template) + get_token_length(context)
+    model = get_llm_model(request_token_size)
+    if model is None:
+        raise click.ClickException(
+            f"The file context you supplied is too large ({request_token_size} tokens). 😢 Try again with less files."
+        )
 
     llm = ChatOpenAI(
         model=model,
@@ -398,41 +411,6 @@ def setup_environment():
     raise click.ClickException(
         "🛑 Please set an API key in the OPENAI_API_KEY environment variable or in a .aicodebot file."
     )
-
-
-def get_llm_model(token_size=0):
-    # https://platform.openai.com/docs/models/gpt-3-5
-    # We want to use GPT-4, if it is available for this OPENAI_API_KEY, otherwise GPT-3.5
-    # We also want to use the largest model that supports the token size we need
-    model_options = {
-        "gpt-4": 8192,
-        "gpt-4-32k": 32768,
-        "gpt-3.5-turbo": 4096,
-        "gpt-3.5-turbo-16k": 16384,
-    }
-    gpt_4_supported = os.getenv("GPT_4_SUPPORTED") == "true"
-
-    # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
-    token_size = int(token_size * 1.1)
-
-    if gpt_4_supported:
-        if token_size <= model_options["gpt-4"]:
-            logger.info(f"Using GPT-4 for token size {token_size}")
-            return "gpt-4"
-        elif token_size <= model_options["gpt-4-32k"]:
-            logger.info(f"Using GPT-4-32k for token size {token_size}")
-            return "gpt-4-32k"
-        else:
-            raise click.ClickException("🛑 The context is too large to for the Model. 😞")
-    else:
-        if token_size <= model_options["gpt-3.5-turbo"]:  # noqa: PLR5501
-            logger.info(f"Using GPT-3.5-turbo for token size {token_size}")
-            return "gpt-3.5-turbo"
-        elif token_size <= model_options["gpt-3.5-turbo-16k"]:
-            logger.info(f"Using GPT-3.5-turbo-16k for token size {token_size}")
-            return "gpt-3.5-turbo-16k"
-        else:
-            raise click.ClickException("🛑 The context is too large to for the Model. 😞")
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):
