@@ -1,6 +1,7 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.helpers import (
     exec_and_get_output,
+    get_config_file,
     get_llm_model,
     get_token_length,
     git_diff_context,
@@ -26,7 +27,6 @@ DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0
 CREATIVE_TEMPERATURE = 0.7
 DEFAULT_SPINNER = "point"
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # ----------------------- Setup for rich console output ---------------------- #
 
@@ -295,23 +295,24 @@ def review(commit, verbose):
 
 @cli.command()
 @click.option("--openai-api-key", "-k", help="Your OpenAI API key")
-def setup(openai_api_key):
+@click.option("--gpt-4-supported", "-4", help="Whether you have access to GPT-4", is_flag=True)
+def setup(openai_api_key, gpt_4_supported):
     """Set up the configuration file with your OpenAI API key
     If the config file already exists, it will ask you if you want to remove it and recreate it.
     """
-    config_file = Path(read_config.CONFIG_FILE)
+    config_file = get_config_file()
     if config_file.exists():
         if not click.confirm(
             f"The config file already exists at {config_file}. Do you want to remove it and recreate it?"
         ):
             console.print("Setup cancelled. 🚫")
-            return
+            sys.exit(1)
 
         # Remove the existing config file
         config_file.unlink()
 
     # Call the setup_config function with the provided arguments
-    setup_config(openai_api_key)
+    setup_config(openai_api_key, gpt_4_supported)
 
 
 @cli.command
@@ -392,18 +393,21 @@ def sidekick(request, verbose, files):
 # ---------------------------------------------------------------------------- #
 
 
-def setup_config(openai_api_key=OPENAI_API_KEY):
+def setup_config(openai_api_key=None, gpt_4_supported=None):
     config = read_config()
+    openai.api_key = openai_api_key
     if config:
         openai.api_key = config["OPENAI_API_KEY"]
+        logger.success(f"Using OpenAI API key from {get_config_file()}")
         return config
-    elif openai_api_key:
-        openai.api_key = openai_api_key
+    elif os.getenv("OPENAI_API_KEY"):
+        logger.info("Using OPENAI_API_KEY environment variable")
+        openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    console.print(
-        f"[bold red]The config file does not exist.[/bold red]\n"
-        f"Let's set that up for you at {read_config.CONFIG_FILE}\n"
-    )
+    logger.info(f"openai.api_key {openai.api_key}")
+
+    config_file = get_config_file()
+    console.print(f"[bold red]The config file does not exist.[/bold red]\nLet's set that up for you at {config_file}\n")
 
     if not openai.api_key:
         openai_api_key_url = "https://platform.openai.com/account/api-keys"
@@ -417,30 +421,33 @@ def setup_config(openai_api_key=OPENAI_API_KEY):
 
         openai.api_key = click.prompt("Please enter your OpenAI API key")
 
+    logger.info(f"openai.api_key 2 {openai.api_key}")
     # Validate the API key and check if it supports GPT-4
-    try:
-        click.echo("Validating the API key, and checking if GPT-4 is supported...")
-        engines = engine.Engine.list()
-        logger.trace(f"Engines: {engines}")
-        gpt_4_supported = "gpt-4" in [engine.id for engine in engines.data]
-        if gpt_4_supported:
-            click.echo("✅ The API key is valid and supports GPT-4.")
-        else:
-            click.echo("✅ The API key is valid, but does not support GPT-4. GPT-3.5 will be used instead.")
-    except Exception as e:
-        raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
+    if gpt_4_supported is None:
+        try:
+            click.echo("Validating the API key, and checking if GPT-4 is supported...")
+            engines = engine.Engine.list()
+            logger.trace(f"Engines: {engines}")
+            gpt_4_supported = "gpt-4" in [engine.id for engine in engines.data]
+            if gpt_4_supported:
+                click.echo("✅ The API key is valid and supports GPT-4.")
+            else:
+                click.echo("✅ The API key is valid, but does not support GPT-4. GPT-3.5 will be used instead.")
+        except Exception as e:
+            raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
 
     config_data = {"config_version": 1, "OPENAI_API_KEY": openai.api_key, "gpt_4_supported": gpt_4_supported}
 
-    with Path.open(read_config.CONFIG_FILE, "w") as f:
+    logger.info(f"openai.api_key 3 {openai.api_key}")
+
+    with Path.open(config_file, "w") as f:
         yaml.dump(config_data, f)
 
     console.print(
-        f"[bold green]Created {read_config.CONFIG_FILE} with your OpenAI API key.[/bold green] "
+        f"[bold green]Created {config_file} with your OpenAI API key.[/bold green] "
         "Now, please re-run aicodebot and let's get started!"
     )
     sys.exit(0)
-    return config_data
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):

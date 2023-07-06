@@ -124,14 +124,22 @@ def exec_and_get_output(command):
     return result.stdout
 
 
+def get_config_file():
+    if "AICODEBOT_CONFIG_FILE" in os.environ:
+        config_file = Path(os.getenv("AICODEBOT_CONFIG_FILE"))
+    else:
+        config_file = Path(Path.home() / ".aicodebot.yaml")
+    logger.debug(f"Using config file {config_file}")
+    return config_file
+
+
 def read_config():
-    if read_config.CONFIG_FILE.exists():
-        logger.debug(f"Config file {read_config.CONFIG_FILE} exists")
-        with Path(read_config.CONFIG_FILE).open("r") as f:
+    """Read the config file and return its contents as a dictionary."""
+    config_file = get_config_file()
+    if config_file.exists():
+        logger.debug(f"Config file {config_file} exists")
+        with Path(config_file).open("r") as f:
             return yaml.safe_load(f)
     else:
-        logger.debug(f"Config file {read_config.CONFIG_FILE} does not exist")
+        logger.debug(f"Config file {config_file} does not exist")
         return None
-
-
-read_config.CONFIG_FILE = Path(Path.home() / ".aicodebot.yaml")
