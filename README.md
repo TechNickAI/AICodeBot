@@ -20,7 +20,7 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 
 ## Current features - how you can use it today
 
-### AI Sidekick
+### AI Sidekick 🦸‍♂️
 
  `aicodebot sidekick` Your AI-powered coding assistant. It's designed to help you with your coding tasks by providing context-aware suggestions and solutions. Think ChatGPT with the ability to read local files for context.
 
@@ -35,18 +35,20 @@ In this example, the sidekick will read in the contents of file1.py and file2.py
 * Fix an issue that I'm having... (paste the error, stack trace, etc.)
 * Write unit tests for the xyz function.
 
+Pro-tip: add your README.md to the list of files to get context-aware answers.
+
 This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingeseting repo specific domain knowledge, writing local files, and more.
 
-### AI-Assisted Git Commit
+### AI-Assisted Git Commit 📝
 
 `aicodebot commit` improves the git commit process. It will run pre-commit for you to check syntax, and then generate a commit message for you based on the changes you've made. In about as much effort as typing "fix bug" for the commit message, you will get a high quality commit message that thoroughly describes the change.
 
-### AI-Assisted Code Review
+### AI-Assisted Code Review 👀
 
 `aicodebot review` will run a code review on your code and suggest improvements. By default it will look at [un]staged changes, and you can also supply a specific commit hash to review.
 It's goal is to suggest how to make the code better, and we've found that it often teaches us new things about our code and makes us better programmers. It's not perfect, but it's a great way to get a second set of robot eyes on your code.
 
-### AI-Assisted Debugging
+### AI-Assisted Debugging 🐞
 
 `aicodebot debug $command` will run the command and capture the log output. It will pass the error message, stack trace, command output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to Stack Overflow in a separate window, allowing you to stay in terminal with all the context.
 
@@ -88,7 +90,7 @@ Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot wil
 
 Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
-## Roadmap of Upcoming Features
+## Roadmap of Upcoming Features ️
 
 ### Code Workflow Improvements
 
