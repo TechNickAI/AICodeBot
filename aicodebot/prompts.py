@@ -54,11 +54,12 @@ PERSONALITIES = {
 
 def get_personality_prompt():
     """Generates a prompt for the sidekick personality."""
+    default_personality = "HER"
     if os.getenv("AICODEBOT_PERSONALITY"):
         personality = os.getenv("AICODEBOT_PERSONALITY")
     else:
         config = read_config()
-        personality = config["personality"]
+        personality = config.get("personality", default_personality)
 
     if personality not in PERSONALITIES:
         raise ValueError(f"Personality {personality} not found")

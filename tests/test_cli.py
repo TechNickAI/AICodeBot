@@ -63,7 +63,9 @@ def test_setup(cli_runner, tmp_path, monkeypatch):
     config_data = read_config()
 
     # Check if the config file contains the correct data
-    assert config_data == {"config_version": 1, "OPENAI_API_KEY": "fake_api_key", "gpt_4_supported": True}
+    assert config_data["OPENAI_API_KEY"] == "fake_api_key"
+    assert config_data["gpt_4_supported"] is True
+    assert config_data["personality"] == "HER"
 
     # Run the setup command again, should fail because the config file already exists
     result = cli_runner.invoke(cli, ["setup", "--openai-api-key", "fake_api_key", "--gpt-4-supported"])
@@ -94,4 +96,6 @@ def test_setup_with_openai_key(cli_runner, tmp_path, monkeypatch):
     config_data = read_config()
 
     # Check if the config file contains the correct data
-    assert config_data == {"config_version": 1, "OPENAI_API_KEY": "fake_api_key2", "gpt_4_supported": False}
+    assert config_data["OPENAI_API_KEY"] == "fake_api_key2"
+    assert config_data["gpt_4_supported"] is False
+    assert config_data["personality"] == "HER"

@@ -8,7 +8,7 @@ from aicodebot.helpers import (
     logger,
     read_config,
 )
-from aicodebot.prompts import PERSONALITIES, generate_files_context, get_prompt
+from aicodebot.prompts import generate_files_context, get_prompt, PERSONALITIES
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -440,7 +440,9 @@ def setup_config(openai_api_key=None, gpt_4_supported=None):
     console.print(personality_choices)
 
     personality = click.prompt(
-        "Please choose a personality", type=click.Choice(PERSONALITIES.keys(), case_sensitive=False)
+        "Please choose a personality",
+        type=click.Choice(PERSONALITIES.keys(), case_sensitive=False),
+        default=list(PERSONALITIES.keys())[0],
     )
 
     config_data = {
