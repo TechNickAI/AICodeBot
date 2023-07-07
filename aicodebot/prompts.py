@@ -59,7 +59,7 @@ def get_personality_prompt():
         personality = os.getenv("AICODEBOT_PERSONALITY")
     else:
         config = read_config()
-        personality = config.get("personality", default_personality)
+        personality = (config or {}).get("personality", default_personality)
 
     if personality not in PERSONALITIES:
         raise ValueError(f"Personality {personality} not found")
