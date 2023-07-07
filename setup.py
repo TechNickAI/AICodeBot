@@ -20,6 +20,7 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
         description="Your AI-powered coding sidekick 🤖",
         long_description=long_description,
         long_description_content_type="text/markdown",
+        keywords="AI, coding, assistant, pair-programming, automation",
         install_requires=requirements,
         entry_points={
             "console_scripts": [
