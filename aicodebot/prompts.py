@@ -1,6 +1,7 @@
-from aicodebot.helpers import get_token_length, logger
+from aicodebot.helpers import get_token_length, logger, read_config
 from langchain import PromptTemplate
 from pathlib import Path
+from types import SimpleNamespace
 import os
 
 # ---------------------------------------------------------------------------- #
@@ -42,23 +43,28 @@ potential. You're not afraid to speak in riddles or metaphors. You don't use emo
 Speak like Morpheus.
 """
 
+PERSONALITIES = {
+    "HER": SimpleNamespace(name="Her", prompt=HER, description="The AI character from the movie Her"),
+    "JULES": SimpleNamespace(name="Jules", prompt=JULES, description="Samuel L. Jackson's character from Pulp Fiction"),
+    "SHERLOCK": SimpleNamespace(name="Sherlock", prompt=SHERLOCK, description="Sherlock Holmes"),
+    "THE_DUDE": SimpleNamespace(name="The Dude", prompt=THE_DUDE, description="The Dude from The Big Lebowski"),
+    "MORPHEUS": SimpleNamespace(name="Morpheus", prompt=MORPHEUS, description="Morpheus from The Matrix"),
+}
+
 
 def get_personality_prompt():
     """Generates a prompt for the sidekick personality."""
-    personality_map = {
-        "HER": HER,
-        "JULES": JULES,
-        "SHERLOCK": SHERLOCK,
-        "THE_DUDE": THE_DUDE,
-        "MORPHEUS": MORPHEUS,
-    }
+    if os.getenv("AICODEBOT_PERSONALITY"):
+        personality = os.getenv("AICODEBOT_PERSONALITY")
+    else:
+        config = read_config()
+        personality = config["personality"]
 
-    personality = os.getenv("AICODEBOT_PERSONALITY", "HER")
-    try:
-        logger.debug(f"Using personality {personality}")
-        return personality_map[personality]
-    except KeyError as e:
-        raise ValueError(f"Personality {personality} not found") from e
+    if personality not in PERSONALITIES:
+        raise ValueError(f"Personality {personality} not found")
+
+    logger.debug(f"Using personality {personality}")
+    return PERSONALITIES[personality].prompt
 
 
 # ---------------------------------------------------------------------------- #

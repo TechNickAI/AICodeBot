@@ -8,7 +8,7 @@ from aicodebot.helpers import (
     logger,
     read_config,
 )
-from aicodebot.prompts import generate_files_context, get_prompt
+from aicodebot.prompts import PERSONALITIES, generate_files_context, get_prompt
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -404,8 +404,6 @@ def setup_config(openai_api_key=None, gpt_4_supported=None):
         logger.info("Using OPENAI_API_KEY environment variable")
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
-    logger.info(f"openai.api_key {openai.api_key}")
-
     config_file = get_config_file()
     console.print(f"[bold red]The config file does not exist.[/bold red]\nLet's set that up for you at {config_file}\n")
 
@@ -421,7 +419,6 @@ def setup_config(openai_api_key=None, gpt_4_supported=None):
 
         openai.api_key = click.prompt("Please enter your OpenAI API key")
 
-    logger.info(f"openai.api_key 2 {openai.api_key}")
     # Validate the API key and check if it supports GPT-4
     if gpt_4_supported is None:
         try:
@@ -436,9 +433,22 @@ def setup_config(openai_api_key=None, gpt_4_supported=None):
         except Exception as e:
             raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
 
-    config_data = {"config_version": 1, "OPENAI_API_KEY": openai.api_key, "gpt_4_supported": gpt_4_supported}
+    # Pull the choices from the name from each of the PERSONALITIES
+    personality_choices = "\nHow would you like your AI to act? You can choose from the following personalities:\n"
+    for key, personality in PERSONALITIES.items():
+        personality_choices += f"\t{key} - {personality.description}\n"
+    console.print(personality_choices)
 
-    logger.info(f"openai.api_key 3 {openai.api_key}")
+    personality = click.prompt(
+        "Please choose a personality", type=click.Choice(PERSONALITIES.keys(), case_sensitive=False)
+    )
+
+    config_data = {
+        "config_version": 1,
+        "OPENAI_API_KEY": openai.api_key,
+        "gpt_4_supported": gpt_4_supported,
+        "personality": personality,
+    }
 
     with Path.open(config_file, "w") as f:
         yaml.dump(config_data, f)
