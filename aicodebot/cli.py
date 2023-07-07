@@ -8,7 +8,7 @@ from aicodebot.helpers import (
     logger,
     read_config,
 )
-from aicodebot.prompts import generate_files_context, get_prompt, PERSONALITIES
+from aicodebot.prompts import PERSONALITIES, generate_files_context, get_prompt
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -24,7 +24,7 @@ import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowse
 # ----------------------------- Default settings ----------------------------- #
 
 DEFAULT_MAX_TOKENS = 512
-PRECISE_TEMPERATURE = 0
+PRECISE_TEMPERATURE = 0.1
 CREATIVE_TEMPERATURE = 0.7
 DEFAULT_SPINNER = "point"
 
@@ -224,7 +224,8 @@ def debug(command, verbose):
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-def fun_fact(verbose):
+@click.option("-t", "--response-token-size", type=int, default=350)
+def fun_fact(verbose, response_token_size):
     """Get a fun fact about programming and artificial intelligence."""
     config = setup_config()
 
@@ -239,7 +240,7 @@ def fun_fact(verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=PRECISE_TEMPERATURE,
-            max_tokens=DEFAULT_MAX_TOKENS / 2,
+            max_tokens=response_token_size,
             openai_api_key=config["OPENAI_API_KEY"],
             verbose=verbose,
             streaming=True,
@@ -318,8 +319,9 @@ def setup(openai_api_key, gpt_4_supported):
 @cli.command
 @click.option("--request", "-r", help="What to ask your sidekick to do")
 @click.option("-v", "--verbose", count=True)
+@click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 2)
 @click.argument("files", nargs=-1)
-def sidekick(request, verbose, files):
+def sidekick(request, verbose, response_token_size, files):
     """
     EXPERIMENTAL: Coding help from your AI sidekick\n
     FILES: List of files to be used as context for the session
@@ -349,7 +351,7 @@ def sidekick(request, verbose, files):
         model=model,
         openai_api_key=config["OPENAI_API_KEY"],
         temperature=PRECISE_TEMPERATURE,
-        max_tokens=DEFAULT_MAX_TOKENS * 2,
+        max_tokens=response_token_size,
         verbose=verbose,
         streaming=True,
     )
@@ -366,7 +368,6 @@ def sidekick(request, verbose, files):
     while True:  # continuous loop for multiple questions
         if request:
             human_input = request
-            request = None  # clear the command line request once we've handled it
         else:
             human_input = click.prompt(
                 f"Enter a question OR (q) quit, OR (e) to edit using {editor}\n>>>",
@@ -386,6 +387,10 @@ def sidekick(request, verbose, files):
             callback.buffer = []
             llm.callbacks = [callback]
             chain.run({"task": human_input, "context": context})
+
+        if request:
+            # If we were given a request, then we only want to run once
+            break
 
 
 # ---------------------------------------------------------------------------- #

@@ -13,13 +13,13 @@ def test_version(cli_runner):
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
 def test_fun_fact(cli_runner):
-    result = cli_runner.invoke(cli, ["fun-fact"])
+    result = cli_runner.invoke(cli, ["fun-fact", "-t", "50"])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
 def test_alignment(cli_runner):
-    result = cli_runner.invoke(cli, ["alignment", "-t", "100"])
+    result = cli_runner.invoke(cli, ["alignment", "-t", "50"])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
@@ -35,6 +35,19 @@ def test_debug_failure(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "ls", "-9"])
     assert result.exit_code > 0, f"Output: {result.output}"
     assert "ls -9" in result.output
+
+
+@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+def test_sidekick(cli_runner):
+    # Define a mock request and file context
+    mock_request = "What is 3 + 2? Just give me the answer, nothing else. Use a number, not text"
+    mock_files = [".gitignore"]
+
+    # Invoke the sidekick command
+    result = cli_runner.invoke(cli, ["sidekick", "-t", "100", "--request", mock_request] + mock_files)
+
+    assert result.exit_code == 0, f"Output: {result.output}"
+    assert "5" in result.output
 
 
 def test_setup(cli_runner, tmp_path, monkeypatch):

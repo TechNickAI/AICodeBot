@@ -182,9 +182,7 @@ DEBUG_TEMPLATE = (
     {command_output}
     END OUTPUT
 
-    Help me understand what happened and how might I be able to fix it
-
-    Respond in markdown format.
+    Help me understand what happened and how might I be able to fix it.  Respond in markdown format.
 """
 )
 
