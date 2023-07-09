@@ -1,4 +1,4 @@
-from aicodebot.helpers import get_token_length, logger, read_config
+from aicodebot.helpers import generate_directory_structure, get_token_length, logger, read_config
 from langchain import PromptTemplate
 from pathlib import Path
 from types import SimpleNamespace
@@ -92,8 +92,18 @@ AICodeBot:
 
 
 def generate_files_context(files):
-    """Generate the files context for the sidekick prompt."""
-    files_context = "Here are the relevant files we are working with in this session:\n"
+    """Generate the files context for the sidekick prompt.
+
+    This includes a directory structure and the contents of $files
+
+    """
+    files_context = "\nHere is the directory structure we are working with in this session:\n"
+    files_context += generate_directory_structure(".", ignore_patterns=[".git"], use_gitignore=True)
+
+    if not files:
+        return files_context
+
+    files_context += "Here are the relevant files we are working with in this session:\n"
     for file_name in files:
         contents = Path(file_name).read_text()
         token_length = get_token_length(contents)
