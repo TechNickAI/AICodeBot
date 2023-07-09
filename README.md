@@ -6,7 +6,7 @@ AICodeBot is a coding assistant designed to make your coding life easier. Think 
 
 We've planned to build out multiple different interfaces for interacting with AICodeBot. To start, it's a [command-line tool](https://pypi.org/project/aicodebot/). In the future, we plan to integrate it with GitHub Actions, Slack, and other tools to make it even more useful.
 
-Status: This project is in its early stages with limited features, but it already improves the software development workflow, and has a healthy roadmap of features (below).
+Status: This project is in its early stages, but it already improves the software development workflow, and has a healthy roadmap of features (below).
 
 We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more.
 
@@ -24,6 +24,8 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 
  `aicodebot sidekick` Your AI-powered coding assistant. It's designed to help you with your coding tasks by providing context-aware suggestions and solutions. Think ChatGPT with the ability to read local files for context.
 
+ By default it will pass along a directory of files from the current working directory, and you can also pass in a list of files to use as context. For example:
+
  ```bash
  aicodebot sidekick file1.py file2.py
  ```
@@ -37,7 +39,7 @@ In this example, the sidekick will read in the contents of file1.py and file2.py
 
 Pro-tip: add your README.md to the list of files to get context-aware answers.
 
-This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingeseting repo specific domain knowledge, writing local files, and more.
+This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingesting repo specific domain knowledge, writing local files, and more. For now, it just *reads* files and provides suggestions.
 
 ### AI-Assisted Git Commit 📝
 
@@ -115,7 +117,7 @@ Note: We'll be adding more options for AI models in the future, including those 
 * [ ] **Jupyter Notebook Extension**: Provides a Jupyter Notebook extension that can be used to debug code in the notebook.
 * [ ] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
 * [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
-* [ ] **Bug Report service integrations**: Listen for bug reports from Sentry, Honeybadger, and other bug reporting tools and automatically create issues, assign them to developers, and notify them via Slack. Eventually: FIX the bug automatically and notify the team.
+* [ ] **Bug Report service integrations**: Listen for bug reports from Sentry, [Honeybadger](http://honeybadger.io), and other bug reporting tools and automatically create issues, assign them to developers, and notify them via Slack. Eventually: FIX the bug automatically and notify the team.
 
 ### Repository / Project Management
 
