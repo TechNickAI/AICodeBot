@@ -39,7 +39,7 @@ In this example, the sidekick will read in the contents of file1.py and file2.py
 
 Pro-tip: add your README.md to the list of files to get context-aware answers.
 
-This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingesting repo specific domain knowledge, writing local files, and more. For now, it just *reads* files and provides suggestions.
+This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingesting repository specific domain knowledge, writing local files, and more. For now, it just *reads* files and provides suggestions.
 
 ### AI-Assisted Git Commit 📝
 
