@@ -1,6 +1,44 @@
-from aicodebot.helpers import exec_and_get_output, get_token_length, git_diff_context
-from pathlib import Path
+from aicodebot.helpers import exec_and_get_output, generate_directory_structure, get_token_length, git_diff_context
+from tests.conftest import create_and_write_file
 import os, pytest
+
+
+def test_generate_directory_structure(tmp_path):
+    # Create a file, a hidden file, another file, a .gitignore file, and a subdirectory in the temporary directory
+    create_and_write_file(tmp_path / "file.txt", "This is a test file")
+    create_and_write_file(tmp_path / ".hidden_file", "This is a hidden test file")
+    create_and_write_file(tmp_path / "test_file", "This is another test file")
+    create_and_write_file(tmp_path / ".gitignore", "*.txt\n")
+    sub_dir = tmp_path / "sub_dir"
+    sub_dir.mkdir()
+    create_and_write_file(sub_dir / "sub_file", "This is a test file in a subdirectory")
+    create_and_write_file(sub_dir / ".gitignore", "sub_file")
+
+    # Call the function with the temporary directory and an ignore pattern
+    directory_structure = generate_directory_structure(tmp_path, ignore_patterns=["*.txt"])
+
+    # Check that the returned string is not empty
+    assert directory_structure
+
+    # Check that the returned string contains the name of the created subdirectory
+    assert "- [Directory] sub_dir" in directory_structure
+
+    # Check that the returned string does not contain the names of the ignored files
+    assert "- [File] file.txt" not in directory_structure
+
+    # Check that the returned string contains the name of the hidden file and the other file
+    assert "- [File] .hidden_file" in directory_structure
+    assert "- [File] test_file" in directory_structure
+
+    # Check that the function respects .gitignore
+    directory_structure_gitignore = generate_directory_structure(tmp_path)
+    assert "- [File] file.txt" not in directory_structure_gitignore
+    assert "- [File] sub_file" not in directory_structure_gitignore
+
+    # Check that the function works correctly when use_gitignore is False
+    directory_structure_no_gitignore = generate_directory_structure(tmp_path, use_gitignore=False)
+    assert "- [File] file.txt" in directory_structure_no_gitignore
+    assert "- [File] sub_file" in directory_structure_no_gitignore
 
 
 def test_get_token_length():
@@ -9,11 +47,6 @@ def test_get_token_length():
 
     text = "Code with heart, align AI with humanity. ❤️🤖"
     assert get_token_length(text) == 14
-
-
-def create_and_write_file(filename, text):
-    with Path(filename).open("w") as f:
-        f.write(text)
 
 
 def test_git_diff_context(temp_git_repo):

@@ -10,6 +10,11 @@ def cli_runner():
     return CliRunner()
 
 
+def create_and_write_file(filename, text):
+    with Path(filename).open("w") as f:
+        f.write(text)
+
+
 @pytest.fixture
 def temp_git_repo(tmp_path):
     # Create a temporary git repository that can be used for testing

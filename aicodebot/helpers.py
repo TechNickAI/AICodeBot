@@ -1,6 +1,6 @@
 from loguru import logger
 from pathlib import Path
-import os, subprocess, sys, tiktoken, yaml
+import fnmatch, os, subprocess, sys, tiktoken, yaml
 
 # ---------------------------------------------------------------------------- #
 #                    Global logging configuration for loguru                   #
@@ -18,6 +18,31 @@ logger = logger.opt(colors=True)
 # ---------------------------------------------------------------------------- #
 #                                Misc functions                                #
 # ---------------------------------------------------------------------------- #
+
+
+def generate_directory_structure(path, ignore_patterns=None, use_gitignore=True, indent=0):
+    """Generate a text representation of the directory structure of a path."""
+    ignore_patterns = ignore_patterns.copy() if ignore_patterns else []
+
+    base_path = Path(path)
+
+    if use_gitignore:
+        # Note: .gitignore files can exist in sub directories as well, such as * in __pycache__ directories
+        gitignore_file = base_path / ".gitignore"
+        if gitignore_file.exists():
+            with gitignore_file.open() as f:
+                ignore_patterns.extend(line.strip() for line in f if line.strip() and not line.startswith("#"))
+
+    structure = ""
+    if base_path.is_dir():
+        if not any(fnmatch.fnmatch(base_path.name, pattern) for pattern in ignore_patterns):
+            structure += "  " * indent + f"- [Directory] {base_path.name}\n"
+            for item in base_path.iterdir():
+                structure += generate_directory_structure(item, ignore_patterns, use_gitignore, indent + 1)
+    elif not any(fnmatch.fnmatch(base_path.name, pattern) for pattern in ignore_patterns):
+        structure += "  " * indent + f"- [File] {base_path.name}\n"
+
+    return structure
 
 
 def get_llm_model(token_size=0):

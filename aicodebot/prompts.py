@@ -112,9 +112,7 @@ def generate_files_context(files):
 # ---------------------------------------------------------------------------- #
 
 ALIGNMENT_TEMPLATE = (
-    """
-    You're an advocate for aligned AI.
-    """
+    """You're an advocate for aligned AI."""
     + get_personality_prompt()
     + """
     You don't subscribe to the idea that AI is a black box or follow the
