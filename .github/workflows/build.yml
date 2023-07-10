@@ -38,6 +38,9 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements/requirements-test.txt
 
+      - name: Run configure to create the config file
+        run: python -m aicodebot.cli configure
+
       - name: Run the tests with coverage
         run: pytest --cov=./ --cov-report=xml
 

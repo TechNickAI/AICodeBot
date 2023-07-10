@@ -50,45 +50,9 @@ def test_sidekick(cli_runner):
     assert "5" in result.output
 
 
-def test_setup(cli_runner, tmp_path, monkeypatch):
-    # Unset the environment variable for the OpenAI API key
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    assert not os.getenv("OPENAI_API_KEY")
-
-    temp_config_file = Path(tmp_path / ".aicodebot.test.yaml")
-    # set AICODEBOT_CONFIG_FILE to the temp config file
-    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(temp_config_file))
-
-    assert os.getenv("AICODEBOT_CONFIG_FILE") == str(temp_config_file)
-
-    assert read_config() is None
-
-    # Run the setup command
-    result = cli_runner.invoke(cli, ["setup", "--openai-api-key", "fake_api_key", "--gpt-4-supported"])
-
-    # Check if the command was successful
-    assert result.exit_code == 0, f"Output: {result.output}"
-
-    # Check if the config file was created
-    assert Path(temp_config_file).exists()
-
-    # Load the config file
-    config_data = read_config()
-
-    # Check if the config file contains the correct data
-    assert config_data["OPENAI_API_KEY"] == "fake_api_key"
-    assert config_data["gpt_4_supported"] is True
-    assert config_data["personality"] == "HER"
-
-    # Run the setup command again, should fail because the config file already exists
-    result = cli_runner.invoke(cli, ["setup", "--openai-api-key", "fake_api_key", "--gpt-4-supported"])
-    assert result.exit_code == 1, f"Output: {result.output}"
-    assert "Setup cancelled" in result.output
-
-
-def test_setup_with_openai_key(cli_runner, tmp_path, monkeypatch):
-    monkeypatch.setenv("OPENAI_API_KEY", "fake_api_key2")
-    assert os.getenv("OPENAI_API_KEY") == "fake_api_key2"
+@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+def test_configure(cli_runner, tmp_path, monkeypatch):
+    key = os.getenv("OPENAI_API_KEY")
 
     temp_config_file = Path(tmp_path / ".aicodebot.test.yaml")
     # set AICODEBOT_CONFIG_FILE to the temp config file
@@ -96,19 +60,33 @@ def test_setup_with_openai_key(cli_runner, tmp_path, monkeypatch):
 
     assert read_config() is None
 
-    # Run the setup command
-    result = cli_runner.invoke(cli, ["setup"])
+    # Run the setup command, should work with the env var set
+    result = cli_runner.invoke(cli, ["configure"])
 
     # Check if the command was successful
     assert result.exit_code == 0, f"Output: {result.output}"
-
     # Check if the config file was created
     assert Path(temp_config_file).exists()
 
     # Load the config file
     config_data = read_config()
-
     # Check if the config file contains the correct data
-    assert config_data["OPENAI_API_KEY"] == "fake_api_key2"
-    assert config_data["gpt_4_supported"] is False
-    assert config_data["personality"] == "HER"
+    assert config_data["openai_api_key"] == key
+    assert config_data["personality"] == "Her"
+
+    # Remove the config file
+    Path.unlink(temp_config_file)
+    assert read_config() is None
+
+    # Now unset the env var and run the command again with it passed as a flag
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    assert os.getenv("OPENAI_API_KEY") == ""
+
+    result = cli_runner.invoke(cli, ["configure", "--openai-api-key", key])
+    assert result.exit_code == 0, f"Output: {result.output}"
+
+    # Load the config file
+    config_data = read_config()
+    # Check if the config file contains the correct data
+    assert config_data["openai_api_key"] == key
+    assert config_data["personality"] == "Her"

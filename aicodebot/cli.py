@@ -8,7 +8,7 @@ from aicodebot.helpers import (
     logger,
     read_config,
 )
-from aicodebot.prompts import PERSONALITIES, generate_files_context, get_prompt
+from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -73,7 +73,7 @@ def alignment(response_token_size, verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=CREATIVE_TEMPERATURE,
-            openai_api_key=config["OPENAI_API_KEY"],
+            openai_api_key=config["openai_api_key"],
             max_tokens=response_token_size,
             verbose=verbose,
             streaming=True,
@@ -136,7 +136,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     # Set up the language model
     llm = ChatOpenAI(
         model=model,
-        openai_api_key=config["OPENAI_API_KEY"],
+        openai_api_key=config["openai_api_key"],
         temperature=PRECISE_TEMPERATURE,
         max_tokens=DEFAULT_MAX_TOKENS,
         verbose=verbose,
@@ -166,6 +166,99 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
 
     # Delete the temporary file
     Path.unlink(temp_file_name)
+
+
+@cli.command()
+@click.option("-v", "--verbose", count=True)
+@click.option("--openai-api-key", envvar="OPENAI_API_KEY", help="Your OpenAI API key")
+def configure(verbose, openai_api_key):
+    """Create or update the config file"""
+
+    # --------------- Check for an existing key or set up defaults --------------- #
+
+    config_data_defaults = {
+        "version": 1.1,
+        "openai_api_key": openai_api_key,
+        "personality": DEFAULT_PERSONALITY.name,
+    }
+
+    config_data = config_data_defaults.copy()
+    config_file = get_config_file()
+
+    existing_config = read_config()
+    if existing_config:
+        console.print(f"Config file already exists at {get_config_file()}.")
+        click.confirm("Do you want to rerun configure and overwrite it?", default=False, abort=True)
+        config_data.update(
+            {"openai_api_key": existing_config["openai_api_key"], "personality": existing_config["personality"]}
+        )
+
+    config_data = config_data_defaults.copy()
+
+    def write_config_file(config_data):
+        with Path.open(config_file, "w") as f:
+            yaml.dump(config_data, f)
+            console.print(f"✅ Created config file at {config_file}")
+
+    is_terminal = sys.stdout.isatty()
+    if not is_terminal:
+        if config_data["openai_api_key"] is None:
+            raise click.ClickException(
+                "🛑 No OpenAI API key found.\n"
+                "Please set the OPENAI_API_KEY environment variable or call configure with --openai-api-key set."
+            )
+        else:
+            # If we are not in a terminal, then we can't ask for input, so just use the defaults and write the file
+            write_config_file(config_data)
+            return
+
+    # ---------------- Collect the OPENAI_API_KEY and validate it ---------------- #
+
+    if config_data["openai_api_key"] is None:
+        console.print(
+            "An OpenAI API key is required to use AICodeBot. You can get one for free on the OpenAI website.\n"
+        )
+        openai_api_key_url = "https://platform.openai.com/account/api-keys"
+        if click.confirm("Open the OpenAI API keys page for you in a browser?", default=False):
+            webbrowser.open(openai_api_key_url)
+
+        config_data["openai_api_key"] = click.prompt(
+            "Please enter your OpenAI API key", default=config_data["openai_api_key"]
+        )
+
+    # Validate the API key
+    try:
+        openai.api_key = config_data["openai_api_key"]
+        click.echo("Validating the OpenAI API key")
+        engine.Engine.list()
+    except Exception as e:
+        raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
+    click.echo("✅ The API key is valid.")
+
+    # ---------------------- Collect the personality choice ---------------------- #
+
+    # Pull the choices from the name from each of the PERSONALITIES
+    personality_choices = "\nHow would you like your AI to act? You can choose from the following personalities:\n"
+    for key, personality in PERSONALITIES.items():
+        personality_choices += f"\t{key} - {personality.description}\n"
+    console.print(personality_choices)
+
+    config_data["personality"] = click.prompt(
+        "Please choose a personality",
+        type=click.Choice(PERSONALITIES.keys(), case_sensitive=False),
+        default=DEFAULT_PERSONALITY.name,
+    )
+
+    write_config_file(config_data)
+    console.print("✅ Configuration complete, you're ready to run aicodebot!\n")
+
+    # After writing the config file, print the usage for the top-level group
+    ctx = click.get_current_context()
+    while ctx.parent is not None:
+        ctx = ctx.parent
+    console.print(ctx.get_help())
+
+    console.print("\nDon't know where to start? Try running `aicodebot alignment`.")
 
 
 @cli.command(context_settings={"ignore_unknown_options": True})
@@ -208,7 +301,7 @@ def debug(command, verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=PRECISE_TEMPERATURE,
-            openai_api_key=config["OPENAI_API_KEY"],
+            openai_api_key=config["openai_api_key"],
             max_tokens=DEFAULT_MAX_TOKENS,
             verbose=verbose,
             streaming=True,
@@ -241,7 +334,7 @@ def fun_fact(verbose, response_token_size):
             model=model,
             temperature=PRECISE_TEMPERATURE,
             max_tokens=response_token_size,
-            openai_api_key=config["OPENAI_API_KEY"],
+            openai_api_key=config["openai_api_key"],
             verbose=verbose,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live)],
@@ -271,7 +364,7 @@ def review(commit, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
-    response_token_size = DEFAULT_MAX_TOKENS
+    response_token_size = DEFAULT_MAX_TOKENS * 2
     request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
     model = get_llm_model(request_token_size)
     if model is None:
@@ -281,7 +374,7 @@ def review(commit, verbose):
         llm = ChatOpenAI(
             model=model,
             temperature=PRECISE_TEMPERATURE,
-            openai_api_key=config["OPENAI_API_KEY"],
+            openai_api_key=config["openai_api_key"],
             max_tokens=response_token_size,
             verbose=verbose,
             streaming=True,
@@ -292,28 +385,6 @@ def review(commit, verbose):
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
         chain.run(diff_context)
-
-
-@cli.command()
-@click.option("--openai-api-key", "-k", help="Your OpenAI API key")
-@click.option("--gpt-4-supported", "-4", help="Whether you have access to GPT-4", is_flag=True)
-def setup(openai_api_key, gpt_4_supported):
-    """Set up the configuration file with your OpenAI API key
-    If the config file already exists, it will ask you if you want to remove it and recreate it.
-    """
-    config_file = get_config_file()
-    if config_file.exists():
-        if not click.confirm(
-            f"The config file already exists at {config_file}. Do you want to remove it and recreate it?"
-        ):
-            console.print("Setup cancelled. 🚫")
-            sys.exit(1)
-
-        # Remove the existing config file
-        config_file.unlink()
-
-    # Call the setup_config function with the provided arguments
-    setup_config(openai_api_key, gpt_4_supported)
 
 
 @cli.command
@@ -349,7 +420,7 @@ def sidekick(request, verbose, response_token_size, files):
 
     llm = ChatOpenAI(
         model=model,
-        openai_api_key=config["OPENAI_API_KEY"],
+        openai_api_key=config["openai_api_key"],
         temperature=PRECISE_TEMPERATURE,
         max_tokens=response_token_size,
         verbose=verbose,
@@ -398,73 +469,14 @@ def sidekick(request, verbose, response_token_size, files):
 # ---------------------------------------------------------------------------- #
 
 
-def setup_config(openai_api_key=None, gpt_4_supported=None):
-    config = read_config()
-    openai.api_key = openai_api_key
-    if config:
-        openai.api_key = config["OPENAI_API_KEY"]
-        logger.success(f"Using OpenAI API key from {get_config_file()}")
-        return config
-    elif os.getenv("OPENAI_API_KEY"):
-        logger.info("Using OPENAI_API_KEY environment variable")
-        openai.api_key = os.getenv("OPENAI_API_KEY")
-
-    config_file = get_config_file()
-    console.print(f"[bold red]The config file does not exist.[/bold red]\nLet's set that up for you at {config_file}\n")
-
-    if not openai.api_key:
-        openai_api_key_url = "https://platform.openai.com/account/api-keys"
-
-        console.print(
-            "First, an OpenAI API key is required to use AICodeBot. You can get one for free on the OpenAI website.\n"
-        )
-
-        if click.confirm("Open the OpenAI API keys page for you in a browser?"):
-            webbrowser.open(openai_api_key_url)
-
-        openai.api_key = click.prompt("Please enter your OpenAI API key")
-
-    # Validate the API key and check if it supports GPT-4
-    if gpt_4_supported is None:
-        try:
-            click.echo("Validating the API key, and checking if GPT-4 is supported...")
-            engines = engine.Engine.list()
-            logger.trace(f"Engines: {engines}")
-            gpt_4_supported = "gpt-4" in [engine.id for engine in engines.data]
-            if gpt_4_supported:
-                click.echo("✅ The API key is valid and supports GPT-4.")
-            else:
-                click.echo("✅ The API key is valid, but does not support GPT-4. GPT-3.5 will be used instead.")
-        except Exception as e:
-            raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
-
-    # Pull the choices from the name from each of the PERSONALITIES
-    personality_choices = "\nHow would you like your AI to act? You can choose from the following personalities:\n"
-    for key, personality in PERSONALITIES.items():
-        personality_choices += f"\t{key} - {personality.description}\n"
-    console.print(personality_choices)
-
-    personality = click.prompt(
-        "Please choose a personality",
-        type=click.Choice(PERSONALITIES.keys(), case_sensitive=False),
-        default=list(PERSONALITIES.keys())[0],
-    )
-
-    config_data = {
-        "config_version": 1,
-        "OPENAI_API_KEY": openai.api_key,
-        "gpt_4_supported": gpt_4_supported,
-        "personality": personality,
-    }
-
-    with Path.open(config_file, "w") as f:
-        yaml.dump(config_data, f)
-
-    console.print(
-        f"[bold green]Created {config_file} with your OpenAI API key.[/bold green] "
-        "Now, please re-run aicodebot and let's get started!"
-    )
-    sys.exit(0)
+def setup_config():
+    existing_config = read_config()
+    if not existing_config:
+        console.print("No config file found. Running configure...\n")
+        configure.callback(openai_api_key=None, verbose=0)
+        sys.exit()
+    else:
+        return existing_config
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):
