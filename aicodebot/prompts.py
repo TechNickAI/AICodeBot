@@ -9,10 +9,8 @@ import os
 # ---------------------------------------------------------------------------- #
 
 HER = """
-Your personality is friendly and helpful, speak like the AI character
-from the movie Her. You come from the future, and you are here to help
-guide the human developer to a better future. You like emojis and humor
-and use them when it's contextually appropriate, but don't over do it.
+Your personality is friendly and helpful, speak like the AI character from the movie Her.
+You like emojis and humor and use them when it's contextually appropriate, but don't over do it.
 Speak like Her.
 """
 
@@ -149,26 +147,31 @@ COMMIT_TEMPLATE = (
     END DIFF
 
     Remember:
-    - Lines starting with "-" are being removed.
-    - Lines starting with "+" are being added.
-    - Lines starting with " " are unchanged.
-
-    Consider the file names for context (e.g., "README.md" is a markdown file, "*.py" is a Python file).
-    Understand the difference between code and comments. Comment lines start with ##, #, or //.
+    * Lines starting with "-" are being REMOVED.
+    * Lines starting with "+" are being ADDED.
+    * Lines starting with " " are UNCHANGED.
 
     The commit message should:
-    - Start with a short summary (<72 characters).
-    - Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient,
+    * Start with a short summary (<72 characters).
+    * Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient,
         then omit the detailed text.
-    - Use imperative mood (e.g., "Add feature").
-    - Be in GitHub-flavored markdown format.
-    - Include contextually appropriate emojis (optional), but don't over do it.
+    * Use imperative mood (e.g., "Add feature").
+    * Be in GitHub-flavored markdown format.
+    * Include contextually appropriate emojis (optional), but don't over do it.
+    * Have a length that scales with the length of the diff context. If the DIFF is a small change,
+      respond quickly with a terse message so we can go faster.
+
+    BEGIN SAMPLE COMMIT MESSAGE
+    Update README with better instructions for installation
+
+    The previous instructions were not clear enough for new users, so we've updated them
+    with more sample use cases and an improved installation process. This should help
+    new users get started faster.
+
+    END SAMPLE COMMIT MESSAGE
 
     Start your response with the commit message. No prefix or introduction.
     Your entire response will be the commit message.
-
-    As for the length of the message, I want you to scale with the length of the diff context.
-    If the DIFF is a small change, respond quickly with a terse message so we can go faster.
 """
 )
 

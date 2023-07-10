@@ -151,7 +151,11 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
-        temp.write(str(response).strip())
+        # For some reason the response often contains quotes around the summary, even if I tell it not to
+        # So we strip them here
+        commit_message = str(response).replace('"', "").strip()
+
+        temp.write(commit_message)
         temp_file_name = temp.name
 
     # Open the temporary file in the user's editor
