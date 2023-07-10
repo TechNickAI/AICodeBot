@@ -1,6 +1,7 @@
 from loguru import logger
+from openai.api_resources import engine
 from pathlib import Path
-import fnmatch, os, subprocess, sys, tiktoken, yaml
+import fnmatch, openai, os, subprocess, sys, tiktoken, yaml
 
 # ---------------------------------------------------------------------------- #
 #                    Global logging configuration for loguru                   #
@@ -46,41 +47,40 @@ def generate_directory_structure(path, ignore_patterns=None, use_gitignore=True,
 
 
 def get_llm_model(token_size=0):
-    # https://platform.openai.com/docs/models/gpt-3-5
-    # We want to use GPT-4, if it is available for this OPENAI_API_KEY, otherwise GPT-3.5
-    # We also want to use the largest model that supports the token size we need
     model_options = {
         "gpt-4": 8192,
         "gpt-4-32k": 32768,
         "gpt-3.5-turbo": 4096,
         "gpt-3.5-turbo-16k": 16384,
     }
+
     config = read_config()
-    gpt_4_supported = config["gpt_4_supported"]
+    openai.api_key = config["openai_api_key"]
+    engines = engine.Engine.list()
+    logger.trace(f"Engines: {engines}")
 
     # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
     token_size = int(token_size * 1.1)
 
-    if gpt_4_supported:
-        if token_size <= model_options["gpt-4"]:
-            logger.info(f"Using GPT-4 for token size {token_size}")
-            return "gpt-4"
-        elif token_size <= model_options["gpt-4-32k"]:
-            logger.info(f"Using GPT-4-32k for token size {token_size}")
-            return "gpt-4-32k"
-        else:
-            logger.critical("🛑 The context is too large to for the Model. 😞")
-            return None
+    # Try to use GPT-4 if it is supported and the token size is small enough
+    if "gpt-4" in [engine.id for engine in engines.data] and token_size <= model_options["gpt-4"]:
+        logger.info(f"Using GPT-4 for token size {token_size}")
+        return "gpt-4"
+    elif "gpt-4-32k" in [engine.id for engine in engines.data] and token_size <= model_options["gpt-4-32k"]:
+        logger.info(f"Using GPT-4-32k for token size {token_size}")
+        return "gpt-4-32k"
+    elif token_size <= model_options["gpt-3.5-turbo"]:
+        logger.info(f"Using GPT-3.5-turbo for token size {token_size}")
+        return "gpt-3.5-turbo"
+    elif token_size <= model_options["gpt-3.5-turbo-16k"]:
+        logger.info(f"Using GPT-3.5-turbo-16k for token size {token_size}")
+        return "gpt-3.5-turbo-16k"
     else:
-        if token_size <= model_options["gpt-3.5-turbo"]:  # noqa: PLR5501
-            logger.info(f"Using GPT-3.5-turbo for token size {token_size}")
-            return "gpt-3.5-turbo"
-        elif token_size <= model_options["gpt-3.5-turbo-16k"]:
-            logger.info(f"Using GPT-3.5-turbo-16k for token size {token_size}")
-            return "gpt-3.5-turbo-16k"
-        else:
-            logger.critical("🛑 The context is too large to for the Model. 😞")
-            return None
+        logger.critical(
+            f"🛑 The context is too large ({token_size})"
+            "for the any of the models supported by your Open AI API key. 😞"
+        )
+        return None
 
 
 def get_token_length(text, model="gpt-3.5-turbo"):
