@@ -20,6 +20,22 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 
 ## Current features - how you can use it today
 
+| Task | Status |
+| --- | --- |
+| Generating quality commit messages | ✅ |
+| Thinking through tasks as a pair programmer | ✅ |
+| Suggestions for simple changes | ✅ |
+| Debugging | ✅ |
+| Doing code reviews | ✅ |
+| Explaining code | ✅ |
+| Writing tests | ✅ |
+| Modifying local files | Not yet, but soon! |
+| Searching the internet for answers | Not yet, but soon! |
+| Reading library documentation | Not yet, but soon! |
+| Writing senior developer level code | Not for a long time |
+| Major refactors | Not for a long time |
+| Build an app for me | Nope |
+
 ### AI Sidekick 🦸‍♂️
 
  `aicodebot sidekick` Your AI-powered coding assistant. It's designed to help you with your coding tasks by providing context-aware suggestions and solutions. Think ChatGPT with the ability to read local files for context.
@@ -30,12 +46,7 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
  aicodebot sidekick file1.py file2.py
  ```
 
-In this example, the sidekick will read in the contents of file1.py and file2.py and use them to provide context-aware answers. For example:
-
-* How can I make this code better?
-* Tell me how to add a new feature to this code.
-* Fix an issue that I'm having... (paste the error, stack trace, etc.)
-* Write unit tests for the xyz function.
+In this example, the sidekick will read in the contents of file1.py and file2.py and use them to provide context-aware answers.
 
 Pro-tip: add your README.md to the list of files to get context-aware answers.
 
@@ -62,7 +73,7 @@ To install AICodeBot, run:
 
 `pip install aicodebot`
 
-And then run `aicodebot --help` to get started.
+And then run `aicodebot configure` to get started.
 
 ```bash
 Usage: aicodebot [OPTIONS] COMMAND [ARGS]...
@@ -74,19 +85,19 @@ Options:
 Commands:
   alignment  Get a message about Heart-Centered AI Alignment ❤ + 🤖.
   commit     Generate a commit message based on your changes.
+  configure  Create or update the config file
   debug      Run a command and debug the output.
   fun-fact   Get a fun fact about programming and artificial intelligence.
-  review     Do a code review, with [un]staged changes, or a specified...
-  sidekick   EXPERIMENTAL: Coding help from your AI sidekick
-  ```
+  review     Do a code review, with [un]staged changes, or a spe
+```
 
 ### Open AI key setup
 
 The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI's large language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys").
 
-#### Which Language Model? GPT-3.5 vs GPT-4
+Note: You will be billed by OpenAI based on how much you use it. Typical developers will use less than $10/month - which if you are a professional developer you'll likely more than make up for with saved time and higher quality work. See [OpenAI's pricing page](https://openai.com/pricing/) for more details.
 
-When using AICodeBot, you have the option to use either GPT-3.5 or GPT-4. While GPT-4 can often provide more accurate and detailed responses, GPT-3.5 is faster and might be sufficient for simpler tasks. We highly recommend GPT-4.
+#### Which Language Model? GPT-3.5 vs GPT-4
 
 Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4 if your OpenAI account supports it, we will check the first time you run it. Tip: If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api)
 
