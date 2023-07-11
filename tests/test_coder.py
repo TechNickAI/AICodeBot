@@ -54,12 +54,12 @@ def test_git_diff_context(temp_git_repo):
 
     # Test empty repo (no commits, no staged files, no unstaged changes)
     diff = Coder.git_diff_context()
-    assert diff == ""
+    assert not diff
 
     # Add a new file but don't stage it
     create_and_write_file("newfile.txt", "This is a new file.")
     diff = Coder.git_diff_context()
-    assert diff == "", "New file should not be included in diff until it is staged"
+    assert not diff, "New file should not be included in diff until it is staged"
 
     # Stage the new file
     temp_git_repo.git.add("newfile.txt")
@@ -70,7 +70,7 @@ def test_git_diff_context(temp_git_repo):
     # Commit the new file
     temp_git_repo.git.commit("-m", "Add newfile.txt")
     diff = Coder.git_diff_context()
-    assert diff == ""
+    assert not diff
 
     # Test diff for a specific commit
     commit = temp_git_repo.head.commit.hexsha
@@ -92,7 +92,7 @@ def test_git_diff_context(temp_git_repo):
     # Commit the modified file
     temp_git_repo.git.commit("-m", "Modify newfile.txt")
     diff = Coder.git_diff_context()
-    assert diff == ""
+    assert not diff
 
     # Rename the file but don't stage it
     temp_git_repo.git.mv("newfile.txt", "renamedfile.txt")
@@ -107,7 +107,7 @@ def test_git_diff_context(temp_git_repo):
     # Commit the renamed file
     temp_git_repo.git.commit("-m", "Rename newfile.txt to renamedfile.txt")
     diff = Coder.git_diff_context()
-    assert diff == ""
+    assert not diff
 
     # Test diff for a specific commit
     commit = temp_git_repo.head.commit.hexsha
