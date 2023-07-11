@@ -1,6 +1,7 @@
 from aicodebot import version as aicodebot_version
+from aicodebot.coder import Coder
 from aicodebot.config import get_config_file, read_config
-from aicodebot.helpers import exec_and_get_output, get_llm_model, get_token_length, git_diff_context, logger
+from aicodebot.helpers import exec_and_get_output, logger
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
@@ -60,11 +61,11 @@ def alignment(response_token_size, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    model = get_llm_model(get_token_length(prompt.template))
+    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template))
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
-            model=model,
+            model=model_name,
             temperature=CREATIVE_TEMPERATURE,
             openai_api_key=config["openai_api_key"],
             max_tokens=response_token_size,
@@ -112,23 +113,23 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
         # The list of files to be committed is the same as the list of staged files
         files = staged_files
 
-    diff_context = git_diff_context()
+    diff_context = Coder.git_diff_context()
 
     if not diff_context:
         console.print("No changes to commit. 🤷")
         sys.exit(0)
 
     # Check the size of the diff context and adjust accordingly
-    request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
-    model = get_llm_model(request_token_size)
-    if model is None:
+    request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
+    model_name = Coder.get_llm_model_name(request_token_size)
+    if model_name is None:
         raise click.ClickException(
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
         )
 
     # Set up the language model
     llm = ChatOpenAI(
-        model=model,
+        model=model_name,
         openai_api_key=config["openai_api_key"],
         temperature=PRECISE_TEMPERATURE,
         max_tokens=DEFAULT_MAX_TOKENS,
@@ -289,14 +290,14 @@ def debug(command, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    request_token_size = get_token_length(error_output) + get_token_length(prompt.template)
-    model = get_llm_model(request_token_size)
-    if model is None:
+    request_token_size = Coder.get_token_length(error_output) + Coder.get_token_length(prompt.template)
+    model_name = Coder.get_llm_model_name(request_token_size)
+    if model_name is None:
         raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
-            model=model,
+            model=model_name,
             temperature=PRECISE_TEMPERATURE,
             openai_api_key=config["openai_api_key"],
             max_tokens=DEFAULT_MAX_TOKENS,
@@ -324,11 +325,11 @@ def fun_fact(verbose, response_token_size):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    model = get_llm_model(get_token_length(prompt.template))
+    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template))
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
-            model=model,
+            model=model_name,
             temperature=PRECISE_TEMPERATURE,
             max_tokens=response_token_size,
             openai_api_key=config["openai_api_key"],
@@ -351,7 +352,7 @@ def review(commit, verbose):
     """Do a code review, with [un]staged changes, or a specified commit."""
     config = setup_config()
 
-    diff_context = git_diff_context(commit)
+    diff_context = Coder.git_diff_context(commit)
     if not diff_context:
         console.print("No changes detected for review. 🤷")
         sys.exit(0)
@@ -362,14 +363,14 @@ def review(commit, verbose):
 
     # Check the size of the diff context and adjust accordingly
     response_token_size = DEFAULT_MAX_TOKENS * 2
-    request_token_size = get_token_length(diff_context) + get_token_length(prompt.template)
-    model = get_llm_model(request_token_size)
-    if model is None:
+    request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
+    model_name = Coder.get_llm_model_name(request_token_size)
+    if model_name is None:
         raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = ChatOpenAI(
-            model=model,
+            model=model_name,
             temperature=PRECISE_TEMPERATURE,
             openai_api_key=config["openai_api_key"],
             max_tokens=response_token_size,
@@ -408,15 +409,15 @@ def sidekick(request, verbose, response_token_size, files):
 
     # Generate the prompt and set up the model
     prompt = get_prompt("sidekick")
-    request_token_size = get_token_length(prompt.template) + get_token_length(context)
-    model = get_llm_model(request_token_size)
-    if model is None:
+    request_token_size = Coder.get_token_length(prompt.template) + Coder.get_token_length(context)
+    model_name = Coder.get_llm_model_name(request_token_size)
+    if model_name is None:
         raise click.ClickException(
             f"The file context you supplied is too large ({request_token_size} tokens). 😢 Try again with less files."
         )
 
     llm = ChatOpenAI(
-        model=model,
+        model=model_name,
         openai_api_key=config["openai_api_key"],
         temperature=PRECISE_TEMPERATURE,
         max_tokens=response_token_size,

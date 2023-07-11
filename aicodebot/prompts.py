@@ -1,4 +1,6 @@
-from aicodebot.helpers import generate_directory_structure, get_token_length, logger, read_config
+from aicodebot.coder import Coder
+from aicodebot.config import read_config
+from aicodebot.helpers import logger
 from langchain import PromptTemplate
 from pathlib import Path
 from types import SimpleNamespace
@@ -132,7 +134,7 @@ def generate_files_context(files):
 
     """
     files_context = "\nHere is the directory structure we are working with in this session:\n"
-    files_context += generate_directory_structure(".", ignore_patterns=[".git"], use_gitignore=True)
+    files_context += Coder.generate_directory_structure(".", ignore_patterns=[".git"], use_gitignore=True)
 
     if not files:
         return files_context
@@ -140,7 +142,7 @@ def generate_files_context(files):
     files_context += "Here are the relevant files we are working with in this session:\n"
     for file_name in files:
         contents = Path(file_name).read_text()
-        token_length = get_token_length(contents)
+        token_length = Coder.get_token_length(contents)
         if token_length > 2_000:
             logger.warning(f"File {file_name} is large, using {token_length} tokens")
         else:

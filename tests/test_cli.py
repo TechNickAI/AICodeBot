@@ -1,6 +1,7 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.cli import cli
-from aicodebot.helpers import read_config
+from aicodebot.config import read_config
+from aicodebot.prompts import DEFAULT_PERSONALITY
 from pathlib import Path
 import os, pytest
 
@@ -90,4 +91,4 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     config_data = read_config()
     # Check if the config file contains the correct data
     assert config_data["openai_api_key"] == key
-    assert config_data["personality"] == "Her"
+    assert config_data["personality"] == DEFAULT_PERSONALITY.name
