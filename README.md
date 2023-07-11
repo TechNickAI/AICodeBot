@@ -24,17 +24,19 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 | --- | --- |
 | Generating quality commit messages | ✅ |
 | Thinking through tasks as a pair programmer | ✅ |
-| Suggestions for simple changes | ✅ |
+| Coding with a small number of files | ✅ |
 | Debugging | ✅ |
 | Doing code reviews | ✅ |
 | Explaining code | ✅ |
 | Writing tests | ✅ |
-| Modifying local files | Not yet, but soon! |
-| Searching the internet for answers | Not yet, but soon! |
-| Reading library documentation | Not yet, but soon! |
-| Writing senior developer level code | Not for a long time |
-| Major refactors | Not for a long time |
-| Build an app for me | Nope |
+| Modifying local files | In Progress |
+| Searching the internet for answers | In Progress |
+| Reading library documentation | In Progress |
+| Coding with a large number of files |  As LLMs improve |
+| Writing senior developer level code | Eventually |
+| Major refactors | Eventually |
+| Build an entire app | Nope |
+| Replace Developers | Nope |
 
 ### AI Sidekick 🦸‍♂️
 
