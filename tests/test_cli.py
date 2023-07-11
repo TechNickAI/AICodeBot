@@ -23,6 +23,7 @@ def test_alignment(cli_runner):
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
+@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
 def test_debug_success(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "echo", "Hello, world!"])
     assert result.exit_code == 0, f"Output: {result.output}"
