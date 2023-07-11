@@ -1,13 +1,6 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.helpers import (
-    exec_and_get_output,
-    get_config_file,
-    get_llm_model,
-    get_token_length,
-    git_diff_context,
-    logger,
-    read_config,
-)
+from aicodebot.config import get_config_file, read_config
+from aicodebot.helpers import exec_and_get_output, get_llm_model, get_token_length, git_diff_context, logger
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
