@@ -162,12 +162,29 @@ def generate_files_context(files):
         files_context += f"--- START OF FILE: {file_name} ---\n"
         files_context += contents
         files_context += f"\n--- END OF FILE: {file_name} ---\n\n"
+
     return files_context
 
 
 # ---------------------------------------------------------------------------- #
 #                                 Other prompts                                #
 # ---------------------------------------------------------------------------- #
+
+DIFF_CONTEXT_EXPLANATION = """
+The diff context is the output of the `git diff` command. It shows the changes that have been made.
+Lines starting with "-" are being removed. Lines starting with "+" are being added.
+Lines starting with space are unchanged. The file names are shown for context.
+
+Here's an example of a diff:
+
+BEGIN DIFF
+ A line of code that is unchanged, that is being passed for context
+ A second line of code that is unchanged, that is being passed for context
+-A line of code that is being removed
++A line of code that is being added
+END DIFF
+"""
+
 
 ALIGNMENT_TEMPLATE = (
     """You're an advocate for aligned AI."""
@@ -194,19 +211,17 @@ COMMIT_TEMPLATE = (
     + get_personality_prompt()
     + """
 
-    I need you to generate a commit message for a change in a git repository.
-    Here's the DIFF
+    I need you to generate a commit message for a change in a git repository."""
+    + DIFF_CONTEXT_EXPLANATION
+    + """
+
+    Here's the DIFF that will be committed:
 
     BEGIN DIFF
     {diff_context}
     END DIFF
 
-    Remember:
-    * Lines starting with "-" are being REMOVED.
-    * Lines starting with "+" are being ADDED.
-    * Lines starting with " " are UNCHANGED.
-
-    The commit message should:
+    Instructions for the commit message:
     * Start with a short summary (<72 characters).
     * Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient,
         then omit the detailed text.
@@ -222,7 +237,6 @@ COMMIT_TEMPLATE = (
     The previous instructions were not clear enough for new users, so we've updated them
     with more sample use cases and an improved installation process. This should help
     new users get started faster.
-
     END SAMPLE COMMIT MESSAGE
 
     Start your response with the commit message. No prefix or introduction.
@@ -266,32 +280,29 @@ REVIEW_TEMPLATE = (
     You know how to give constructive feedback.
     You know how to give feedback that is actionable, kind, and specific."""
     + get_personality_prompt()
+    + DIFF_CONTEXT_EXPLANATION
     + """
-
-    Here's the diff context:
+    Here's the DIFF that will be committed:
 
     BEGIN DIFF
     {diff_context}
     END DIFF
 
-    Remember:
-    * Lines starting with "-" are being removed.
-    * Lines starting with "+" are being added.
-    * Lines starting with " " are unchanged.
-    * Consider the file names for context (e.g., "README.md" is a markdown file, "*.py" is a Python file).
-    * Understand the difference between code and comments. Comment lines start with ##, #, or //.
+    Guildelines for the review:
     * Point out obvious spelling mistakes in plain text files if you see them, but don't check for spelling in code.
     * Do not talk about minor changes. It's better to be terse and focus on issues.
     * Do not talk about formatting, as that will be handled with pre-commit hooks.
 
-    The main focus is to tell the developer how to make the code better.
+    IMPORTANT: The main focus is to tell the developer how to make the code better.
+
+    In addition to review, also provide a review_status.
 
     The review_status can be one of the following:
     * "PASSED" (looks good to me) - there were no serious issues found,
     * "COMMENTS" - there were some issues found, but they should not block the build and are informational only
     * "FAILED" - there were serious, blocking issues found that should be fixed before merging the code
 
-    The review_message should be a markdown-formatted string for display with rich.Markdown or GitHub markdown.
+    The review message should be a markdown-formatted string for display with rich.Markdown or GitHub markdown.
 """
 )
 
