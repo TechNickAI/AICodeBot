@@ -203,29 +203,33 @@ def configure(verbose, openai_api_key):
 
     if config_data["openai_api_key"] is None:
         console.print(
-            "An OpenAI API key is required to use AICodeBot. You can get one for free on the OpenAI website.\n"
+            "You need an OpenAI API Key for AICodeBot. You can get one on the OpenAI website.",
+            style=bot_style,
         )
         openai_api_key_url = "https://platform.openai.com/account/api-keys"
-        if click.confirm("Open the OpenAI API keys page for you in a browser?", default=False):
+        if click.confirm("Open the api keys page in a browser?", default=False):
             webbrowser.open(openai_api_key_url)
 
-        config_data["openai_api_key"] = input_prompt("Please enter your OpenAI API key")
+        config_data["openai_api_key"] = click.prompt("Please enter your OpenAI API key").strip()
 
     # Validate the API key
     try:
         openai.api_key = config_data["openai_api_key"]
-        click.echo("Validating the OpenAI API key")
-        engine.Engine.list()
+        with console.status("Validating the OpenAI API key", spinner=DEFAULT_SPINNER):
+            engine.Engine.list()
     except Exception as e:
         raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
-    click.echo("✅ The API key is valid.")
+    console.print("✅ The API key is valid.")
 
     # ---------------------- Collect the personality choice ---------------------- #
 
     # Pull the choices from the name from each of the PERSONALITIES
-    personality_choices = "\nHow would you like your AI to act? You can choose from the following personalities:\n"
+    console.print(
+        "\nHow would you like your AI to act? You can choose from the following personalities:\n", style=bot_style
+    )
+    personality_choices = ""
     for key, personality in PERSONALITIES.items():
-        personality_choices += f"\t{key} - {personality.description}\n"
+        personality_choices += f"\t[b]{key}[/b] - {personality.description}\n"
     console.print(personality_choices)
 
     config_data["personality"] = click.prompt(
@@ -236,14 +240,6 @@ def configure(verbose, openai_api_key):
 
     write_config_file(config_data)
     console.print("✅ Configuration complete, you're ready to run aicodebot!\n")
-
-    # After writing the config file, print the usage for the top-level group
-    ctx = click.get_current_context()
-    while ctx.parent is not None:
-        ctx = ctx.parent
-    console.print(ctx.get_help())
-
-    console.print("\nDon't know where to start? Try running `aicodebot alignment`.")
 
 
 @cli.command(context_settings={"ignore_unknown_options": True})
@@ -375,10 +371,9 @@ def sidekick(request, verbose, response_token_size, files):
     EXPERIMENTAL: Coding help from your AI sidekick\n
     FILES: List of files to be used as context for the session
     """
-
-    console.print("This is an experimental feature. Play with it, but don't count on it.", style=warning_style)
-
     setup_config()
+
+    console.print("This is an experimental feature", style=warning_style)
 
     # Pull in context. Right now it's just the contents of files that we passed in.
     # Soon, we could add vector embeddings of:
@@ -441,7 +436,7 @@ def sidekick(request, verbose, response_token_size, files):
 def setup_config():
     existing_config = read_config()
     if not existing_config:
-        console.print("No config file found. Running configure...\n")
+        console.print("Welcome to AI Code Bot! 🤖. Let's set up your config file.\n", style=bot_style)
         configure.callback(openai_api_key=None, verbose=0)
         sys.exit()
     else:
