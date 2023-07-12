@@ -117,7 +117,9 @@ class Coder:
         if commit:
             # If a commit is provided, just get the diff for that commit
             logger.debug(f"Getting diff for commit {commit}")
-            return exec_and_get_output(["git", "show", commit])
+            show = exec_and_get_output(["git", "show", commit])
+            logger.debug(f"Diff for commit {commit}: {show}")
+            return show
         else:
             # Otherwise, get the diff for the staged files, or if there are none, the diff for the unstaged files
             staged_files = exec_and_get_output(["git", "diff", "--cached", "--name-only"]).splitlines()
