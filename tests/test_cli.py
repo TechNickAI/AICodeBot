@@ -22,6 +22,7 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     # set aicodebot_config_file to the temp config file
     monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(temp_config_file))
 
+    read_config.cache_clear()
     assert read_config() is None
 
     # run the setup command, should work with the env var set
@@ -33,6 +34,7 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     assert Path(temp_config_file).exists()
 
     # load the config file
+    read_config.cache_clear()
     config_data = read_config()
     # check if the config file contains the correct data
     assert config_data["openai_api_key"] == key
@@ -40,6 +42,7 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
 
     # remove the config file
     Path.unlink(temp_config_file)
+    read_config.cache_clear()
     assert read_config() is None
 
     # now unset the env var and run the command again with it passed as a flag
@@ -50,6 +53,7 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     assert result.exit_code == 0, f"output: {result.output}"
 
     # load the config file
+    read_config.cache_clear()
     config_data = read_config()
     # check if the config file contains the correct data
     assert config_data["openai_api_key"] == key
