@@ -405,6 +405,7 @@ def sidekick(request, verbose, response_token_size, files):
     history_file = Path.home() / ".aicodebot_request_history"
 
     while True:  # continuous loop for multiple questions
+        edited_input = None
         if request:
             human_input = request
         else:
@@ -414,10 +415,15 @@ def sidekick(request, verbose, response_token_size, files):
                 if human_input.lower() == "q":
                     break
                 elif human_input.lower() == "e":
-                    human_input = click.edit()
+                    human_input = edited_input = click.edit()
             elif human_input.lower()[-2:] == r"\e":
                 # If the text ends with \e then we want to edit it
-                human_input = click.edit(human_input[:-2])
+                human_input = edited_input = click.edit(human_input[:-2])
+
+            if edited_input:
+                # If the user edited the input, then we want to print it out so they
+                # have a record of what they asked for on their terminal
+                console.print(f"Request:\n{edited_input}")
 
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live, bot_style)
