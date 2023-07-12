@@ -5,7 +5,7 @@ from aicodebot.helpers import create_and_write_file
 from aicodebot.prompts import DEFAULT_PERSONALITY
 from git import Repo
 from pathlib import Path
-import os, pytest
+import json, os, pytest
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
@@ -109,11 +109,19 @@ def test_review(cli_runner, temp_git_repo):
         repo.git.add("test.txt")
 
         # Run the review command
-        result = cli_runner.invoke(cli, ["review"])
+        result = cli_runner.invoke(cli, ["review", "-t", "100"])
 
         # Check that the review command ran successfully
         assert result.exit_code == 0
         assert len(result.output) > 20
+
+        # Again with json output
+        result = cli_runner.invoke(cli, ["review", "-t", "100", "--output-format", "json"])
+
+        assert result.exit_code == 0
+        # Check if it's valid json
+        parsed = json.loads(result.output)
+        assert parsed["review_status"] == "PASSED"
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")

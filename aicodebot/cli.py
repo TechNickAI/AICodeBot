@@ -13,7 +13,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.style import Style
-import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowser, yaml
+import click, datetime, json, openai, os, random, subprocess, sys, tempfile, webbrowser, yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -327,7 +327,9 @@ def fun_fact(verbose, response_token_size):
 @cli.command
 @click.option("-c", "--commit", help="The commit hash to review (otherwise look at [un]staged changes).")
 @click.option("-v", "--verbose", count=True)
-def review(commit, verbose):
+@click.option("--output-format", default="text", type=click.Choice(["text", "json"], case_sensitive=False))
+@click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 2)
+def review(commit, verbose, output_format, response_token_size):
     """Do a code review, with [un]staged changes, or a specified commit."""
     setup_config()
 
@@ -337,7 +339,7 @@ def review(commit, verbose):
         sys.exit(0)
 
     # Load the prompt
-    prompt = get_prompt("review")
+    prompt = get_prompt("review", structured_output=output_format == "json")
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
@@ -347,19 +349,27 @@ def review(commit, verbose):
     if model_name is None:
         raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
-    with Live(Markdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
-            model_name,
-            verbose,
-            response_token_size=response_token_size,
-            streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
-        )
+    llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
+    chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-        # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+    if output_format == "json":
+        with console.status("Examining the diff and generating the review", spinner=DEFAULT_SPINNER):
+            response = chain.run(diff_context)
 
-        chain.run(diff_context)
+        parsed_response = prompt.output_parser.parse(response)
+        data = {"review_status": parsed_response.review_status, "review_comments": parsed_response.review_comments}
+        if commit:
+            data["commit"] = commit
+        json_response = json.dumps(data, indent=4)
+        print(json_response)  # noqa: T201
+
+    else:
+        # Stream live
+        with Live(Markdown(""), auto_refresh=True) as live:
+            llm.streaming = True
+            llm.callbacks = [RichLiveCallbackHandler(live, bot_style)]
+
+            chain.run(diff_context)
 
 
 @cli.command

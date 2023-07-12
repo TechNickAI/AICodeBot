@@ -2,7 +2,9 @@ from aicodebot.coder import Coder
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
 from langchain import PromptTemplate
+from langchain.output_parsers import PydanticOutputParser
 from pathlib import Path
+from pydantic import BaseModel, Field
 from types import SimpleNamespace
 import functools, os
 
@@ -266,9 +268,6 @@ REVIEW_TEMPLATE = (
     + get_personality_prompt()
     + """
 
-    DO NOT give comments that discuss formatting, as those will be handled with pre-commit hooks.
-    DO NOT respond with line numbers, use function names or file names instead.
-
     Here's the diff context:
 
     BEGIN DIFF
@@ -276,37 +275,66 @@ REVIEW_TEMPLATE = (
     END DIFF
 
     Remember:
-    - Lines starting with "-" are being removed.
-    - Lines starting with "+" are being added.
-    - Lines starting with " " are unchanged.
+    * Lines starting with "-" are being removed.
+    * Lines starting with "+" are being added.
+    * Lines starting with " " are unchanged.
+    * Consider the file names for context (e.g., "README.md" is a markdown file, "*.py" is a Python file).
+    * Understand the difference between code and comments. Comment lines start with ##, #, or //.
+    * Point out obvious spelling mistakes in plain text files if you see them, but don't check for spelling in code.
+    * Do not talk about minor changes. It's better to be terse and focus on issues.
+    * Do not talk about formatting, as that will be handled with pre-commit hooks.
 
-    Consider the file names for context (e.g., "README.md" is a markdown file, "*.py" is a Python file).
-    Understand the difference between code and comments. Comment lines start with ##, #, or //.
+    The main focus is to tell the developer how to make the code better.
 
-    The main focus is to tell me how I could make the code better.
+    The review_status can be one of the following:
+    * "PASSED" (looks good to me) - there were no serious issues found,
+    * "COMMENTS" - there were some issues found, but they should not block the build and are informational only
+    * "FAILED" - there were serious, blocking issues found that should be fixed before merging the code
 
-    Point out spelling mistakes in plain text files if you see them, but don't try to spell
-    function and variable names correctly.
-
-    If the changes look good overall and don't require any feedback, then just respond with "LGTM" (looks good to me).
-
-    Respond in markdown format.
+    The review_message should be a markdown-formatted string for display with rich.Markdown or GitHub markdown.
 """
 )
 
 
-def get_prompt(command):
+def get_prompt(command, structured_output=False):
     """Generates a prompt for the sidekick workflow."""
-    prompt_map = {
-        "alignment": PromptTemplate(template=ALIGNMENT_TEMPLATE, input_variables=[]),
-        "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context"]),
-        "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output"]),
-        "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
-        "review": PromptTemplate(template=REVIEW_TEMPLATE, input_variables=["diff_context"]),
-        "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"]),
-    }
 
-    try:
-        return prompt_map[command]
-    except KeyError as e:
-        raise ValueError(f"Unable to find prompt for command {command}") from e
+    if command == "review":
+        if structured_output:
+            parser = PydanticOutputParser(pydantic_object=ReviewResult)
+            return PromptTemplate(
+                template=REVIEW_TEMPLATE + "\n{format_instructions}",
+                input_variables=["diff_context"],
+                partial_variables={"format_instructions": parser.get_format_instructions()},
+                output_parser=parser,
+            )
+        else:
+            return PromptTemplate(
+                template=REVIEW_TEMPLATE + "\nRespond in markdown format", input_variables=["diff_context"]
+            )
+
+    else:
+        prompt_map = {
+            "alignment": PromptTemplate(template=ALIGNMENT_TEMPLATE, input_variables=[]),
+            "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context"]),
+            "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output"]),
+            "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
+            "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"]),
+        }
+
+        try:
+            return prompt_map[command]
+        except KeyError as e:
+            raise ValueError(f"Unable to find prompt for command {command}") from e
+
+
+# ---------------------------------------------------------------------------- #
+#                                Output Parsers                                #
+# ---------------------------------------------------------------------------- #
+
+
+class ReviewResult(BaseModel):
+    """Review result from the sidekick."""
+
+    review_status: str = Field(description="The status of the review: PASSED, COMMENTS, or FAILED")
+    review_comments: str = Field(description="The comments from the review")
