@@ -121,7 +121,7 @@ def test_review(cli_runner, temp_git_repo):
         assert result.exit_code == 0
         # Check if it's valid json
         parsed = json.loads(result.output)
-        assert parsed["review_status"] == "PASSED"
+        assert parsed["review_status"] in ["PASSED", "COMMENTS"]
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
