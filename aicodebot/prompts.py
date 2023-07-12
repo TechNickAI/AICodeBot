@@ -85,7 +85,7 @@ PERSONALITIES = {
     ),
     "Spock": SimpleNamespace(name="Spock", prompt=SPOCK, description="Dr. Spock from Star Trek"),
 }
-DEFAULT_PERSONALITY = PERSONALITIES["Einstein"]
+DEFAULT_PERSONALITY = PERSONALITIES["Spock"]
 
 
 def get_personality_prompt():
