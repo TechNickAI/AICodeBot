@@ -14,7 +14,7 @@ logger_format = (
     "<level>{time}</level> {message} | <level>{level}</level> "
     "<cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan>"
 )
-logger.add(sys.stderr, catch=True, format=logger_format, level=os.getenv("LOG_LEVEL", "WARNING"))
+logger.add(sys.stderr, catch=True, format=logger_format, level=os.getenv("LOG_LEVEL", "WARNING").upper())
 logger = logger.opt(colors=True)
 
 # ---------------------------------------------------------------------------- #
