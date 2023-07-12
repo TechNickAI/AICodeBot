@@ -1,0 +1,24 @@
+name: AICodeBot
+
+on: [push]
+
+jobs:
+  review:
+    name: AICodeBot Code Review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      LOG_LEVEL: DEBUG
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          # Full git history is needed to get a proper list of changed files
+          fetch-depth: 0
+
+      - name: AICodeBot Code Review
+        uses: gorillamania/AICodeBot-action@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
