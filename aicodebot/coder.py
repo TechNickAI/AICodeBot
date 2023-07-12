@@ -1,8 +1,13 @@
 from aicodebot.config import read_config
 from aicodebot.helpers import exec_and_get_output, logger
+from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
 import fnmatch, openai, tiktoken
+
+DEFAULT_MAX_TOKENS = 512
+PRECISE_TEMPERATURE = 0.1
+CREATIVE_TEMPERATURE = 0.7
 
 
 class Coder:
@@ -36,6 +41,28 @@ class Coder:
             structure += "  " * indent + f"- [File] {base_path.name}\n"
 
         return structure
+
+    @staticmethod
+    def get_llm(
+        model_name,
+        verbose=False,
+        response_token_size=DEFAULT_MAX_TOKENS,
+        temperature=PRECISE_TEMPERATURE,
+        live=None,
+        streaming=False,
+        callbacks=None,
+    ):
+        config = read_config()
+
+        return ChatOpenAI(
+            openai_api_key=config["openai_api_key"],
+            model=model_name,
+            max_tokens=response_token_size,
+            verbose=verbose,
+            temperature=temperature,
+            streaming=streaming,
+            callbacks=callbacks,
+        )
 
     @staticmethod
     def get_llm_model_name(token_size=0):

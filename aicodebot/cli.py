@@ -1,11 +1,9 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.coder import Coder
+from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
 from aicodebot.config import get_config_file, read_config
-from aicodebot.helpers import exec_and_get_output, logger
+from aicodebot.helpers import RichLiveCallbackHandler, exec_and_get_output, logger
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
-from langchain.callbacks.base import BaseCallbackHandler
 from langchain.chains import LLMChain
-from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationTokenBufferMemory
 from openai.api_resources import engine
 from pathlib import Path
@@ -17,9 +15,6 @@ import click, datetime, openai, os, random, subprocess, sys, tempfile, webbrowse
 
 # ----------------------------- Default settings ----------------------------- #
 
-DEFAULT_MAX_TOKENS = 512
-PRECISE_TEMPERATURE = 0.1
-CREATIVE_TEMPERATURE = 0.7
 DEFAULT_SPINNER = "point"
 
 # ----------------------- Setup for rich console output ---------------------- #
@@ -54,7 +49,7 @@ def cli():
 @click.option("-t", "--response-token-size", type=int, default=350)
 def alignment(response_token_size, verbose):
     """Get a message about Heart-Centered AI Alignment ❤ + 🤖."""
-    config = setup_config()
+    setup_config()
 
     # Load the prompt
     prompt = get_prompt("alignment")
@@ -64,14 +59,13 @@ def alignment(response_token_size, verbose):
     model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template))
 
     with Live(Markdown(""), auto_refresh=True) as live:
-        llm = ChatOpenAI(
-            model=model_name,
+        llm = Coder.get_llm(
+            model_name,
+            verbose,
+            response_token_size,
             temperature=CREATIVE_TEMPERATURE,
-            openai_api_key=config["openai_api_key"],
-            max_tokens=response_token_size,
-            verbose=verbose,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live)],
+            callbacks=[RichLiveCallbackHandler(live, bot_style)],
         )
 
         # Set up the chain
@@ -87,7 +81,7 @@ def alignment(response_token_size, verbose):
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
 def commit(verbose, response_token_size, yes, skip_pre_commit):
     """Generate a commit message based on your changes."""
-    config = setup_config()
+    setup_config()
 
     # Check if pre-commit is installed and .pre-commit-config.yaml exists
     if not skip_pre_commit and Path(".pre-commit-config.yaml").exists():
@@ -127,14 +121,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
         )
 
-    # Set up the language model
-    llm = ChatOpenAI(
-        model=model_name,
-        openai_api_key=config["openai_api_key"],
-        temperature=PRECISE_TEMPERATURE,
-        max_tokens=DEFAULT_MAX_TOKENS,
-        verbose=verbose,
-    )
+    llm = Coder.get_llm(model_name, verbose, 350)
 
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
@@ -264,7 +251,7 @@ def configure(verbose, openai_api_key):
 @click.option("-v", "--verbose", count=True)
 def debug(command, verbose):
     """Run a command and debug the output."""
-    config = setup_config()
+    setup_config()
 
     # Run the command and capture its output
     command_str = " ".join(command)
@@ -296,14 +283,11 @@ def debug(command, verbose):
         raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
 
     with Live(Markdown(""), auto_refresh=True) as live:
-        llm = ChatOpenAI(
-            model=model_name,
-            temperature=PRECISE_TEMPERATURE,
-            openai_api_key=config["openai_api_key"],
-            max_tokens=DEFAULT_MAX_TOKENS,
-            verbose=verbose,
+        llm = Coder.get_llm(
+            model_name,
+            verbose,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live)],
+            callbacks=[RichLiveCallbackHandler(live, bot_style)],
         )
 
         # Set up the chain
@@ -315,10 +299,10 @@ def debug(command, verbose):
 
 @cli.command()
 @click.option("-v", "--verbose", count=True)
-@click.option("-t", "--response-token-size", type=int, default=350)
+@click.option("-t", "--response-token-size", type=int, default=250)
 def fun_fact(verbose, response_token_size):
     """Get a fun fact about programming and artificial intelligence."""
-    config = setup_config()
+    setup_config()
 
     # Load the prompt
     prompt = get_prompt("fun_fact")
@@ -328,16 +312,14 @@ def fun_fact(verbose, response_token_size):
     model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template))
 
     with Live(Markdown(""), auto_refresh=True) as live:
-        llm = ChatOpenAI(
-            model=model_name,
-            temperature=PRECISE_TEMPERATURE,
-            max_tokens=response_token_size,
-            openai_api_key=config["openai_api_key"],
-            verbose=verbose,
+        llm = Coder.get_llm(
+            model_name,
+            verbose,
+            response_token_size=response_token_size,
+            temperature=CREATIVE_TEMPERATURE,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live)],
+            callbacks=[RichLiveCallbackHandler(live, bot_style)],
         )
-
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
@@ -350,7 +332,7 @@ def fun_fact(verbose, response_token_size):
 @click.option("-v", "--verbose", count=True)
 def review(commit, verbose):
     """Do a code review, with [un]staged changes, or a specified commit."""
-    config = setup_config()
+    setup_config()
 
     diff_context = Coder.git_diff_context(commit)
     if not diff_context:
@@ -369,14 +351,12 @@ def review(commit, verbose):
         raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
     with Live(Markdown(""), auto_refresh=True) as live:
-        llm = ChatOpenAI(
-            model=model_name,
-            temperature=PRECISE_TEMPERATURE,
-            openai_api_key=config["openai_api_key"],
-            max_tokens=response_token_size,
-            verbose=verbose,
+        llm = Coder.get_llm(
+            model_name,
+            verbose,
+            response_token_size=response_token_size,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live)],
+            callbacks=[RichLiveCallbackHandler(live, bot_style)],
         )
 
         # Set up the chain
@@ -398,7 +378,7 @@ def sidekick(request, verbose, response_token_size, files):
 
     console.print("This is an experimental feature. Play with it, but don't count on it.", style=warning_style)
 
-    config = setup_config()
+    setup_config()
 
     # Pull in context. Right now it's just the contents of files that we passed in.
     # Soon, we could add vector embeddings of:
@@ -416,14 +396,7 @@ def sidekick(request, verbose, response_token_size, files):
             f"The file context you supplied is too large ({request_token_size} tokens). 😢 Try again with less files."
         )
 
-    llm = ChatOpenAI(
-        model=model_name,
-        openai_api_key=config["openai_api_key"],
-        temperature=PRECISE_TEMPERATURE,
-        max_tokens=response_token_size,
-        verbose=verbose,
-        streaming=True,
-    )
+    llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
 
     # Open the temporary file in the user's editor
     editor = Path(os.getenv("EDITOR", "/usr/bin/vim")).name
@@ -452,9 +425,8 @@ def sidekick(request, verbose, response_token_size, files):
                 human_input = click.edit(human_input[:-2])
 
         with Live(Markdown(""), auto_refresh=True) as live:
-            callback = RichLiveCallbackHandler(live)
-            callback.buffer = []
-            llm.callbacks = [callback]
+            callback = RichLiveCallbackHandler(live, bot_style)
+            llm.callbacks = [callback]  # a fresh callback handler for each question
             chain.run({"task": human_input, "context": context})
 
         if request:
@@ -475,17 +447,6 @@ def setup_config():
         sys.exit()
     else:
         return existing_config
-
-
-class RichLiveCallbackHandler(BaseCallbackHandler):
-    buffer = []
-
-    def __init__(self, live):
-        self.live = live
-
-    def on_llm_new_token(self, token, **kwargs):
-        self.buffer.append(token)
-        self.live.update(Markdown("".join(self.buffer), style=bot_style))
 
 
 if __name__ == "__main__":
