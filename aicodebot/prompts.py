@@ -4,7 +4,7 @@ from aicodebot.helpers import logger
 from langchain import PromptTemplate
 from pathlib import Path
 from types import SimpleNamespace
-import os
+import functools, os
 
 # ---------------------------------------------------------------------------- #
 #                              Personality helpers                             #
@@ -97,6 +97,7 @@ PERSONALITIES = {
 DEFAULT_PERSONALITY = PERSONALITIES["Spock"]
 
 
+@functools.lru_cache
 def get_personality_prompt():
     """Generates a prompt for the sidekick personality."""
     default_personality = DEFAULT_PERSONALITY.name

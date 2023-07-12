@@ -1,8 +1,9 @@
 from aicodebot.helpers import logger
 from pathlib import Path
-import os, yaml
+import functools, os, yaml
 
 
+@functools.lru_cache
 def get_config_file():
     if "AICODEBOT_CONFIG_FILE" in os.environ:
         config_file = Path(os.getenv("AICODEBOT_CONFIG_FILE"))
@@ -12,6 +13,7 @@ def get_config_file():
     return config_file
 
 
+@functools.lru_cache
 def read_config():
     """Read the config file and return its contents as a dictionary."""
     config_file = get_config_file()
