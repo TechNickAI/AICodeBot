@@ -188,8 +188,9 @@ def configure(verbose, openai_api_key):
             console.print(f"✅ Created config file at {config_file}")
 
     is_terminal = sys.stdout.isatty()
+    openai_api_key = openai_api_key or config_data["openai_api_key"] or os.getenv("OPENAI_API_KEY")
     if not is_terminal:
-        if config_data["openai_api_key"] is None:
+        if openai_api_key is None:
             raise click.ClickException(
                 "🛑 No OpenAI API key found.\n"
                 "Please set the OPENAI_API_KEY environment variable or call configure with --openai-api-key set."
@@ -437,7 +438,7 @@ def setup_config():
     existing_config = read_config()
     if not existing_config:
         console.print("Welcome to AI Code Bot! 🤖. Let's set up your config file.\n", style=bot_style)
-        configure.callback(openai_api_key=None, verbose=0)
+        configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
         sys.exit()
     else:
         return existing_config
