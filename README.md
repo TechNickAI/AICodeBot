@@ -29,6 +29,7 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well constr
 | Doing code reviews | ✅ |
 | Explaining code | ✅ |
 | Writing tests | ✅ |
+| Integration with GitHub | ✅ |
 | Modifying local files | In Progress |
 | Searching the internet for answers | In Progress |
 | Reading library documentation | In Progress |
@@ -95,7 +96,7 @@ Commands:
 
 ### Open AI key setup
 
-The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI's large language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys").
+The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI's large language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys).
 
 Note: You will be billed by OpenAI based on how much you use it. Typical developers will use less than $10/month - which if you are a professional developer you'll likely more than make up for with saved time and higher quality work. See [OpenAI's pricing page](https://openai.com/pricing/) for more details.
 
@@ -104,6 +105,10 @@ Note: You will be billed by OpenAI based on how much you use it. Typical develop
 Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4 if your OpenAI account supports it, we will check the first time you run it. Tip: If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api)
 
 Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
+
+## Integration with GitHub via Github Actions
+
+You can have AICodeBot run as a GitHub action on your repository. See [The AICodeBot GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review), which will run a code review on every commit and pull request.
 
 ## Roadmap of Upcoming Features ️
 
@@ -126,7 +131,7 @@ Note: We'll be adding more options for AI models in the future, including those 
 
 * [X] **Command-line, installable via pip**: aicodebot can be installed as a Python package using `pip install aicodebot`
 * [ ] **Mention the @aicodebot GitHub user**: Mentioning the [@aicodebot](https://pypi.org/project/aicodebot/) GitHub user in a comment will trigger it to perform a task, review code, or pull in an appropriate GIF.
-* [ ] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories. [WIP](https://github.com/gorillamania/AICodeBot-action)
+* [X] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories. [AICodeBot Action](https://github.com/marketplace/actions/aicodebot-code-review)
 * [ ] **Jupyter Notebook Extension**: Provides a Jupyter Notebook extension that can be used to debug code in the notebook.
 * [ ] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
 * [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
