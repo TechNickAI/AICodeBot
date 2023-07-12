@@ -7,6 +7,8 @@ from langchain.chains import LLMChain
 from langchain.memory import ConversationTokenBufferMemory
 from openai.api_resources import engine
 from pathlib import Path
+from prompt_toolkit import prompt as input_prompt
+from prompt_toolkit.history import FileHistory
 from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
@@ -207,9 +209,7 @@ def configure(verbose, openai_api_key):
         if click.confirm("Open the OpenAI API keys page for you in a browser?", default=False):
             webbrowser.open(openai_api_key_url)
 
-        config_data["openai_api_key"] = click.prompt(
-            "Please enter your OpenAI API key", default=config_data["openai_api_key"]
-        )
+        config_data["openai_api_key"] = input_prompt("Please enter your OpenAI API key")
 
     # Validate the API key
     try:
@@ -406,15 +406,14 @@ def sidekick(request, verbose, response_token_size, files):
         memory_key="chat_history", input_key="task", llm=llm, max_token_limit=DEFAULT_MAX_TOKENS
     )
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
+    history_file = Path.home() / ".aicodebot_request_history"
 
     while True:  # continuous loop for multiple questions
         if request:
             human_input = request
         else:
-            human_input = click.prompt(
-                f"Enter a question OR (q) quit, OR (e) to edit using {editor}\n>>>",
-                prompt_suffix="",
-            )
+            console.print(f"Enter a request OR (q) quit, OR (e) to edit using {editor}")
+            human_input = input_prompt("➤ ", history=FileHistory(history_file))
             if len(human_input) == 1:
                 if human_input.lower() == "q":
                     break
