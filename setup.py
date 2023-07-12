@@ -17,7 +17,7 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
         version=version,
         url="https://github.com/gorillamania/AICodeBot",
         author="Nick Sullivan",
-        description="Your AI-powered coding sidekick 🤖",
+        description="AI-powered tool for developers, simplifying coding tasks and improving workflow efficiency.",
         long_description=long_description,
         long_description_content_type="text/markdown",
         keywords="AI, coding, assistant, pair-programming, automation",
