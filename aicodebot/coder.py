@@ -3,7 +3,7 @@ from aicodebot.helpers import exec_and_get_output, logger
 from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
-import fnmatch, openai, tiktoken
+import fnmatch, functools, openai, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
@@ -14,7 +14,6 @@ class Coder:
     """
     The Coder class encapsulates the functionality of interacting with LLMs,
     git, and the local file system.
-
     """
 
     @classmethod
@@ -41,6 +40,17 @@ class Coder:
             structure += "  " * indent + f"- [File] {base_path.name}\n"
 
         return structure
+
+    @staticmethod
+    @functools.lru_cache
+    def get_openai_supported_engines():
+        """Get a list of the models supported by the OpenAI API key."""
+        config = read_config()
+        openai.api_key = config["openai_api_key"]
+        engines = engine.Engine.list()
+        out = [engine.id for engine in engines.data]
+        logger.trace(f"OpenAI supported engines: {out}")
+        return out
 
     @staticmethod
     def get_llm(
@@ -73,18 +83,16 @@ class Coder:
             "gpt-3.5-turbo-16k": 16384,
         }
 
-        config = read_config()
-        openai.api_key = config["openai_api_key"]
-        engines = engine.Engine.list()
+        engines = Coder.get_openai_supported_engines()
 
         # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
         token_size = int(token_size * 1.1)
 
         # Try to use GPT-4 if it is supported and the token size is small enough
-        if "gpt-4" in [engine.id for engine in engines.data] and token_size <= model_options["gpt-4"]:
+        if "gpt-4" in engines and token_size <= model_options["gpt-4"]:
             logger.info(f"Using GPT-4 for token size {token_size}")
             return "gpt-4"
-        elif "gpt-4-32k" in [engine.id for engine in engines.data] and token_size <= model_options["gpt-4-32k"]:
+        elif "gpt-4-32k" in engines and token_size <= model_options["gpt-4-32k"]:
             logger.info(f"Using GPT-4-32k for token size {token_size}")
             return "gpt-4-32k"
         elif token_size <= model_options["gpt-3.5-turbo"]:
