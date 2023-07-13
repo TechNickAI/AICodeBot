@@ -13,7 +13,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.style import Style
-import click, datetime, json, openai, os, random, subprocess, sys, tempfile, webbrowser, yaml
+import click, datetime, json, langchain, openai, os, random, subprocess, sys, tempfile, webbrowser, yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -33,8 +33,9 @@ warning_style = Style(color="#FFA500")
 @click.group()
 @click.version_option(aicodebot_version, "--version", "-V")
 @click.help_option("--help", "-h")
-def cli():
-    pass
+@click.option("-d", "--debug", is_flag=True, help="Enable langchain debug output")
+def cli(debug):
+    langchain.debug = debug
 
 
 # ---------------------------------------------------------------------------- #
@@ -47,8 +48,8 @@ def cli():
 
 
 @cli.command()
-@click.option("-v", "--verbose", count=True)
 @click.option("-t", "--response-token-size", type=int, default=350)
+@click.option("-v", "--verbose", count=True)
 def alignment(response_token_size, verbose):
     """Get a message about Heart-Centered AI Alignment ❤ + 🤖."""
     setup_config()
@@ -439,7 +440,7 @@ def sidekick(request, verbose, response_token_size, files):
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live, bot_style)
             llm.callbacks = [callback]  # a fresh callback handler for each question
-            response = chain.run({"task": human_input, "context": context})
+            chain.run({"task": human_input, "context": context})
 
         if request:
             # If we were given a request, then we only want to run once
