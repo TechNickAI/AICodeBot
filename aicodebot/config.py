@@ -1,6 +1,6 @@
 from aicodebot.helpers import logger
 from pathlib import Path
-import functools, os, yaml
+import os, yaml
 
 
 def get_config_file():
