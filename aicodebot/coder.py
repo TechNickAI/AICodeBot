@@ -6,8 +6,8 @@ from pathlib import Path
 import fnmatch, openai, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
-PRECISE_TEMPERATURE = 0.1
-CREATIVE_TEMPERATURE = 0.7
+PRECISE_TEMPERATURE = 0.05
+CREATIVE_TEMPERATURE = 0.6
 
 
 class Coder:
