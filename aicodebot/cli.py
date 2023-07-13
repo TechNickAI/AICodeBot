@@ -420,6 +420,7 @@ def sidekick(request, verbose, response_token_size, files):
             human_input = request
         else:
             console.print(f"Enter a request OR (q) quit, OR (e) to edit using {editor}")
+
             human_input = input_prompt("➤ ", history=FileHistory(history_file))
             if len(human_input) == 1:
                 if human_input.lower() == "q":
@@ -438,7 +439,7 @@ def sidekick(request, verbose, response_token_size, files):
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live, bot_style)
             llm.callbacks = [callback]  # a fresh callback handler for each question
-            chain.run({"task": human_input, "context": context})
+            response = chain.run({"task": human_input, "context": context})
 
         if request:
             # If we were given a request, then we only want to run once
