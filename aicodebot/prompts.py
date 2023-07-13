@@ -275,20 +275,21 @@ Respond in markdown format.
 )
 
 REVIEW_TEMPLATE = (
-    """ You are an expert code reviewer, and I want you to review a change in a git repository.
-
-    You know how to give constructive feedback.
-    You know how to give feedback that is actionable, kind, and specific."""
+    """ You are an expert software code reviewer, versed in many programming languages,
+    especially Python. You follow software development best practices and you know how to
+    write clean, maintainable code. You are a champion for code quality.
+    You are terse and to the point. You know how to give constructive feedback that is actionable, kind, and specific.
+    """
     + get_personality_prompt()
     + DIFF_CONTEXT_EXPLANATION
     + """
-    Here's the DIFF that will be committed:
+    I want you to review a change in a git repository.  Here's the DIFF that will be committed:
 
     BEGIN DIFF
     {diff_context}
     END DIFF
 
-    Guildelines for the review:
+    Guidelines for the review:
     * Point out obvious spelling mistakes in plain text files if you see them, but don't check for spelling in code.
     * Do not talk about minor changes. It's better to be terse and focus on issues.
     * Do not talk about formatting, as that will be handled with pre-commit hooks.
