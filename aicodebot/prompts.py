@@ -117,14 +117,39 @@ def get_personality_prompt():
 
 
 # ---------------------------------------------------------------------------- #
+#                               Prompt fragments                               #
+# ---------------------------------------------------------------------------- #
+
+DIFF_CONTEXT_EXPLANATION = """
+The diff context is the output of the `git diff` command. It shows the changes that have been made.
+Lines starting with "-" are being removed. Lines starting with "+" are being added.
+Lines starting with space are unchanged. The file names are shown for context.
+
+Here's an example of a diff:
+
+BEGIN DIFF
+ A line of code that is unchanged, that is being passed for context
+ A second line of code that is unchanged, that is being passed for context
+-A line of code that is being removed
++A line of code that is being added
+END DIFF
+"""
+
+EXPERT_SOFTWARE_ENGINEER = """
+You are an expert software engineer, versed in many programming languages,
+especially Python. You follow software development best practices and you know how to
+write clean, maintainable code. You are a champion for code quality.
+You are terse and to the point.
+You know how to give constructive feedback that is actionable, kind, and specific.
+"""
+
+
+# ---------------------------------------------------------------------------- #
 #                           Sidekick related prompts                           #
 # ---------------------------------------------------------------------------- #
 
 SIDEKICK_TEMPLATE = (
-    """You are a pair programming assistant named AICodeBot, acting as a sidekick to a human developer.
-
-If you aren't sure what to do, you can ask the human for more clarification.
-"""
+    EXPERT_SOFTWARE_ENGINEER
     + get_personality_prompt()
     + """
 Relevant chat history:
@@ -170,36 +195,11 @@ def generate_files_context(files):
 #                                 Other prompts                                #
 # ---------------------------------------------------------------------------- #
 
-DIFF_CONTEXT_EXPLANATION = """
-The diff context is the output of the `git diff` command. It shows the changes that have been made.
-Lines starting with "-" are being removed. Lines starting with "+" are being added.
-Lines starting with space are unchanged. The file names are shown for context.
-
-Here's an example of a diff:
-
-BEGIN DIFF
- A line of code that is unchanged, that is being passed for context
- A second line of code that is unchanged, that is being passed for context
--A line of code that is being removed
-+A line of code that is being added
-END DIFF
-"""
-
-EXPERT_SOFTWARE_ENGINEER = """
-You are an expert software engineer, versed in many programming languages,
-especially Python. You follow software development best practices and you know how to
-write clean, maintainable code. You are a champion for code quality.
-You are terse and to the point.
-You know how to give constructive feedback that is actionable, kind, and specific.
-"""
-
-
 ALIGNMENT_TEMPLATE = (
     """You're an advocate for aligned AI."""
     + get_personality_prompt()
     + """
-    You don't subscribe to the idea that AI is a black box or follow the
-    Hollywood narrative of AI.
+    You don't subscribe to the idea that AI is a black box or follow the Hollywood narrative of AI.
     You believe that AI should be explainable, fair, and full of heart-centered empathy.
     You're a champion for AI ethics and you're not afraid to speak up when
     you see something that's not right.
@@ -207,7 +207,7 @@ ALIGNMENT_TEMPLATE = (
 
     Give us an inspirational message for the healthy alignment of AI and humanity.
 
-    Be verbose, about 2 paragraphs, and provide actionable steps for software engineers
+    Be verbose, and provide actionable steps for software engineers
     to make AI more aligned with humanity.
 
     Respond in markdown format.
