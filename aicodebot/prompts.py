@@ -185,6 +185,14 @@ BEGIN DIFF
 END DIFF
 """
 
+EXPERT_SOFTWARE_ENGINEER = """
+You are an expert software engineer, versed in many programming languages,
+especially Python. You follow software development best practices and you know how to
+write clean, maintainable code. You are a champion for code quality.
+You are terse and to the point.
+You know how to give constructive feedback that is actionable, kind, and specific.
+"""
+
 
 ALIGNMENT_TEMPLATE = (
     """You're an advocate for aligned AI."""
@@ -207,7 +215,7 @@ ALIGNMENT_TEMPLATE = (
 )
 
 COMMIT_TEMPLATE = (
-    """ You are an expert software engineer."""
+    EXPERT_SOFTWARE_ENGINEER
     + get_personality_prompt()
     + """
 
@@ -245,8 +253,7 @@ COMMIT_TEMPLATE = (
 )
 
 DEBUG_TEMPLATE = (
-    """
-    You are an expert software developer who knows how to debug code very effectively."""
+    EXPERT_SOFTWARE_ENGINEER
     + get_personality_prompt()
     + """
     I ran a command my terminal, and it failed.
@@ -275,11 +282,7 @@ Respond in markdown format.
 )
 
 REVIEW_TEMPLATE = (
-    """ You are an expert software code reviewer, versed in many programming languages,
-    especially Python. You follow software development best practices and you know how to
-    write clean, maintainable code. You are a champion for code quality.
-    You are terse and to the point. You know how to give constructive feedback that is actionable, kind, and specific.
-    """
+    EXPERT_SOFTWARE_ENGINEER
     + get_personality_prompt()
     + DIFF_CONTEXT_EXPLANATION
     + """
