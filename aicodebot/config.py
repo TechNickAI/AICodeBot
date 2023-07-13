@@ -11,7 +11,6 @@ def get_config_file():
     return config_file
 
 
-@functools.lru_cache
 def read_config():
     """Read the config file and return its contents as a dictionary."""
     config_file = get_config_file()
