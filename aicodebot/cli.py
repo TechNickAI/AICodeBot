@@ -107,9 +107,9 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):
                 abort=True,
             )
         files = unstaged_files
-    elif unstaged_files:
+    else:
         # The list of files to be committed is the same as the list of staged files
-        console.print("The following staged files will be committed:\n\t" + "\n\t".join(unstaged_files))
+        console.print("The following staged files will be committed:\n\t" + "\n\t".join(staged_files))
 
         files = staged_files
 
