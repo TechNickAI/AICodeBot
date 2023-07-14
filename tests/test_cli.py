@@ -19,11 +19,12 @@ def test_commit(cli_runner, temp_git_repo):
     with cli_runner.isolated_filesystem():
         os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
 
+        response_token_size = 200 # smaller than the default so tests go a little faster
         # Scenario 1: Only unstaged changes
         create_and_write_file("test1.txt", "This is a test file.")
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test1.txt")  # stage the new file
-        result = cli_runner.invoke(cli, ["commit", "-y"])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size])
         assert result.exit_code == 0
         assert "✅ 1 file(s) committed" in result.output
 
@@ -32,12 +33,12 @@ def test_commit(cli_runner, temp_git_repo):
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test2.txt")  # stage the new file
         create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
-        result = cli_runner.invoke(cli, ["commit", "-y"])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size])
         assert result.exit_code == 0
         assert "✅ 1 file(s) committed" in result.output
 
         # Scenario 3: No changes at all
-        result = cli_runner.invoke(cli, ["commit", "-y"])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size])
         assert result.exit_code == 0
         assert "No changes" in result.output
 
