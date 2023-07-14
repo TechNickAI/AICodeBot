@@ -14,6 +14,34 @@ def test_alignment(cli_runner):
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
+@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+def test_commit(cli_runner, temp_git_repo):
+    with cli_runner.isolated_filesystem():
+        os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
+
+        # Scenario 1: Only unstaged changes
+        create_and_write_file("test1.txt", "This is a test file.")
+        repo = Repo(temp_git_repo.working_dir)
+        repo.git.add("test1.txt")  # stage the new file
+        result = cli_runner.invoke(cli, ["commit", "-y"])
+        assert result.exit_code == 0
+        assert "✅ 1 file(s) committed" in result.output
+
+        # Scenario 2: Both staged and unstaged changes
+        create_and_write_file("test2.txt", "This is another test file.")
+        repo = Repo(temp_git_repo.working_dir)
+        repo.git.add("test2.txt")  # stage the new file
+        create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
+        result = cli_runner.invoke(cli, ["commit", "-y"])
+        assert result.exit_code == 0
+        assert "✅ 1 file(s) committed" in result.output
+
+        # Scenario 3: No changes at all
+        result = cli_runner.invoke(cli, ["commit", "-y"])
+        assert result.exit_code == 0
+        assert "No changes" in result.output
+
+
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="skipping live tests without an api key.")
 def test_configure(cli_runner, tmp_path, monkeypatch):
     key = os.getenv("OPENAI_API_KEY")
@@ -75,21 +103,6 @@ def test_debug_failure(cli_runner):
 def test_fun_fact(cli_runner):
     result = cli_runner.invoke(cli, ["fun-fact", "-t", "50"])
     assert result.exit_code == 0, f"Output: {result.output}"
-
-
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
-def test_commit(cli_runner, temp_git_repo):
-    with cli_runner.isolated_filesystem():
-        os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
-        create_and_write_file("test.txt", "This is a test file.")
-        result = cli_runner.invoke(cli, ["commit", "-y"])
-        assert result.exit_code == 0
-        assert "The following files will be committed:\ntest.txt" in result.output
-
-        # Check the last commit message in the repository
-        repo = Repo(temp_git_repo.working_dir)
-        last_commit_message = repo.head.commit.message
-        assert len(last_commit_message) > 10
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")

@@ -86,35 +86,45 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     """Generate a commit message based on your changes."""
     setup_config()
 
-    # Check if pre-commit is installed and .pre-commit-config.yaml exists
-    if not skip_pre_commit and Path(".pre-commit-config.yaml").exists():
-        console.print("Running pre-commit checks...")
-        result = subprocess.run(["pre-commit", "run", "--all-files"])
-        if result.returncode != 0:
-            console.print("🛑 Pre-commit checks failed. Please fix the issues and try again.")
-            return
-
-    # Load the prompt
-    prompt = get_prompt("commit")
-    logger.trace(f"Prompt: {prompt}")
-
     # Get the changes from git
-    staged_files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
+
+    staged_files = Coder.git_staged_files()
+    unstaged_files = Coder.git_unstaged_files()
     if not staged_files:
-        # If no files are staged, Assume they want to commit all changed files
-        logger.info("No files staged, assuming we want to commit all changed files, running git add -A")
-        exec_and_get_output(["git", "add", "-A"])
-        # Get the list of files to be committed
-        files = exec_and_get_output(["git", "diff", "--name-only", "--cached"])
-    else:
+        # If no files are staged, they probably want to commit all changed files, confirm.
+        if not yes:
+            click.confirm(
+                "Since there are no git staged files, all of the modified files will be committed:\n\t"
+                + "\n\t".join(unstaged_files)
+                + "\nDoes that look correct?",
+                default=True,
+                abort=True,
+            )
+        files = unstaged_files
+    elif unstaged_files:
         # The list of files to be committed is the same as the list of staged files
         files = staged_files
 
     diff_context = Coder.git_diff_context()
-
     if not diff_context:
         console.print("No changes to commit. 🤷")
-        sys.exit(0)
+        return
+
+    # Check if pre-commit is installed and .pre-commit-config.yaml exists
+    if not skip_pre_commit and Path(".pre-commit-config.yaml").exists():
+        console.print("Running pre-commit checks...")
+        result = subprocess.run(["pre-commit", "run", "--files"] + files)
+        if result.returncode != 0:
+            console.print("🛑 Pre-commit checks failed. Please fix the issues and try again.")
+            return
+
+    if not staged_files:
+        # Add all files to the index (git add -A)
+        exec_and_get_output(["git", "add", "-A"])
+
+    # Load the prompt
+    prompt = get_prompt("commit")
+    logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
     request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
@@ -129,7 +139,6 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     # Set up the chain
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-    console.print("The following files will be committed:\n" + files)
     with console.status("Examining the diff and generating the commit message", spinner=DEFAULT_SPINNER):
         response = chain.run(diff_context)
 
@@ -147,10 +156,10 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
     subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
-    if yes or click.confirm("Are you ready to commit the changes?"):
+    if yes or click.confirm("Are you ready to commit the changes?", default=True, abort=True):
         # Commit the changes using the temporary file for the commit message
         exec_and_get_output(["git", "commit", "-F", temp_file_name])
-        console.print(f"✅ {len(files.splitlines())} files committed.")
+        console.print(f"✅ {len(files)} file(s) committed.")
 
     # Delete the temporary file
     Path.unlink(temp_file_name)

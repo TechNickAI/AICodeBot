@@ -131,7 +131,7 @@ class Coder:
             return show
         else:
             # Otherwise, get the diff for the staged files, or if there are none, the diff for the unstaged files
-            staged_files = exec_and_get_output(["git", "diff", "--cached", "--name-only"]).splitlines()
+            staged_files = Coder.git_staged_files()
             if staged_files:
                 logger.debug(f"Getting diff for staged files: {staged_files}")
                 diff_type = "--cached"
@@ -167,3 +167,11 @@ class Coder:
                     diffs.append(exec_and_get_output(base_git_diff + [diff_type, "--", file_name]))
 
             return "\n".join(diffs)
+
+    @staticmethod
+    def git_staged_files():
+        return exec_and_get_output(["git", "diff", "--cached", "--name-only"]).splitlines()
+
+    @staticmethod
+    def git_unstaged_files():
+        return exec_and_get_output(["git", "diff", "HEAD", "--name-only"]).splitlines()
