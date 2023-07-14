@@ -8,7 +8,7 @@ from pathlib import Path
 import json, os, pytest
 
 # smaller than the default so tests go a little faster
-TEST_RESPONSE_TOKEN_SIZE = 200
+TEST_RESPONSE_TOKEN_SIZE = 150
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
@@ -129,7 +129,9 @@ def test_review(cli_runner, temp_git_repo):
 
         # Again with json output
         result = cli_runner.invoke(
-            cli, ["review", "-t", TEST_RESPONSE_TOKEN_SIZE, "--output-format", "json", "test.txt"]
+            # Larger test token size to make sure the response is valid json
+            cli,
+            ["review", "-t", TEST_RESPONSE_TOKEN_SIZE * 3, "--output-format", "json", "test.txt"],
         )
 
         assert result.exit_code == 0
