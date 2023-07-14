@@ -82,17 +82,23 @@ def alignment(response_token_size, verbose):
 @click.option("-t", "--response-token-size", type=int, default=250)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
-def commit(verbose, response_token_size, yes, skip_pre_commit):
+@click.argument("files", nargs=-1, type=click.Path(exists=True))
+def commit(verbose, response_token_size, yes, skip_pre_commit, files):
     """Generate a commit message based on your changes."""
     setup_config()
 
-    # Get the changes from git
+    # If files are specified, only consider those files
+    if files:
+        staged_files = [f for f in Coder.git_staged_files() if f in files]
+        unstaged_files = [f for f in Coder.git_unstaged_files() if f in files]
+    else:
+        # Otherwise use git
+        staged_files = Coder.git_staged_files()
+        unstaged_files = Coder.git_unstaged_files()
 
-    staged_files = Coder.git_staged_files()
-    unstaged_files = Coder.git_unstaged_files()
     if not staged_files:
         # If no files are staged, they probably want to commit all changed files, confirm.
-        if not yes:
+        if not files and not yes:
             click.confirm(
                 "Since there are no git staged files, all of the modified files will be committed:\n\t"
                 + "\n\t".join(unstaged_files)
@@ -119,8 +125,8 @@ def commit(verbose, response_token_size, yes, skip_pre_commit):
             return
 
     if not staged_files:
-        # Add all files to the index (git add -A)
-        exec_and_get_output(["git", "add", "-A"])
+        # Stage the files that we are committing
+        exec_and_get_output(["git", "add"] + list(files))
 
     # Load the prompt
     prompt = get_prompt("commit")
@@ -272,7 +278,7 @@ def debug(command, verbose):
     # If it succeeded, exit
     if process.returncode == 0:
         console.print("✅ The command completed successfully.")
-        sys.exit(0)
+        return
 
     # If the command failed, send its output to ChatGPT for analysis
     error_output = process.stderr
@@ -339,14 +345,14 @@ def fun_fact(verbose, response_token_size):
 @click.option("-v", "--verbose", count=True)
 @click.option("--output-format", default="text", type=click.Choice(["text", "json"], case_sensitive=False))
 @click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 2)
-def review(commit, verbose, output_format, response_token_size):
+def review(commit, verbose, output_format, response_token_size, files):
     """Do a code review, with [un]staged changes, or a specified commit."""
     setup_config()
 
     diff_context = Coder.git_diff_context(commit)
     if not diff_context:
         console.print("No changes detected for review. 🤷")
-        sys.exit(0)
+        return
 
     # Load the prompt
     prompt = get_prompt("review", structured_output=output_format == "json")
@@ -466,7 +472,7 @@ def setup_config():
     if not existing_config:
         console.print("Welcome to AI Code Bot! 🤖. Let's set up your config file.\n", style=bot_style)
         configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
-        sys.exit()
+        sys.exit(0)
     else:
         return existing_config
 
