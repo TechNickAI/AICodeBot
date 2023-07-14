@@ -109,6 +109,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):
         files = unstaged_files
     elif unstaged_files:
         # The list of files to be committed is the same as the list of staged files
+        console.print("The following staged files will be committed:\n\t" + "\n\t".join(unstaged_files))
         files = staged_files
 
     diff_context = Coder.git_diff_context()
