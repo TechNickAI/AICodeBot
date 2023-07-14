@@ -110,6 +110,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):
     elif unstaged_files:
         # The list of files to be committed is the same as the list of staged files
         console.print("The following staged files will be committed:\n\t" + "\n\t".join(unstaged_files))
+
         files = staged_files
 
     diff_context = Coder.git_diff_context()
@@ -141,13 +142,17 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
         )
 
-    llm = Coder.get_llm(model_name, verbose, 350)
+    console.print("Examining the diff and generating the commit message")
+    with Live(Markdown(""), auto_refresh=True) as live:
+        llm = Coder.get_llm(
+            model_name, verbose, 350, streaming=True, callbacks=[RichLiveCallbackHandler(live, bot_style)]
+        )
 
-    # Set up the chain
-    chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-
-    with console.status("Examining the diff and generating the commit message", spinner=DEFAULT_SPINNER):
+        # Set up the chain
+        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run(diff_context)
+
+    commit_message_approved = click.confirm("Do you want to use this commit message (type n to edit)?", default=True)
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
@@ -158,9 +163,10 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):
         temp.write(commit_message)
         temp_file_name = temp.name
 
-    # Open the temporary file in the user's editor
-    editor = os.getenv("EDITOR", "vim")
-    subprocess.call([editor, temp_file_name])  # noqa: S603
+    if not commit_message_approved:
+        # Open the temporary file in the user's editor
+        editor = os.getenv("EDITOR", "vim")
+        subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
     if yes or click.confirm("Are you ready to commit the changes?", default=True, abort=True):
