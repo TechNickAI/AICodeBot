@@ -33,7 +33,7 @@ def test_commit(cli_runner, temp_git_repo):
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test2.txt")  # stage the new file
         create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size, "test2.txt"])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size])
         assert result.exit_code == 0
         assert "✅ 1 file(s) committed" in result.output
 
@@ -119,19 +119,19 @@ def test_review(cli_runner, temp_git_repo):
         repo.git.add("test.txt")
 
         # Run the review command
-        result = cli_runner.invoke(cli, ["review", "-t", "100"])
+        result = cli_runner.invoke(cli, ["review", "-t", "100", "test.txt"])
 
         # Check that the review command ran successfully
         assert result.exit_code == 0
         assert len(result.output) > 20
 
         # Again with json output
-        result = cli_runner.invoke(cli, ["review", "-t", "100", "--output-format", "json"])
+        result = cli_runner.invoke(cli, ["review", "-t", "100", "--output-format", "json", "test.txt"])
 
         assert result.exit_code == 0
         # Check if it's valid json
         parsed = json.loads(result.output)
-        assert parsed["review_status"] in ["PASSED", "COMMENTS"]
+        assert parsed["review_status"] in ["PASSED"]
 
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")

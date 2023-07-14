@@ -118,7 +118,7 @@ class Coder:
         return token_length
 
     @staticmethod
-    def git_diff_context(commit=None):
+    def git_diff_context(commit=None, files=None):
         """Get a text representation of the git diff for the current commit or staged files, including new files"""
         base_git_diff = ["git", "diff", "-U10"]  # Tell diff to provide 10 lines of context
 
@@ -136,10 +136,11 @@ class Coder:
                 logger.debug(f"Getting diff for staged files: {staged_files}")
                 diff_type = "--cached"
             else:
-                logger.debug(f"Getting diff for unstaged files: {staged_files}")
                 diff_type = "HEAD"
 
-            file_status = exec_and_get_output(["git", "diff", diff_type, "--name-status"]).splitlines()
+            file_status = exec_and_get_output(
+                ["git", "diff", diff_type, "--name-status"] + list(files or [])
+            ).splitlines()
 
             diffs = []
             for status in file_status:

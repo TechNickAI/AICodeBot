@@ -352,11 +352,19 @@ def fun_fact(verbose, response_token_size):
 @click.option("-v", "--verbose", count=True)
 @click.option("--output-format", default="text", type=click.Choice(["text", "json"], case_sensitive=False))
 @click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 2)
+@click.argument("files", nargs=-1)
 def review(commit, verbose, output_format, response_token_size, files):
     """Do a code review, with [un]staged changes, or a specified commit."""
     setup_config()
 
-    diff_context = Coder.git_diff_context(commit)
+    # If files are specified, only consider those files
+    # Otherwise, use git to get the list of files
+    if not files:
+        files = Coder.git_staged_files()
+        if not files:
+            files = Coder.git_unstaged_files()
+
+    diff_context = Coder.git_diff_context(commit, files)
     if not diff_context:
         console.print("No changes detected for review. 🤷")
         return
@@ -388,6 +396,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 
     else:
         # Stream live
+        console.print("Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files))
         with Live(Markdown(""), auto_refresh=True) as live:
             llm.streaming = True
             llm.callbacks = [RichLiveCallbackHandler(live, bot_style)]
