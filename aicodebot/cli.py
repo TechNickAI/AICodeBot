@@ -13,7 +13,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.style import Style
-import click, datetime, json, langchain, openai, os, random, subprocess, sys, tempfile, webbrowser, yaml
+import click, datetime, json, langchain, openai, os, random, shutil, subprocess, sys, tempfile, webbrowser, yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -83,7 +83,7 @@ def alignment(response_token_size, verbose):
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
-def commit(verbose, response_token_size, yes, skip_pre_commit, files):
+def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     """Generate a commit message based on your changes."""
     setup_config()
 
@@ -120,11 +120,17 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):
 
     # Check if pre-commit is installed and .pre-commit-config.yaml exists
     if not skip_pre_commit and Path(".pre-commit-config.yaml").exists():
-        console.print("Running pre-commit checks...")
-        result = subprocess.run(["pre-commit", "run", "--files"] + files)
-        if result.returncode != 0:
-            console.print("🛑 Pre-commit checks failed. Please fix the issues and try again.")
-            return
+        if not shutil.which("pre-commit"):
+            console.print(
+                "This project uses pre-commit, but it is not installed. Skipping pre-commit checks.",
+                style=warning_style,
+            )
+        else:
+            console.print("Running pre-commit checks...")
+            result = subprocess.run(["pre-commit", "run", "--files"] + files)
+            if result.returncode != 0:
+                console.print("🛑 Pre-commit checks failed. Please fix the issues and try again.")
+                return
 
     if not staged_files:
         # Stage the files that we are committing
