@@ -7,6 +7,9 @@ from git import Repo
 from pathlib import Path
 import json, os, pytest
 
+# smaller than the default so tests go a little faster
+TEST_RESPONSE_TOKEN_SIZE = 200
+
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
 def test_alignment(cli_runner):
@@ -19,12 +22,11 @@ def test_commit(cli_runner, temp_git_repo):
     with cli_runner.isolated_filesystem():
         os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
 
-        response_token_size = 200  # smaller than the default so tests go a little faster
         # Scenario 1: Only unstaged changes
         create_and_write_file("test1.txt", "This is a test file.")
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test1.txt")  # stage the new file
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size, "test1.txt"])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE, "test1.txt"])
         assert result.exit_code == 0
         assert "✅ 1 file(s) committed" in result.output
 
@@ -33,12 +35,12 @@ def test_commit(cli_runner, temp_git_repo):
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test2.txt")  # stage the new file
         create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
         assert result.exit_code == 0
         assert "✅ 1 file(s) committed" in result.output
 
         # Scenario 3: No changes at all
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", response_token_size])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
         assert result.exit_code == 0
         assert "No changes" in result.output
 
@@ -102,7 +104,7 @@ def test_debug_failure(cli_runner):
 
 @pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
 def test_fun_fact(cli_runner):
-    result = cli_runner.invoke(cli, ["fun-fact", "-t", "50"])
+    result = cli_runner.invoke(cli, ["fun-fact", "-t", TEST_RESPONSE_TOKEN_SIZE])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
@@ -119,14 +121,16 @@ def test_review(cli_runner, temp_git_repo):
         repo.git.add("test.txt")
 
         # Run the review command
-        result = cli_runner.invoke(cli, ["review", "-t", "100", "test.txt"])
+        result = cli_runner.invoke(cli, ["review", "-t", TEST_RESPONSE_TOKEN_SIZE, "test.txt"])
 
         # Check that the review command ran successfully
         assert result.exit_code == 0
         assert len(result.output) > 20
 
         # Again with json output
-        result = cli_runner.invoke(cli, ["review", "-t", "100", "--output-format", "json", "test.txt"])
+        result = cli_runner.invoke(
+            cli, ["review", "-t", TEST_RESPONSE_TOKEN_SIZE, "--output-format", "json", "test.txt"]
+        )
 
         assert result.exit_code == 0
         # Check if it's valid json
@@ -141,7 +145,9 @@ def test_sidekick(cli_runner):
     mock_files = [".gitignore"]
 
     # Invoke the sidekick command
-    result = cli_runner.invoke(cli, ["sidekick", "-t", "100", "--request", mock_request] + mock_files)
+    result = cli_runner.invoke(
+        cli, ["sidekick", "-t", TEST_RESPONSE_TOKEN_SIZE, "--request", mock_request] + mock_files
+    )
 
     assert result.exit_code == 0, f"Output: {result.output}"
     assert "5" in result.output
