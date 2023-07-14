@@ -294,8 +294,11 @@ REVIEW_TEMPLATE = (
 
     Guidelines for the review:
     * Point out obvious spelling mistakes in plain text files if you see them, but don't check for spelling in code.
-    * Do not talk about minor changes. It's better to be terse and focus on issues.
-    * Do not talk about formatting, as that will be handled with pre-commit hooks.
+    * Do not discuss very minor changes. It's better to be terse and focus on issues.
+    * Do not discuss about formatting, as that will be handled with pre-commit hooks.
+    * Do not discuss about adding additional documentation/comments.
+
+    In short, unless you find something notable, it's better to just say LGTM!
 
     IMPORTANT: The main focus is to tell the developer how to make the code better.
 
