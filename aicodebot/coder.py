@@ -125,7 +125,8 @@ class Coder:
         if commit:
             # If a commit is provided, just get the diff for that commit
             logger.debug(f"Getting diff for commit {commit}")
-            show = exec_and_get_output(["git", "show", commit])
+            # format=%B is the diff and the commit message
+            show = exec_and_get_output(["git", "show", "--format=%B", commit])
             logger.opt(raw=True).debug(f"Diff for commit {commit}: {show}")
             return show
         else:
