@@ -98,9 +98,9 @@ Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot wil
 
 Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
-## Integration with GitHub via Github Actions
+## Integration with GitHub Actions
 
-You can have AICodeBot run as a GitHub action on your repository. See [The AICodeBot GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review), which will run a code review on every commit and pull request.
+How about automated code reviews on every commit? You can have AICodeBot run as a GitHub action on your repository. See [The AICodeBot GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review)
 
 ## Roadmap of Upcoming Features ️
 
