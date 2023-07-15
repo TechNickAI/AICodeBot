@@ -92,12 +92,6 @@ The first time you run it, you'll be prompted to enter your OpenAI API Key, whic
 
 Note: You will be billed by OpenAI based on how much you use it. Typical developers will use less than $10/month - which if you are a professional developer you'll likely more than make up for with saved time and higher quality work. See [OpenAI's pricing page](https://openai.com/pricing/) for more details.
 
-#### Which Language Model? GPT-3.5 vs GPT-4
-
-Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4 if your OpenAI account supports it, we will check the first time you run it. Tip: If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api)
-
-Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
-
 ## Integration with GitHub Actions
 
 How about automated code reviews on every commit? You can have AICodeBot run as a GitHub action on your repository. See [The AICodeBot GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review)
@@ -156,6 +150,34 @@ Technology itself is amoral, it just imbues the values of the people who create 
 ⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes AICodeBot does dumb things, which is why it's mostly *reading* and *advising* and not yet *writing*. Much like Tesla's "Full Self Driving", you have to keep your hands on the wheel.
 
 It's also not a "build a site for me in 5 minutes" tool that takes a well-constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that. It's not a no-code platform. Instead, AICodeBot is built to work with existing code bases and the git-commit level. It's designed to multiply the effectiveness of capable engineers.
+
+## Which Language Model?
+
+Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4 if your OpenAI account supports it, we will check the first time you run it. Tip: If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api)
+
+Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
+
+### Understanding Tokens and Using Commands Efficiently
+
+In AI models like OpenAI's GPT-4, a "token" is a piece of text, as short as a character or as long as a word. The total tokens in an API call, including input and output, affect the cost, time, and whether the call works based on the maximum limit.
+
+Each model has a maximum token limit. For example, gpt-3.5 has a limit of 4096 tokens, and gpt-4 has a token limit of 8192 tokens. If a conversation exceeds this limit, you'll need to reduce your text until it fits.
+
+When using commands like the Sidekick command in AICodeBot, which allows you to pass in files for context, it's important to manage your tokens effectively. Due to token limits, it's not feasible to load your entire code base. Instead, you should only load the specific files that are relevant to the task you're working on. This ensures that the AI model can process your request efficiently and provide the most relevant suggestions for your current task.
+
+### How can I get a larger token limit?
+
+Do you need a larger context window for your task? Are you running into token limits and getting a message like this?
+
+```bash
+The context is too large (21414) for any of the models supported by your API key. 😞
+```
+
+There are a couple of things you can do:
+
+1. Load less files into the context (only what you need to work with)
+2. Apply for gpt-32k access from OpenAI by contacting them.
+3. Use openrouter.ai - this allows you to use the full power of gpt-4-32k, which offers a 4x larger context window. See [openrouter.ai](https://openrouter.ai) for more details. Once you sign up and set your `openrouter_api_key` in your `$HOME/.aicodebot.yaml` file, you can have access too larger models. Soon we will have support for Claude 2, which has a 100k token limit.
 
 ## Development / Contributing
 
