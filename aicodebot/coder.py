@@ -63,50 +63,71 @@ class Coder:
         callbacks=None,
     ):
         config = read_config()
+        if "openrouter_api_key" in config:
+            # If the openrouter_api_key is set, use the Open Router API
+            # OpenRouter allows for access to many models that have larger token limits
+            openai.api_key = config["openrouter_api_key"]
+            openai.api_base = "https://openrouter.ai/api/v1"
+            headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
+            tiktoken_model_name = model_name.replace("openai/", "")
+        else:
+            openai.api_key = config["openai_api_key"]
+            headers = None
+            tiktoken_model_name = model_name
 
         return ChatOpenAI(
-            openai_api_key=config["openai_api_key"],
+            openai_api_key=openai.api_key,
             model=model_name,
             max_tokens=response_token_size,
             verbose=verbose,
             temperature=temperature,
             streaming=streaming,
             callbacks=callbacks,
+            tiktoken_model_name=tiktoken_model_name,
+            model_kwargs={"headers": headers},
         )
 
     @staticmethod
-    def get_llm_model_name(token_size=0):
-        model_options = {
-            "gpt-4": 8192,
-            "gpt-4-32k": 32768,
-            "gpt-3.5-turbo": 4096,
-            "gpt-3.5-turbo-16k": 16384,
-        }
+    def get_llm_headers():
+        config = read_config()
+        if "openrouter_api_key" in config:
+            return {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
+        else:
+            return None
 
-        engines = Coder.get_openai_supported_engines()
+    @staticmethod
+    def get_llm_model_name(token_size=0):
+        config = read_config()
+        if "openrouter_api_key" in config:
+            model_options = {
+                "openai/gpt-4": 8192,
+                "openai/gpt-4-32k": 32768,
+                # Not working yet "anthropic/claude-2": 100_000,
+            }
+            supported_engines = model_options.keys()
+        else:
+            model_options = {
+                "gpt-4": 8192,
+                "gpt-4-32k": 32768,
+                "gpt-3.5-turbo": 4096,
+                "gpt-3.5-turbo-16k": 16384,
+            }
+            # Pull the list of supported engines from the OpenAI API for this key
+            supported_engines = Coder.get_openai_supported_engines()
 
         # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
         token_size = int(token_size * 1.1)
 
-        # Try to use GPT-4 if it is supported and the token size is small enough
-        if "gpt-4" in engines and token_size <= model_options["gpt-4"]:
-            logger.info(f"Using GPT-4 for token size {token_size}")
-            return "gpt-4"
-        elif "gpt-4-32k" in engines and token_size <= model_options["gpt-4-32k"]:
-            logger.info(f"Using GPT-4-32k for token size {token_size}")
-            return "gpt-4-32k"
-        elif token_size <= model_options["gpt-3.5-turbo"]:
-            logger.info(f"Using GPT-3.5-turbo for token size {token_size}")
-            return "gpt-3.5-turbo"
-        elif token_size <= model_options["gpt-3.5-turbo-16k"]:
-            logger.info(f"Using GPT-3.5-turbo-16k for token size {token_size}")
-            return "gpt-3.5-turbo-16k"
-        else:
-            logger.critical(
-                f"🛑 The context is too large ({token_size})"
-                "for the any of the models supported by your Open AI API key. 😞"
-            )
-            return None
+        for model, max_tokens in model_options.items():
+            if model in supported_engines and token_size <= max_tokens:
+                logger.info(f"Using {model} for token size {token_size}")
+                return model
+
+        logger.critical(f"The context is too large ({token_size}) for any of the models supported by your API key. 😞")
+        if "openrouter_api_key" not in config:
+            logger.critical("If you provide an Open Router API key, you can access larger models, up to 32k tokens")
+
+        return None
 
     @staticmethod
     def get_token_length(text, model="gpt-3.5-turbo"):
