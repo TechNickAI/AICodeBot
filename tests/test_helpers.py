@@ -9,13 +9,13 @@ def test_create_and_write_file():
     text = "This is a test file."
     create_and_write_file(filename, text)
     assert Path(filename).exists()
-    assert Path.open(filename).read() == text
+    assert Path(filename).read_text() == text
 
     # Test creating a file that already exists with overwrite=True
     text = "This is a new test file."
     create_and_write_file(filename, text, overwrite=True)
     assert Path(filename).exists()
-    assert Path.open(filename).read() == text
+    assert Path(filename).read_text() == text
 
     # Test creating a file that already exists with overwrite=False
     with pytest.raises(ValueError):

@@ -1,6 +1,6 @@
+from aicodebot.helpers import create_and_write_file
 from click.testing import CliRunner
 from git import Repo
-from pathlib import Path
 import pytest
 
 
@@ -18,8 +18,7 @@ def temp_git_repo(tmp_path):
         git_config.set_value("user", "name", "AICodeBot Test")
         git_config.set_value("user", "email", "test@aicodebot.dev")
 
-    with Path.open(tmp_path / "initial_commit.txt", "w") as f:
-        f.write("This is a test file.")
+    create_and_write_file(tmp_path / "initial_commit.txt", "This is a test file.")
     repo.index.add(["initial_commit.txt"])
     repo.index.commit("Initial commit")
 

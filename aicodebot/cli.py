@@ -1,7 +1,7 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
 from aicodebot.config import get_config_file, read_config
-from aicodebot.helpers import RichLiveCallbackHandler, exec_and_get_output, logger
+from aicodebot.helpers import RichLiveCallbackHandler, create_and_write_file, exec_and_get_output, logger
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from langchain.chains import LLMChain
 from langchain.memory import ConversationTokenBufferMemory
@@ -212,9 +212,8 @@ def configure(verbose, openai_api_key):
     config_data = config_data_defaults.copy()
 
     def write_config_file(config_data):
-        with Path.open(config_file, "w") as f:
-            yaml.dump(config_data, f)
-            console.print(f"✅ Created config file at {config_file}")
+        create_and_write_file(config_file, yaml.dump(config_data))
+        console.print(f"✅ Created config file at {config_file}")
 
     is_terminal = sys.stdout.isatty()
     openai_api_key = openai_api_key or config_data["openai_api_key"] or os.getenv("OPENAI_API_KEY")

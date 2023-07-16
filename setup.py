@@ -3,12 +3,12 @@ from pathlib import Path
 from setuptools import setup
 
 # Pull in the long description from the README
-with Path("README.md").open("r", encoding="utf-8") as f:
-    long_description = f.read()
+long_description = Path("README.md").read_text(encoding="utf-8")
 
 # Get requirements from requirements.in
-with Path.open("requirements/requirements.in") as f:
-    requirements = f.read().splitlines()
+requirements = Path("requirements/requirements.in").read_text(encoding="utf-8").splitlines()
+# Remove lines that are empty or start with # (comments)
+requirements = [line for line in requirements if line and not line.startswith("#")]
 
 if __name__ == "__main__":  # Only run setup if this is the main file (allows this file to be imported for __version__)
     setup(
