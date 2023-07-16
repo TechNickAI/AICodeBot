@@ -13,14 +13,14 @@ requirements = [line for line in requirements if line and not line.startswith("#
 if __name__ == "__main__":  # Only run setup if this is the main file (allows this file to be imported for __version__)
     setup(
         name="aicodebot",
-        python_requires=">=3.9",
+        python_requires=">=3.10",
         version=version,
         url="https://github.com/gorillamania/AICodeBot",
         author="Nick Sullivan",
         description="AI-powered tool for developers, simplifying coding tasks and improving workflow efficiency.",
         long_description=long_description,
         long_description_content_type="text/markdown",
-        keywords="AI, coding, assistant, pair-programming, automation",
+        keywords="AI, coding, assistant, pair-programming, automation, productivity, workflow, artificial intelligence",
         install_requires=requirements,
         entry_points={
             "console_scripts": [
@@ -31,11 +31,10 @@ if __name__ == "__main__":  # Only run setup if this is the main file (allows th
             "aicodebot": ["prompts/*.yaml", ".aicodebot.template"],
         },
         classifiers=[
-            "Development Status :: 3 - Alpha",
+            "Development Status :: 4 - Beta",
             "Intended Audience :: Developers",
             "License :: OSI Approved :: GNU Affero General Public License v3",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: 3.9",
             "Programming Language :: Python :: 3.10",
             "Programming Language :: Python :: 3.11",
         ],
