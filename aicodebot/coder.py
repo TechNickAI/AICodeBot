@@ -115,8 +115,8 @@ class Coder:
             # Pull the list of supported engines from the OpenAI API for this key
             supported_engines = Coder.get_openai_supported_engines()
 
-        # For some unknown reason, tiktoken often underestimates the token size by ~10%, so let's buffer
-        token_size = int(token_size * 1.1)
+        # For some unknown reason, tiktoken often underestimates the token size by ~5%, so let's buffer
+        token_size = int(token_size * 1.05)
 
         for model, max_tokens in model_options.items():
             if model in supported_engines and token_size <= max_tokens:
@@ -130,12 +130,13 @@ class Coder:
         return None
 
     @staticmethod
-    def get_token_length(text, model="gpt-3.5-turbo"):
+    def get_token_length(text, model="gpt-4"):
         """Get the number of tokens in a string using the tiktoken library."""
         encoding = tiktoken.encoding_for_model(model)
         tokens = encoding.encode(text)
         token_length = len(tokens)
-        logger.debug(f"Token length for text {text[0:10]}...: {token_length}")
+        short_text = text.strip()[0:20] + "..." if len(text) > 10 else text
+        logger.debug(f"Token length for {short_text}: {token_length}")
         return token_length
 
     @staticmethod

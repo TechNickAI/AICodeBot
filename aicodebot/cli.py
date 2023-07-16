@@ -59,7 +59,7 @@ def alignment(response_token_size, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template))
+    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template) + response_token_size)
 
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = Coder.get_llm(
@@ -142,7 +142,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
 
     # Check the size of the diff context and adjust accordingly
     request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
-    model_name = Coder.get_llm_model_name(request_token_size)
+    model_name = Coder.get_llm_model_name(request_token_size + response_token_size)
     if model_name is None:
         raise click.ClickException(
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
@@ -303,7 +303,7 @@ def debug(command, verbose):
 
     # Set up the language model
     request_token_size = Coder.get_token_length(error_output) + Coder.get_token_length(prompt.template)
-    model_name = Coder.get_llm_model_name(request_token_size)
+    model_name = Coder.get_llm_model_name(request_token_size + DEFAULT_MAX_TOKENS)
     if model_name is None:
         raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
 
@@ -379,9 +379,8 @@ def review(commit, verbose, output_format, response_token_size, files):
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
-    response_token_size = DEFAULT_MAX_TOKENS * 2
     request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
-    model_name = Coder.get_llm_model_name(request_token_size)
+    model_name = Coder.get_llm_model_name(request_token_size + response_token_size)
     if model_name is None:
         raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
@@ -432,8 +431,9 @@ def sidekick(request, verbose, response_token_size, files):
 
     # Generate the prompt and set up the model
     prompt = get_prompt("sidekick")
+    memory_token_size = response_token_size * 2  # Allow decent history
     request_token_size = Coder.get_token_length(prompt.template) + Coder.get_token_length(context)
-    model_name = Coder.get_llm_model_name(request_token_size)
+    model_name = Coder.get_llm_model_name(request_token_size + response_token_size + memory_token_size)
     if model_name is None:
         raise click.ClickException(
             f"The file context you supplied is too large ({request_token_size} tokens). 😢 Try again with less files."
@@ -446,7 +446,7 @@ def sidekick(request, verbose, response_token_size, files):
 
     # Set up the chain
     memory = ConversationTokenBufferMemory(
-        memory_key="chat_history", input_key="task", llm=llm, max_token_limit=DEFAULT_MAX_TOKENS
+        memory_key="chat_history", input_key="task", llm=llm, max_token_limit=memory_token_size
     )
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
     history_file = Path.home() / ".aicodebot_request_history"
@@ -457,8 +457,11 @@ def sidekick(request, verbose, response_token_size, files):
         if request:
             human_input = request
         else:
-            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file))
-            if len(human_input) == 1:
+            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file)).strip()
+            if not human_input:
+                # Must have been spaces or blank line
+                continue
+            elif len(human_input) == 1:
                 if human_input.lower() == "q":
                     break
                 elif human_input.lower() == "e":
