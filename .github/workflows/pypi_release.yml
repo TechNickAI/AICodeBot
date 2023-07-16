@@ -45,6 +45,7 @@ jobs:
         pytest
 
   pypi_release:
+    needs: smoke_test
     runs-on: ubuntu-latest
     name: Publish to PyPi
     permissions:
@@ -52,6 +53,20 @@ jobs:
       contents: write
 
     steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+        cache: pip
+
+    - name: Build the package
+      run: |
+        pip install wheel twine
+        python setup.py sdist bdist_wheel
+
     - name: Publish to PyPi
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
