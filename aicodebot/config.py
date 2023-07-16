@@ -4,11 +4,7 @@ import os, yaml
 
 
 def get_config_file():
-    if "AICODEBOT_CONFIG_FILE" in os.environ:
-        config_file = Path(os.getenv("AICODEBOT_CONFIG_FILE"))
-    else:
-        config_file = Path(Path.home() / ".aicodebot.yaml")
-    return config_file
+    return Path(os.getenv("AICODEBOT_CONFIG_FILE", str(Path.home() / ".aicodebot.yaml")))
 
 
 def read_config():
