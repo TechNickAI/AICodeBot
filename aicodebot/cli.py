@@ -422,7 +422,7 @@ def sidekick(request, verbose, response_token_size, files):
     """
     setup_config()
 
-    console.print("This is an experimental feature", style=warning_style)
+    console.print("This is an experimental feature.", style=warning_style)
 
     # Pull in context. Right now it's just the contents of files that we passed in.
     # Soon, we could add vector embeddings of:
@@ -452,14 +452,13 @@ def sidekick(request, verbose, response_token_size, files):
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
     history_file = Path.home() / ".aicodebot_request_history"
 
+    console.print(f"Enter a request OR (q) quit, OR (e) to edit using {editor}")
     while True:  # continuous loop for multiple questions
         edited_input = None
         if request:
             human_input = request
         else:
-            console.print(f"Enter a request OR (q) quit, OR (e) to edit using {editor}")
-
-            human_input = input_prompt("➤ ", history=FileHistory(history_file))
+            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file))
             if len(human_input) == 1:
                 if human_input.lower() == "q":
                     break
