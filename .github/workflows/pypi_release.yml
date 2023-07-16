@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.11"]
 
     steps:
     - name: Checkout Code
@@ -33,13 +33,13 @@ jobs:
         pip install -r requirements/requirements.txt
         pip install wheel twine pytest
 
-    - name: Build the package
+    - name: Build and install aicodebot
       run: |
         python setup.py sdist bdist_wheel
+        pip install dist/*.whl
 
     - name: Smoke Test
       run: |
-        pip install dist/*.whl
         aicodebot -V
         pytest
 
