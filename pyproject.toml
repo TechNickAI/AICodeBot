@@ -85,3 +85,6 @@ target-version = "py311"
 # Certain errors we don't want to fix because they are too aggressive,
 # especially in the editor (removing variables we haven't used yet
 unfixable = ["F401", "F841"]
+
+[tool.semantic_release]
+version_variable = "aicodebot:version"

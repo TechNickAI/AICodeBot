@@ -12,6 +12,11 @@ pip-tools
 pre-commit
 ruff
 
-# Optional
+# Optional goodies that improve the developer experience
 pytest-sugar
+better_exceptions
+pdbpp # ipython in pdb
 
+
+# Release management
+python-semantic-release
