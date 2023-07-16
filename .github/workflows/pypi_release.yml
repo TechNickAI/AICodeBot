@@ -44,7 +44,7 @@ jobs:
         pytest
 
   pypi_release:
-    needs: smoke_test
+    needs: test
     runs-on: ubuntu-latest
     name: Publish to PyPi
     permissions:
