@@ -1,7 +1,8 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
-from aicodebot.config import get_config_file, read_config
+from aicodebot.config import get_config_file, get_local_data_dir, read_config
 from aicodebot.helpers import RichLiveCallbackHandler, create_and_write_file, exec_and_get_output, logger
+from aicodebot.learn import load_documents_from_repo, store_documents
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from langchain.chains import LLMChain
 from langchain.memory import ConversationTokenBufferMemory
@@ -353,6 +354,36 @@ def fun_fact(verbose, response_token_size):
 
 
 @cli.command
+@click.option("-v", "--verbose", count=True)
+@click.option("-r", "--repo-url", help="The URL of the repository to learn from")
+def learn(repo_url, verbose):
+    """Learn new skills and gain additional knowledge from a repository"""
+    # Clone the supplied repo locally and walk through it, load it into a
+    # local vector store, and pre-query this vector store for the LLM to use a
+    # context for the prompt
+
+    setup_config()
+
+    owner, repo_name = Coder.parse_github_url(repo_url)
+
+    start_time = datetime.datetime.utcnow()
+
+    local_data_dir = get_local_data_dir()
+
+    Coder.clone_repo(repo_url, local_data_dir / "repos" / repo_name)
+    console.print("✅ Repo cloned.")
+
+    console.log("Loading documents")
+    vector_store_dir = local_data_dir / "vector_stores" / repo_name
+    documents = load_documents_from_repo(local_data_dir / "repos" / repo_name)
+    console.print("✅ Repo loaded and indexed.")
+
+    with console.status("Storing the repo in the vector store", spinner=DEFAULT_SPINNER):
+        store_documents(documents, vector_store_dir)
+    console.print(f"✅ Repo loaded and indexed in {datetime.datetime.utcnow() - start_time} seconds.")
+
+
+@cli.command
 @click.option("-c", "--commit", help="The commit hash to review (otherwise look at [un]staged changes).")
 @click.option("-v", "--verbose", count=True)
 @click.option("--output-format", default="text", type=click.Choice(["text", "json"], case_sensitive=False))
@@ -478,6 +509,7 @@ def sidekick(request, verbose, response_token_size, files):
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live, bot_style)
             llm.callbacks = [callback]  # a fresh callback handler for each question
+
             chain.run({"task": human_input, "context": context})
 
         if request:
@@ -497,6 +529,7 @@ def setup_config():
         configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
         sys.exit(0)
     else:
+        os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
         return existing_config
 
 

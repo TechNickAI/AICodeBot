@@ -3,7 +3,7 @@ from aicodebot.helpers import exec_and_get_output, logger
 from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
-import fnmatch, functools, openai, tiktoken
+import fnmatch, functools, openai, re, subprocess, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
@@ -15,6 +15,18 @@ class Coder:
     The Coder class encapsulates the functionality of interacting with LLMs,
     git, and the local file system.
     """
+
+    @staticmethod
+    def clone_repo(repo_url, repo_dir):
+        """Clone a git repository to a directory."""
+        if Path(repo_dir).exists():
+            logger.info(f"Repo {repo_dir} already exists, updating it instead")
+            # Reset it first to make sure we don't have any local changes
+            subprocess.run(["git", "reset", "--hard"], cwd=repo_dir, check=True, stdout=subprocess.DEVNULL)
+            subprocess.run(["git", "pull"], cwd=repo_dir, check=True)
+        else:
+            logger.info(f"Cloning {repo_url} to {repo_dir}")
+            subprocess.run(["git", "clone", repo_url, repo_dir], check=True)
 
     @classmethod
     def generate_directory_structure(cls, path, ignore_patterns=None, use_gitignore=True, indent=0):
@@ -198,3 +210,18 @@ class Coder:
     @staticmethod
     def git_unstaged_files():
         return exec_and_get_output(["git", "diff", "HEAD", "--name-only"]).splitlines()
+
+    @staticmethod
+    def parse_github_url(repo_url):
+        """
+        Parse a GitHub URL and return the owner and repo name.
+        Returns: A tuple containing the owner and repo name.
+        """
+        pattern = r"(?:https:\/\/github\.com\/|git@github\.com:)([^\/]+)\/([^\/]+?)(?:\.git)?$"
+        match = re.match(pattern, repo_url)
+
+        if not match:
+            raise ValueError("URL is not a valid GitHub URL")
+
+        owner, repo = match.groups()
+        return owner, repo

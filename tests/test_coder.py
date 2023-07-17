@@ -1,6 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import create_and_write_file
-import os
+import os, pytest
 
 
 def test_generate_directory_structure(tmp_path):
@@ -113,3 +113,18 @@ def test_git_diff_context(temp_git_repo):
     commit = temp_git_repo.head.commit.hexsha
     diff = Coder.git_diff_context(commit)
     assert "renamedfile.txt" in diff
+
+    def test_parse_github_url():
+        # Test with https URL
+        owner, repo = Coder.parse_github_url("https://github.com/owner/repo.git")
+        assert owner == "owner"
+        assert repo == "repo"
+
+        # Test with git URL
+        owner, repo = Coder.parse_github_url("git@github.com:owner/repo.git")
+        assert owner == "owner"
+        assert repo == "repo"
+
+        # Test with invalid URL
+        with pytest.raises(ValueError):
+            Coder.parse_github_url("not a valid url")
