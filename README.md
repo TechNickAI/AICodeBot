@@ -4,7 +4,7 @@
 
 AICodeBot is a coding assistant designed to make your coding life easier. Think of it as your AI version of a pair programmer. Perform code reviews, create helpful commit messages, debug problems, and help you think through building new features. A team member that accelerates the pace of development and helps you write better code.
 
-We've planned to build out multiple different interfaces for interacting with AICodeBot. To start, it's a [command-line tool](https://pypi.org/project/aicodebot/). In the future, we plan to integrate it with GitHub Actions, Slack, and other tools to make it even more useful.
+We've planned to build out multiple different interfaces for interacting with AICodeBot. To start, it's a [command-line tool](https://pypi.org/project/aicodebot/) that you can install and run in your terminal, and a [GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review).
 
 Status: This project is in its early stages, but it already improves the software development workflow, and has a healthy roadmap of features (below).
 
@@ -23,42 +23,46 @@ We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time
 | Writing tests | ✅ |
 | Integration with GitHub | ✅ |
 | Modifying local files | In Progress |
-| Searching the internet for answers | In Progress |
+| Searching the Internet for answers | In Progress |
 | Reading library documentation | In Progress |
 | Coding with a large number of files |  As LLMs improve |
 | Writing senior developer level code | Eventually |
 | Major refactors | Eventually |
-| Build an entire app | Nope |
+| Build entire apps | Eventually |
 | Replace Developers | Nope |
 
 ### AI Sidekick 🦸‍♂️
 
- `aicodebot sidekick` Your AI-powered coding assistant. It's designed to help you with your coding tasks by providing context-aware suggestions and solutions. Think ChatGPT with the ability to read local files for context.
+ `aicodebot sidekick` Your AI-powered coding assistant. It's designed to help you with your coding tasks by providing context-aware suggestions and solutions. Think ChatGPT with the ability to read the local repository for context.
 
- By default it will pass along a directory of files from the current working directory, and you can also pass in a list of files to use as context. For example:
+ By default it will pass along a directory of files from the current working directory, and you can also pass in a list of files to use as context for the task you are working on. For example:
 
  ```bash
  aicodebot sidekick file1.py file2.py
  ```
 
-In this example, the sidekick will read in the contents of file1.py and file2.py and use them to provide context-aware answers.
+In this example, the sidekick will read the contents of file1.py and file2.py and use them to provide context-aware answers.
 
-Pro-tip: add your README.md to the list of files to get context-aware answers.
+Pro-tips: 
+* Add your README.md to the list of files to get context-aware answers.
+* Paste in error messages from log files or stack traces and it will help you debug
+* Brainstorm new features
+* Have it write unit tests for you that cover all the cases
 
-This feature is in it's early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingesting repository specific domain knowledge, writing local files, and more. For now, it just *reads* files and provides suggestions.
+This feature is in its early phases right now, but it's already useful. We'll be adding support for tools that the sidekick can use, including GitHub integration, ingesting repository specific domain knowledge, writing local files, and more. For now, it just *reads* files and provides suggestions.
 
 ### AI-Assisted Git Commit 📝
 
-`aicodebot commit` improves the git commit process. It will run pre-commit for you to check syntax, and then generate a commit message for you based on the changes you've made. In about as much effort as typing "fix bug" for the commit message, you will get a high quality commit message that thoroughly describes the change.
+`aicodebot commit` improves the git commit process. It will run pre-commit for you to check syntax, and then generate a commit message for you based on the changes you've made. In about as much effort as typing "fix bug" for the commit message, you will get a high-quality commit message that thoroughly describes the change.
 
 ### AI-Assisted Code Review 👀
 
-`aicodebot review` will run a code review on your code and suggest improvements. By default it will look at [un]staged changes, and you can also supply a specific commit hash to review.
-It's goal is to suggest how to make the code better, and we've found that it often teaches us new things about our code and makes us better programmers. It's not perfect, but it's a great way to get a second set of robot eyes on your code.
+`aicodebot review` will run a code review on your code and suggest improvements. By default, it will look at [un]staged changes, and you can also supply a specific commit hash to review.
+Its goal is to suggest how to make the code better, and we've found that it often teaches us new things about our code and makes us better programmers. It is a great way to get a second set of robot eyes on your code.
 
 ### AI-Assisted Debugging 🐞
 
-`aicodebot debug $command` will run the command and capture the log output. It will pass the error message, stack trace, command output, etc. to the AI and respond with some suggestions on how to fix it. It saves a trip to Stack Overflow in a separate window, allowing you to stay in terminal with all the context.
+`aicodebot debug $command` will run the $command and capture the log output. It will pass the error message, stack trace, command output, etc. over to the AI and respond with some suggestions on how to fix it.
 
 [![PyPI version](https://badge.fury.io/py/aicodebot.svg?0.6.2)](https://badge.fury.io/py/aicodebot)
 
@@ -68,7 +72,7 @@ To install AICodeBot, run:
 
 `pip install aicodebot`
 
-And then run `aicodebot configure` to get started.
+And then, run `aicodebot configure` to get started.
 
 ```bash
 Usage: aicodebot [OPTIONS] COMMAND [ARGS]...
@@ -83,18 +87,22 @@ Commands:
   configure  Create or update the config file
   debug      Run a command and debug the output.
   fun-fact   Get a fun fact about programming and artificial intelligence.
-  review     Do a code review, with [un]staged changes, or a spe
+  review     Do a code review, with [un]staged changes, or a specifc commit.
 ```
 
 ### Open AI key setup
 
 The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI's large language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys).
 
-Note: You will be billed by OpenAI based on how much you use it. Typical developers will use less than $10/month - which if you are a professional developer you'll likely more than make up for with saved time and higher quality work. See [OpenAI's pricing page](https://openai.com/pricing/) for more details.
+Note: You will be billed by OpenAI based on how much you use it. Typical developers will use less than $10/month - which if you are a professional developer you'll likely more than make up for with saved time and higher quality work. See [OpenAI's pricing page](https://openai.com/pricing/) for more details. Also, see the note about increasing your token size and using better language models below.
 
 ## Integration with GitHub Actions
 
-How about automated code reviews on every commit? You can have AICodeBot run as a GitHub action on your repository. See [The AICodeBot GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review)
+How about automated code reviews on every commit? You can have AICodeBot run as a GitHub action on your repository. See [The AICodeBot GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review). It will look at every commit and pull request, and then either:
+
+* ✅ Pass
+* 🗒️ Comments - pass the action, but leave a comment with minor issues, suggestions, or improvements.
+* ❌ Fail the action - if a serious issue is found, it will leave a comment and let you know about something that should be addressed.
 
 ## Roadmap of Upcoming Features ️
 
@@ -106,11 +114,10 @@ How about automated code reviews on every commit? You can have AICodeBot run as 
 * [ ] **Dependency Management**: Updating dependencies to their latest versions with pull requests that run tests.
 * [ ] **Documentation Generation**: Generates comprehensive documentation for code, including docstrings, README files, and wiki pages.
 * [ ] **Performance Optimization Suggestions**: Suggests potential performance optimizations for code.
-* [ ] **Test Generation**: Generates unit tests for code, improve test coverage.
-* [ ] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via GitHub Actions). Eventually: Fix the build automatically when there are small errors.
+* [X] **Test Generation**: Generates unit tests for code, improve test coverage.
+* [X] **Integration with CI/CD pipelines**: Integrates with CI/CD pipelines to automate tasks like code review, testing, and deployment (via GitHub Actions). Eventually: Fix the build automatically when there are small errors.
 * [X] **Rubber Ducky Chat Bot**: Helps developers think through design issues by providing a conversational interface to discuss and solve problems, using data from the current repository.
 * [X] **Linting/Formatting**: Checks code for linting errors and automatically fixes them where possible (via pre-commit)
-* [ ] **Handle GitHub Issues**: Handles basic tasks that you assign to [@aicodebot](https://pypi.org/project/aicodebot/)
 * [ ] **Automatically Generate ChangeLogs and Release Notes**: Generates release notes and changelogs based on commit messages and code changes.
 
 ### User Interfaces
@@ -119,7 +126,7 @@ How about automated code reviews on every commit? You can have AICodeBot run as 
 * [ ] **Mention the @aicodebot GitHub user**: Mentioning the [@aicodebot](https://pypi.org/project/aicodebot/) GitHub user in a comment will trigger it to perform a task, review code, or pull in an appropriate GIF.
 * [X] **Callable as a GitHub action**: Can be called as a GitHub action to perform tasks on GitHub repositories. [AICodeBot Action](https://github.com/marketplace/actions/aicodebot-code-review)
 * [ ] **Jupyter Notebook Extension**: Provides a Jupyter Notebook extension that can be used to debug code in the notebook.
-* [ ] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
+* [X] **Chat**: CLI chat interface that knows the context of your codebase and can answer questions about it. No more going back and forth between ChatGPT and command-line.
 * [ ] **Slack Bot**: Interacts with aicodebot via slack, sends notifications, performs tasks, and provides real-time assistance to developers.
 * [ ] **Bug Report service integrations**: Listen for bug reports from Sentry, [Honeybadger](http://honeybadger.io), and other bug reporting tools and automatically create issues, assign them to developers, and notify them via Slack. Eventually: FIX the bug automatically and notify the team.
 
@@ -141,19 +148,19 @@ How about automated code reviews on every commit? You can have AICodeBot run as 
 
 ## Alignment ❤️ + 🤖
 
-Technology itself is amoral, it just imbues the values of the people who create it. We believe that AI should be built-in a way that aligns with humanity, and we're building AICodeBot to help us do just that. We're building from a heart-centered space, and contributing to the healthy intersection of AI and humanity.
+Technology itself is amoral; it just imbues the values of the people who create it. We believe that AI should be built in a way that aligns with humanity, and we're building AICodeBot to help us do just that. We're building from a heart-centered space, and contributing to the healthy intersection of AI and humanity.
 
 ### What it's NOT
 
-`aicodebot` is a tool for developers, not a replacement for them. It's not going to replace your job, but it will make your job easier and more fun. It's not going to take over the world, but it will help us build a better one. See the *Alignment* section below for more.
+`aicodebot` is a tool for developers, not a replacement for them. It's not going to replace your job, but it will make your job easier and more fun. It won't take over the world, but it will help us build a better one. See the *Alignment* section below for more.
 
-⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes AICodeBot does dumb things, which is why it's mostly *reading* and *advising* and not yet *writing*. Much like Tesla's "Full Self Driving", you have to keep your hands on the wheel.
+⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes AICodeBot does dumb things, so it's mostly *reading* and *advising* and not yet *writing*. Much like Tesla's "Full Self Driving", you must keep your hands on the wheel.
 
 It's also not a "build a site for me in 5 minutes" tool that takes a well-constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that. It's not a no-code platform. Instead, AICodeBot is built to work with existing code bases and the git-commit level. It's designed to multiply the effectiveness of capable engineers.
 
 ## Which Language Model?
 
-Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4 if your OpenAI account supports it, we will check the first time you run it. Tip: If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api)
+Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4. If your OpenAI account supports it, we will check the first time you run it. If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api). You can also use openrouter.ai to get access to advanced models like GPT-4 32k for larger context windows.
 
 Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
@@ -161,7 +168,7 @@ Note: We'll be adding more options for AI models in the future, including those 
 
 In AI models like OpenAI's GPT-4, a "token" is a piece of text, as short as a character or as long as a word. The total tokens in an API call, including input and output, affect the cost, time, and whether the call works based on the maximum limit.
 
-Each model has a maximum token limit. For example, gpt-3.5 has a limit of 4096 tokens, and gpt-4 has a token limit of 8192 tokens. If a conversation exceeds this limit, you'll need to reduce your text until it fits.
+Each model has a maximum token limit. For example, GPT-3.5 has a limit of 4096 tokens, and GPT-4 has a token limit of 8192 tokens. If a conversation exceeds this limit, you must reduce your text until it fits.
 
 When using commands like the Sidekick command in AICodeBot, which allows you to pass in files for context, it's important to manage your tokens effectively. Due to token limits, it's not feasible to load your entire code base. Instead, you should only load the specific files that are relevant to the task you're working on. This ensures that the AI model can process your request efficiently and provide the most relevant suggestions for your current task.
 
@@ -175,9 +182,9 @@ The context is too large (21414) for any of the models supported by your API key
 
 There are a couple of things you can do:
 
-1. Load less files into the context (only what you need to work with)
-2. Apply for gpt-32k access from OpenAI by contacting them.
-3. Use openrouter.ai - this allows you to use the full power of gpt-4-32k, which offers a 4x larger context window. See [openrouter.ai](https://openrouter.ai) for more details. Once you sign up and set your `openrouter_api_key` in your `$HOME/.aicodebot.yaml` file, you can have access too larger models. Soon we will have support for Claude 2, which has a 100k token limit.
+1. Load fewer files into the context (only what you need to work with)
+2. Apply for GPT-4-32k access from OpenAI by contacting them.
+3. Use openrouter.ai - this allows you to use the full power of GPT-4-32k, which offers a 4x larger context window. See [openrouter.ai](https://openrouter.ai) for more details. Once you sign up and set your `openrouter_api_key` in your `$HOME/.aicodebot.yaml` file, you can have access to larger models. Soon we will have support for Claude 2, which has a 100k token limit.
 
 ## Development / Contributing
 
