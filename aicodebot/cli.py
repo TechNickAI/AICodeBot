@@ -182,7 +182,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         console.print(f"✅ {len(files)} file(s) committed.")
 
     # Delete the temporary file
-    Path.unlink(temp_file_name)
+    Path(temp_file_name).unlink()
 
 
 @cli.command()

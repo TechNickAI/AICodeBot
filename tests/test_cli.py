@@ -70,7 +70,7 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     assert config_data["personality"] == DEFAULT_PERSONALITY.name
 
     # remove the config file
-    Path.unlink(temp_config_file)
+    Path(temp_config_file).unlink()
     assert read_config() is None
 
     # now unset the env var and run the command again with it passed as a flag
