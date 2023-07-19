@@ -43,7 +43,8 @@ We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time
 
 In this example, the sidekick will read the contents of file1.py and file2.py and use them to provide context-aware answers.
 
-Pro-tips: 
+Pro-tips:
+
 * Add your README.md to the list of files to get context-aware answers.
 * Paste in error messages from log files or stack traces and it will help you debug
 * Brainstorm new features
