@@ -22,7 +22,7 @@ charset-normalizer==3.1.0
     # via
     #   aiohttp
     #   requests
-click==8.1.4
+click==8.1.6
     # via -r requirements/requirements.in
 dataclasses-json==0.5.8
     # via langchain
