@@ -357,12 +357,14 @@ def fun_fact(verbose, response_token_size):
 @click.option("-v", "--verbose", count=True)
 @click.option("-r", "--repo-url", help="The URL of the repository to learn from")
 def learn(repo_url, verbose):
-    """Learn new skills and gain additional knowledge from a repository"""
+    """NOT WORKING YET: Learn new skills and gain additional knowledge from a repository"""
     # Clone the supplied repo locally and walk through it, load it into a
     # local vector store, and pre-query this vector store for the LLM to use a
     # context for the prompt
 
     setup_config()
+
+    console.print("This is an experimental feature.", style=warning_style)
 
     owner, repo_name = Coder.parse_github_url(repo_url)
 
