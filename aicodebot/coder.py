@@ -3,7 +3,7 @@ from aicodebot.helpers import exec_and_get_output, logger
 from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
-import fnmatch, functools, openai, re, subprocess, tiktoken
+import fnmatch, functools, openai, os, re, subprocess, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
@@ -81,7 +81,17 @@ class Coder:
             openai.api_key = config["openrouter_api_key"]
             openai.api_base = "https://openrouter.ai/api/v1"
             headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
-            tiktoken_model_name = model_name.replace("openai/", "")
+
+            # In order to get conversation buffer memory to work, we need to set the tiktoken model name
+            # For OpenAI models, this is as simple as stripping the prefix "openai/" from the model name
+            # For non-OpenAI models, we need to set the model name to "gpt-4" for now
+            if model_name.startswith("openai/"):
+                tiktoken_model_name = model_name.replace("openai/", "")
+            else:
+                # HACK: For any other model, default to gpt-4. Seems to work?
+                # Tested with anthropic/claude2
+                tiktoken_model_name = "gpt-4"
+
         else:
             openai.api_key = config["openai_api_key"]
             headers = None
@@ -110,12 +120,17 @@ class Coder:
     @staticmethod
     def get_llm_model_name(token_size=0):
         config = read_config()
+        if os.getenv("AICODEBOT_LLM_MODEL"):
+            logger.info(f"Using model {os.getenv('AICODEBOT_LLM_MODEL')} from AICODEBOT_LLM_MODEL environment variable")
+            return os.getenv("AICODEBOT_LLM_MODEL")
+
         if "openrouter_api_key" in config:
             model_options = {
                 "openai/gpt-4": 8192,
                 "openai/gpt-4-32k": 32768,
-                # Not working yet "anthropic/claude-2": 100_000,
+                "anthropic/claude-2": 100_000,
             }
+
             supported_engines = model_options.keys()
         else:
             model_options = {
@@ -147,7 +162,7 @@ class Coder:
         encoding = tiktoken.encoding_for_model(model)
         tokens = encoding.encode(text)
         token_length = len(tokens)
-        short_text = text.strip()[0:20] + "..." if len(text) > 10 else text
+        short_text = (text[0:20] + "..." if len(text) > 10 else text).strip()
         logger.debug(f"Token length for {short_text}: {token_length}")
         return token_length
 
