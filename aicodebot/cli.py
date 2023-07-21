@@ -444,7 +444,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 @cli.command
 @click.option("--request", "-r", help="What to ask your sidekick to do")
 @click.option("-v", "--verbose", count=True)
-@click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 2)
+@click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 3)
 @click.argument("files", nargs=-1)
 def sidekick(request, verbose, response_token_size, files):
     """
