@@ -12,6 +12,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Test with Python ${{ matrix.python-version }}
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     strategy:
       matrix:
@@ -27,22 +29,24 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
+        cache: pip
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements/requirements.txt
-        pip install wheel twine pytest
+        pip install -r requirements/requirements-test.txt
+        # Additional build dependencies
+        pip install wheel twine
 
     - name: Build and install aicodebot
       run: |
         python setup.py sdist bdist_wheel
         pip install dist/*.whl
 
-    - name: Smoke Test
+    - name: Test
       run: |
         aicodebot -V
-        pytest
+        pytest --record-mode=new_episodes
 
   pypi_release:
     needs: test
