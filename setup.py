@@ -1,6 +1,6 @@
 from aicodebot import version
 from pathlib import Path
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 # Pull in the long description from the README
 long_description = Path("README.md").read_text(encoding="utf-8")
@@ -26,7 +26,7 @@ setup(
             "aicodebot = aicodebot.cli:cli",
         ],
     },
-    packages=find_packages(include=['aicodebot', 'aicodebot.*']),
+    packages=find_packages(include=["aicodebot", "aicodebot.*"]),
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
