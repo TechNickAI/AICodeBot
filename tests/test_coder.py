@@ -40,6 +40,9 @@ def test_generate_directory_structure(tmp_path):
     assert "- [File] file.txt" in directory_structure_no_gitignore
     assert "- [File] sub_file" in directory_structure_no_gitignore
 
+    file_list = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
+    assert len(file_list) > 10
+
 
 def test_get_token_length():
     text = ""

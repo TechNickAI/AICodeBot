@@ -1,7 +1,6 @@
 from langchain.callbacks.base import BaseCallbackHandler
 from loguru import logger
 from pathlib import Path
-from prompt_toolkit.completion import Completer, Completion
 from rich.markdown import Markdown
 import os, subprocess, sys
 
@@ -30,29 +29,6 @@ def create_and_write_file(filename, text, overwrite=False):
 
     with Path(filename).open("w") as f:
         f.write(text)
-
-
-class SidekickCompleter(Completer):
-    """A custom prompt_toolkit completer for sidekick."""
-
-    def get_completions(self, document, complete_event):
-        # Get the text before the cursor
-        text = document.text_before_cursor
-
-        supported_commands = ["/add", "/drop", "/edit", "/files", "/quit"]
-
-        # If the text starts with a slash, it's a command
-        if text.startswith("/"):
-            for command in supported_commands:
-                if command.startswith(text):
-                    yield Completion(command, start_position=-len(text))
-
-        if text.startswith(("/add ", "/drop ")):
-            # If the text starts with /add or /drop, it's a file
-            files = Path().rglob("*")
-            for file in files:
-                if str(file).startswith(text.split()[-1]):
-                    yield Completion(str(file), start_position=-len(text.split()[-1]))
 
 
 def exec_and_get_output(command):

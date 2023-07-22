@@ -3,6 +3,7 @@ from aicodebot.helpers import exec_and_get_output, logger
 from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
+from prompt_toolkit.completion import Completer, Completion
 import fnmatch, functools, openai, os, re, subprocess, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
@@ -27,6 +28,31 @@ class Coder:
         else:
             logger.info(f"Cloning {repo_url} to {repo_dir}")
             subprocess.run(["git", "clone", repo_url, repo_dir], check=True)
+
+    @classmethod
+    def filtered_file_list(cls, path, ignore_patterns=None, use_gitignore=True):
+        """Walk a directory and return a list of files that are not ignored."""
+        ignore_patterns = ignore_patterns.copy() if ignore_patterns else []
+
+        base_path = Path(path)
+
+        if use_gitignore:
+            # Note: .gitignore files can exist in sub directories as well, such as * in __pycache__ directories
+            gitignore_file = base_path / ".gitignore"
+            if gitignore_file.exists():
+                with gitignore_file.open() as f:
+                    ignore_patterns.extend(line.strip() for line in f if line.strip() and not line.startswith("#"))
+
+        out = []
+        if base_path.is_dir():
+            if not any(fnmatch.fnmatch(base_path.name, pattern) for pattern in ignore_patterns):
+                out.append(base_path)
+                for item in base_path.iterdir():
+                    out += cls.filtered_file_list(item, ignore_patterns, use_gitignore)
+        elif not any(fnmatch.fnmatch(base_path.name, pattern) for pattern in ignore_patterns):
+            out.append(base_path)
+
+        return out
 
     @classmethod
     def generate_directory_structure(cls, path, ignore_patterns=None, use_gitignore=True, indent=0):
@@ -246,3 +272,26 @@ class Coder:
 
         owner, repo = match.groups()
         return owner, repo
+
+
+class SidekickCompleter(Completer):
+    """A custom prompt_toolkit completer for sidekick."""
+
+    def get_completions(self, document, complete_event):
+        # Get the text before the cursor
+        text = document.text_before_cursor
+
+        supported_commands = ["/add", "/drop", "/edit", "/files", "/quit"]
+
+        # If the text starts with a slash, it's a command
+        if text.startswith("/"):
+            for command in supported_commands:
+                if command.startswith(text):
+                    yield Completion(command, start_position=-len(text))
+
+        if text.startswith(("/add ", "/drop ")):
+            # If the text starts with /add or /drop, it's a file
+            files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
+            for file in files:
+                if str(file).startswith(text.split()[-1]):
+                    yield Completion(str(file), start_position=-len(text.split()[-1]))

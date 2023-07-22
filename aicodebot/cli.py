@@ -1,13 +1,7 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
+from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder, SidekickCompleter
 from aicodebot.config import get_config_file, get_local_data_dir, read_config
-from aicodebot.helpers import (
-    RichLiveCallbackHandler,
-    SidekickCompleter,
-    create_and_write_file,
-    exec_and_get_output,
-    logger,
-)
+from aicodebot.helpers import RichLiveCallbackHandler, create_and_write_file, exec_and_get_output, logger
 from aicodebot.learn import load_documents_from_repo, store_documents
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from datetime import datetime
@@ -494,7 +488,7 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
             token_length = Coder.get_token_length(Path(file).read_text())
             console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
 
-    files = set(files)  # Dedupe
+    files = set(files)  # Create a set for deduplication
     if files:
         show_file_context(files)
 
