@@ -494,8 +494,8 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
             token_length = Coder.get_token_length(Path(file).read_text())
             console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
 
+    files = set(files)  # Dedupe
     if files:
-        files = set(files)  # Dedupe
         show_file_context(files)
 
     # Generate the prompt and set up the model
@@ -528,53 +528,56 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
         else:
             human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file), completer=SidekickCompleter())
             human_input = human_input.strip()
-            if not human_input:
-                # Must have been spaces or blank line
+
+        if not human_input:
+            # Must have been spaces or blank line
+            continue
+
+        if human_input.startswith("/"):
+            cmd = human_input.lower().split()[0]
+            # Handle commands
+            if cmd in ["/add", "/drop"]:
+                # Get the filename
+                # If they didn't specify a file, then ignore
+                try:
+                    filename = human_input.split()[1]
+                except IndexError:
+                    continue
+
+                # If the file doesn't exist, or we can't open it, let them know
+                if not Path(filename).exists():
+                    console.print(f"File '{filename}' doesn't exist.", style=error_style)
+                    continue
+
+                if cmd == "/add":
+                    files.add(filename)
+                    console.print(f"✅ Added '{filename}' to the list of files.")
+                elif cmd == "/drop":
+                    # Drop the file from the list
+                    files.discard(filename)
+                    console.print(f"✅ Dropped '{filename}' from the list of files.")
+
+                context = generate_files_context(files)
+                show_file_context(files)
                 continue
 
-            if human_input.startswith("/"):
-                cmd = human_input.lower().split()[0]
-                # Handle commands
-                if cmd in ["/add", "/drop"]:
-                    # Get the filename
-                    # If they didn't specify a file, then ignore
-                    try:
-                        filename = human_input.split()[1]
-                    except IndexError:
-                        continue
+            elif cmd == "/edit":
+                human_input = edited_input = click.edit()
+            elif cmd == "/files":
+                show_file_context(files)
+                continue
 
-                    # If the file doesn't exist, or we can't open it, let them know
-                    if not Path(filename).exists():
-                        console.print(f"File '{filename}' doesn't exist.", style=error_style)
-                        continue
+            elif cmd == "/quit":
+                break
 
-                    if cmd == "/add":
-                        files.add(filename)
-                        console.print(f"✅ Added '{filename}' to the list of files.")
-                    elif cmd == "/drop":
-                        # Drop the file from the list
-                        files.discard(filename)
-                        console.print(f"✅ Dropped '{filename}' from the list of files.")
+        elif human_input.lower()[-2:] == r"\e":
+            # If the text ends wit then we want to edit it
+            human_input = edited_input = click.edit(human_input[:-2])
 
-                    context = generate_files_context(files)
-                    show_file_context(files)
-                    continue
-                elif cmd == "/edit":
-                    human_input = edited_input = click.edit()
-                elif cmd == "/files":
-                    show_file_context(files)
-                    continue
-                elif cmd == "/quit":
-                    break
-
-            elif human_input.lower()[-2:] == r"\e":
-                # If the text ends wit then we want to edit it
-                human_input = edited_input = click.edit(human_input[:-2])
-
-            if edited_input:
-                # If the user edited the input, then we want to print it out so they
-                # have a record of what they asked for on their terminal
-                console.print(f"Request:\n{edited_input}")
+        if edited_input:
+            # If the user edited the input, then we want to print it out so they
+            # have a record of what they asked for on their terminal
+            console.print(f"Request:\n{edited_input}")
 
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live, bot_style)
