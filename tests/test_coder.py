@@ -44,6 +44,34 @@ def test_generate_directory_structure(tmp_path):
     assert len(file_list) > 10
 
 
+def test_get_file_info():
+    # Test with a text file
+    is_binary, file_type = Coder.get_file_info("tests/test_coder.py")
+    assert is_binary is False
+    assert file_type == "Python"
+
+    # Test with a binary file
+    is_binary, file_type = Coder.get_file_info("assets/robot.png")
+    assert is_binary is True
+    assert file_type == Coder.UNKNOWN_FILE_TYPE
+
+    is_binary, file_type = Coder.get_file_info("LICENSE")
+    assert is_binary is False
+    assert file_type == Coder.UNKNOWN_FILE_TYPE
+
+    is_binary, file_type = Coder.get_file_info("README.md")
+    assert is_binary is False
+    assert file_type == "Markdown"
+
+    is_binary, file_type = Coder.get_file_info("pyproject.toml")
+    assert is_binary is False
+    assert file_type == "TOML"
+
+    # Test with a non-existent file
+    with pytest.raises(FileNotFoundError):
+        Coder.get_file_info("non_existent_file.txt")
+
+
 def test_get_token_length():
     text = ""
     assert Coder.get_token_length(text) == 0

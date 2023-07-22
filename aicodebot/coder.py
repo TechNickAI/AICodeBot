@@ -4,7 +4,8 @@ from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
 from prompt_toolkit.completion import Completer, Completion
-import fnmatch, functools, openai, os, re, subprocess, tiktoken
+from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
+import fnmatch, functools, mimetypes, openai, os, re, subprocess, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
@@ -16,6 +17,8 @@ class Coder:
     The Coder class encapsulates the functionality of interacting with LLMs,
     git, and the local file system.
     """
+
+    UNKNOWN_FILE_TYPE = "unknown"
 
     @staticmethod
     def clone_repo(repo_url, repo_dir):
@@ -78,6 +81,31 @@ class Coder:
             structure += "  " * indent + f"- [File] {base_path.name}\n"
 
         return structure
+
+    @classmethod
+    def get_file_info(cls, file_path):
+        # Use the mimetypes module to guess the MIME type
+        mime_type = mimetypes.guess_type(file_path)[0]
+
+        # Use the is_binary_file function to check if the file is binary
+        is_binary = cls.is_binary_file(file_path)
+
+        try:
+            # Try to get the lexer for the MIME type
+            lexer = get_lexer_for_mimetype(mime_type)
+        except ClassNotFound:
+            try:
+                # If that fails, try to guess the lexer based on the file name
+                lexer = guess_lexer_for_filename(file_path, "")
+            except ClassNotFound:
+                # If that also fails, set the file type to UNKNOWN_FILE_TYPE
+                file_type = cls.UNKNOWN_FILE_TYPE
+            else:
+                file_type = lexer.name
+        else:
+            file_type = lexer.name
+
+        return is_binary, file_type
 
     @staticmethod
     @functools.lru_cache
@@ -230,9 +258,13 @@ class Coder:
                 if status_code == "A":
                     # If the file is new, include the entire file content
                     file_name = status_parts[1]
-                    contents = Path(file_name).read_text()
-                    diffs.append(f"## New file added: {file_name}")
-                    diffs.append(contents)
+                    if Coder.is_binary_file(file_name):
+                        # Don't include the diff for binary files
+                        diffs.append(f"## New binary file added: {file_name}")
+                    else:
+                        diffs.append(f"## New file added: {file_name}")
+                        contents = Path(file_name).read_text()
+                        diffs.append(contents)
                 elif status_code == "R":
                     # If the file is renamed, get the diff and note the old and new names
                     old_file_name, new_file_name = status_parts[1], status_parts[2]
@@ -257,6 +289,18 @@ class Coder:
     @staticmethod
     def git_unstaged_files():
         return exec_and_get_output(["git", "diff", "HEAD", "--name-only"]).splitlines()
+
+    @staticmethod
+    def is_binary_file(file_path):
+        chunksize = 4000
+        with Path(file_path).open("rb") as file:
+            while True:
+                chunk = file.read(chunksize)
+                if b"\0" in chunk:  # Null byte
+                    return True
+                if len(chunk) < chunksize:
+                    break  # End of file
+        return False
 
     @staticmethod
     def parse_github_url(repo_url):
