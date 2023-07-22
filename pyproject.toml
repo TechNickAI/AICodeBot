@@ -1,9 +1,9 @@
 [tool.black]
-line-length = 120
+line-length = 115
 target-version = ["py311"]
 
 [tool.isort]
-line_length = 120
+line_length = 115
 profile = "black"
 py_version = 311
 use_parentheses = true
@@ -44,7 +44,7 @@ extend-ignore = [
     "TRY003",  # long messages in exceptions are ok
 ]
 # https://beta.ruff.rs/docs/rules/#ruff-specific-rules-ruf
-line-length = 120
+line-length = 120 # Tell the linter the max length is 120, and the other tools aim for 115
 select = [
     # Note, don't use isort through ruff, it's not as configurable as the standalone tool
     "A", # builtins
