@@ -7,17 +7,17 @@ from git import Repo
 from pathlib import Path
 import json, os, pytest
 
-# smaller than the default so tests go a little faster
+# smaller than the default size to speed up the tests
 TEST_RESPONSE_TOKEN_SIZE = 150
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_alignment(cli_runner):
     result = cli_runner.invoke(cli, ["alignment", "-t", "50"])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_commit(cli_runner, temp_git_repo):
     with cli_runner.isolated_filesystem():
         os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
@@ -45,7 +45,7 @@ def test_commit(cli_runner, temp_git_repo):
         assert "No changes" in result.output
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="skipping live tests without an api key.")
+@pytest.mark.vcr()
 def test_configure(cli_runner, tmp_path, monkeypatch):
     key = os.getenv("OPENAI_API_KEY")
 
@@ -87,7 +87,7 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     assert config_data["personality"] == DEFAULT_PERSONALITY.name
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_debug_success(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "echo", "Hello, world!"])
     assert result.exit_code == 0, f"Output: {result.output}"
@@ -95,20 +95,20 @@ def test_debug_success(cli_runner):
     assert "The command completed successfully." in result.output
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_debug_failure(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "ls", "-9"])
     assert result.exit_code > 0, f"Output: {result.output}"
     assert "ls -9" in result.output
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_fun_fact(cli_runner):
     result = cli_runner.invoke(cli, ["fun-fact", "-t", TEST_RESPONSE_TOKEN_SIZE])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_review(cli_runner, temp_git_repo):
     with cli_runner.isolated_filesystem():
         os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
@@ -134,13 +134,13 @@ def test_review(cli_runner, temp_git_repo):
             ["review", "-t", TEST_RESPONSE_TOKEN_SIZE * 3, "--output-format", "json", "test.txt"],
         )
 
-        assert result.exit_code == 0
+        assert result.exit_code == 0, f"Output: {result.output}"
         # Check if it's valid json
         parsed = json.loads(result.output)
         assert parsed["review_status"] in ["PASSED"]
 
 
-@pytest.mark.skipif(not os.getenv("OPENAI_API_KEY"), reason="Skipping live tests without an API key.")
+@pytest.mark.vcr()
 def test_sidekick(cli_runner):
     # Define a mock request and file context
     mock_request = "What is 3 + 2? Just give me the answer, nothing else. Use a number, not text"

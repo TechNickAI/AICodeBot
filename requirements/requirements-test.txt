@@ -2,3 +2,7 @@
 -r requirements.txt
 pytest
 pytest-cov
+# We can use vcrpy 5 once this issue is fixed:
+# https://github.com/kiwicom/pytest-recording/issues/111
+vcrpy<5
+pytest-recording

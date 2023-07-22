@@ -23,3 +23,9 @@ def temp_git_repo(tmp_path):
     repo.index.commit("Initial commit")
 
     return repo
+
+
+@pytest.fixture(autouse=True)
+def vcr_config():
+    # Strip out the authorization header from the VCR cassettes, so we don't check in our API key
+    return {"filter_headers": ["authorization", "openai-organization"]}
