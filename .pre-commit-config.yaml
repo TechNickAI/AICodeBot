@@ -34,8 +34,6 @@ repos:
     rev: 23.7.0
     hooks:
       - id: black
-        args: [--line-length=115]
-        exclude: migrations/
 
   - repo: https://github.com/PyCQA/isort
     rev: 5.12.0
