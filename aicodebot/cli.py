@@ -52,7 +52,7 @@ def cli(debug):
 @click.option("-t", "--response-token-size", type=int, default=350)
 @click.option("-v", "--verbose", count=True)
 def alignment(response_token_size, verbose):
-    """Get a message about Heart-Centered AI Alignment ❤ + 🤖."""
+    """A message from AICodeBot about AI Alignment ❤ + 🤖."""
     setup_config()
 
     # Load the prompt
@@ -189,7 +189,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
 @click.option("-v", "--verbose", count=True)
 @click.option("--openai-api-key", envvar="OPENAI_API_KEY", help="Your OpenAI API key")
 def configure(verbose, openai_api_key):
-    """Create or update the config file"""
+    """Create or update the configuration file"""
 
     # --------------- Check for an existing key or set up defaults --------------- #
 
@@ -527,7 +527,7 @@ def sidekick(request, verbose, response_token_size, files):
 def setup_config():
     existing_config = read_config()
     if not existing_config:
-        console.print("Welcome to AI Code Bot! 🤖. Let's set up your config file.\n", style=bot_style)
+        console.print("Welcome to AICodeBot 🤖. Let's set up your config file.\n", style=bot_style)
         configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
         sys.exit(0)
     else:
