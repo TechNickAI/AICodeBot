@@ -42,7 +42,9 @@ jobs:
         run: python -m aicodebot.cli configure
 
       - name: Run the tests with coverage
-        run: pytest --cov=./ --cov-report=xml
+        # We use record-mode=new_episodes to record new API responses, because some times the open ai
+        # API calls a different host
+        run: pytest --cov=./ --cov-report=xml --record-mode=new_episodes
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
