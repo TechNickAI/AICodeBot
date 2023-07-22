@@ -89,7 +89,11 @@ def alignment(response_token_size, verbose):
 @click.option("-v", "--verbose", count=True)
 @click.option("-t", "--response-token-size", type=int, default=250)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
-@click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit (otherwise run it if it is found).")
+@click.option(
+    "--skip-pre-commit",
+    is_flag=True,
+    help="Skip running pre-commit (otherwise run it if it is found).",
+)
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
 def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     """Generate a commit message based on your changes."""
@@ -159,7 +163,11 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
     console.print("Examining the diff and generating the commit message")
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = Coder.get_llm(
-            model_name, verbose, 350, streaming=True, callbacks=[RichLiveCallbackHandler(live, bot_style)]
+            model_name,
+            verbose,
+            350,
+            streaming=True,
+            callbacks=[RichLiveCallbackHandler(live, bot_style)],
         )
 
         # Set up the chain
@@ -216,7 +224,10 @@ def configure(verbose, openai_api_key):
         console.print(f"Config file already exists at {get_config_file()}.")
         click.confirm("Do you want to rerun configure and overwrite it?", default=False, abort=True)
         config_data.update(
-            {"openai_api_key": existing_config["openai_api_key"], "personality": existing_config["personality"]}
+            {
+                "openai_api_key": existing_config["openai_api_key"],
+                "personality": existing_config["personality"],
+            }
         )
 
     config_data = config_data_defaults.copy()
@@ -264,7 +275,8 @@ def configure(verbose, openai_api_key):
 
     # Pull the choices from the name from each of the PERSONALITIES
     console.print(
-        "\nHow would you like your AI to act? You can choose from the following personalities:\n", style=bot_style
+        "\nHow would you like your AI to act? You can choose from the following personalities:\n",
+        style=bot_style,
     )
     personality_choices = ""
     for key, personality in PERSONALITIES.items():
@@ -434,7 +446,10 @@ def review(commit, verbose, output_format, response_token_size, files):
             response = chain.run(diff_context)
 
         parsed_response = prompt.output_parser.parse(response)
-        data = {"review_status": parsed_response.review_status, "review_comments": parsed_response.review_comments}
+        data = {
+            "review_status": parsed_response.review_status,
+            "review_comments": parsed_response.review_comments,
+        }
         if commit:
             data["commit"] = commit
         json_response = json.dumps(data, indent=4)
@@ -503,7 +518,8 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
     history_file = Path.home() / ".aicodebot_request_history"
 
     console.print(
-        "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n", style=bot_style
+        "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n",
+        style=bot_style,
     )
     while True:  # continuous loop for multiple questions
         edited_input = None

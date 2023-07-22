@@ -121,7 +121,9 @@ class Coder:
     def get_llm_model_name(token_size=0):
         config = read_config()
         if os.getenv("AICODEBOT_LLM_MODEL"):
-            logger.info(f"Using model {os.getenv('AICODEBOT_LLM_MODEL')} from AICODEBOT_LLM_MODEL environment variable")
+            logger.info(
+                f"Using model {os.getenv('AICODEBOT_LLM_MODEL')} from AICODEBOT_LLM_MODEL environment variable"
+            )
             return os.getenv("AICODEBOT_LLM_MODEL")
 
         if "openrouter_api_key" in config:
@@ -150,9 +152,13 @@ class Coder:
                 logger.info(f"Using {model} for token size {token_size}")
                 return model
 
-        logger.critical(f"The context is too large ({token_size}) for any of the models supported by your API key. 😞")
+        logger.critical(
+            f"The context is too large ({token_size}) for any of the models supported by your API key. 😞"
+        )
         if "openrouter_api_key" not in config:
-            logger.critical("If you provide an Open Router API key, you can access larger models, up to 32k tokens")
+            logger.critical(
+                "If you provide an Open Router API key, you can access larger models, up to 32k tokens"
+            )
 
         return None
 

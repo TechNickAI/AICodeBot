@@ -329,7 +329,8 @@ def get_prompt(command, structured_output=False):
             )
         else:
             return PromptTemplate(
-                template=REVIEW_TEMPLATE + "\nRespond in markdown format", input_variables=["diff_context"]
+                template=REVIEW_TEMPLATE + "\nRespond in markdown format",
+                input_variables=["diff_context"],
             )
 
     else:
