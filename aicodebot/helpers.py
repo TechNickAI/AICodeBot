@@ -51,8 +51,8 @@ class SidekickCompleter(Completer):
             # If the text starts with /add or /drop, it's a file
             files = Path().rglob("*")
             for file in files:
-                if file.name.startswith(text.split()[-1]):
-                    yield Completion(file.name, start_position=-len(text.split()[-1]))
+                if str(file).startswith(text.split()[-1]):
+                    yield Completion(str(file), start_position=-len(text.split()[-1]))
 
 
 def exec_and_get_output(command):
