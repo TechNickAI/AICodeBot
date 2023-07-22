@@ -1,9 +1,16 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
 from aicodebot.config import get_config_file, get_local_data_dir, read_config
-from aicodebot.helpers import RichLiveCallbackHandler, create_and_write_file, exec_and_get_output, logger
+from aicodebot.helpers import (
+    RichLiveCallbackHandler,
+    SidekickCompleter,
+    create_and_write_file,
+    exec_and_get_output,
+    logger,
+)
 from aicodebot.learn import load_documents_from_repo, store_documents
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
+from datetime import datetime
 from langchain.chains import LLMChain
 from langchain.memory import ConversationTokenBufferMemory
 from openai.api_resources import engine
@@ -14,7 +21,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.style import Style
-import click, datetime, json, langchain, openai, os, random, shutil, subprocess, sys, tempfile, webbrowser, yaml
+import click, humanize, json, langchain, openai, os, random, shutil, subprocess, sys, tempfile, webbrowser, yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -159,7 +166,9 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run(diff_context)
 
-    commit_message_approved = click.confirm("Do you want to use this commit message (type n to edit)?", default=True)
+    commit_message_approved = click.confirm(
+        "Do you want to use this commit message (type n to edit)?", default=True
+    )
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
@@ -349,7 +358,7 @@ def fun_fact(verbose, response_token_size):
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
-        year = random.randint(1942, datetime.datetime.utcnow().year)
+        year = random.randint(1942, datetime.utcnow().year)
         chain.run(f"programming and artificial intelligence in the year {year}")
 
 
@@ -368,7 +377,7 @@ def learn(repo_url, verbose):
 
     owner, repo_name = Coder.parse_github_url(repo_url)
 
-    start_time = datetime.datetime.utcnow()
+    start_time = datetime.utcnow()
 
     local_data_dir = get_local_data_dir()
 
@@ -382,7 +391,7 @@ def learn(repo_url, verbose):
 
     with console.status("Storing the repo in the vector store", spinner=DEFAULT_SPINNER):
         store_documents(documents, vector_store_dir)
-    console.print(f"✅ Repo loaded and indexed in {datetime.datetime.utcnow() - start_time} seconds.")
+    console.print(f"✅ Repo loaded and indexed in {datetime.utcnow() - start_time} seconds.")
 
 
 @cli.command
@@ -433,7 +442,9 @@ def review(commit, verbose, output_format, response_token_size, files):
 
     else:
         # Stream live
-        console.print("Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files))
+        console.print(
+            "Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files)
+        )
         with Live(Markdown(""), auto_refresh=True) as live:
             llm.streaming = True
             llm.callbacks = [RichLiveCallbackHandler(live, bot_style)]
@@ -446,7 +457,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 @click.option("-v", "--verbose", count=True)
 @click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 3)
 @click.argument("files", nargs=-1)
-def sidekick(request, verbose, response_token_size, files):
+def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
     """
     EXPERIMENTAL: Coding help from your AI sidekick\n
     FILES: List of files to be used as context for the session
@@ -462,6 +473,16 @@ def sidekick(request, verbose, response_token_size, files):
     # git history
     context = generate_files_context(files)
 
+    def show_file_context(files):
+        console.print("Files loaded in this session:")
+        for file in files:
+            token_length = Coder.get_token_length(Path(file).read_text())
+            console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
+
+    if files:
+        files = set(files)  # Dedupe
+        show_file_context(files)
+
     # Generate the prompt and set up the model
     prompt = get_prompt("sidekick")
     memory_token_size = response_token_size * 2  # Allow decent history
@@ -474,9 +495,6 @@ def sidekick(request, verbose, response_token_size, files):
 
     llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
 
-    # Open the temporary file in the user's editor
-    editor = Path(os.getenv("EDITOR", "/usr/bin/vim")).name
-
     # Set up the chain
     memory = ConversationTokenBufferMemory(
         memory_key="chat_history", input_key="task", llm=llm, max_token_limit=memory_token_size
@@ -484,23 +502,57 @@ def sidekick(request, verbose, response_token_size, files):
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
     history_file = Path.home() / ".aicodebot_request_history"
 
-    console.print(f"Enter a request OR (q) quit, OR (e) to edit using {editor}")
+    console.print(
+        "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n", style=bot_style
+    )
     while True:  # continuous loop for multiple questions
         edited_input = None
         if request:
             human_input = request
         else:
-            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file)).strip()
+            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file), completer=SidekickCompleter())
+            human_input = human_input.strip()
             if not human_input:
                 # Must have been spaces or blank line
                 continue
-            elif len(human_input) == 1:
-                if human_input.lower() == "q":
-                    break
-                elif human_input.lower() == "e":
+
+            if human_input.startswith("/"):
+                cmd = human_input.lower().split()[0]
+                # Handle commands
+                if cmd in ["/add", "/drop"]:
+                    # Get the filename
+                    # If they didn't specify a file, then ignore
+                    try:
+                        filename = human_input.split()[1]
+                    except IndexError:
+                        continue
+
+                    # If the file doesn't exist, or we can't open it, let them know
+                    if not Path(filename).exists():
+                        console.print(f"File '{filename}' doesn't exist.", style=error_style)
+                        continue
+
+                    if cmd == "/add":
+                        files.add(filename)
+                        console.print(f"✅ Added '{filename}' to the list of files.")
+                    elif cmd == "/drop":
+                        # Drop the file from the list
+                        files.discard(filename)
+                        console.print(f"✅ Dropped '{filename}' from the list of files.")
+
+                    context = generate_files_context(files)
+                    show_file_context(files)
+                    continue
+                elif cmd == "/edit":
                     human_input = edited_input = click.edit()
+                elif cmd == "/files":
+                    show_file_context(files)
+                    continue
+                elif cmd == "/quit":
+                    break
+
             elif human_input.lower()[-2:] == r"\e":
-                # If the text ends with \e then we want to edit it
+                # If the text ends wit then we want to edit it
                 human_input = edited_input = click.edit(human_input[:-2])
 
             if edited_input:
@@ -535,5 +587,5 @@ def setup_config():
         return existing_config
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     cli()

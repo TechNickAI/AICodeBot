@@ -87,7 +87,9 @@ PERSONALITIES = {
     ),
     "Her": SimpleNamespace(name="Her", prompt=HER, description="The AI character from the movie Her"),
     "Jules": SimpleNamespace(
-        name="Jules", prompt=JULES, description="Samuel L. Jackson's character from Pulp Fiction (warning: profanity))"
+        name="Jules",
+        prompt=JULES,
+        description="Samuel L. Jackson's character from Pulp Fiction (warning: profanity))",
     ),
     "Michael": SimpleNamespace(
         name="Michael", prompt=MICHAEL, description="Michael Scott from The Office (warning: TWSS))"
@@ -183,11 +185,6 @@ def generate_files_context(files):
     files_context += "Here are the relevant files we are working with in this session:\n"
     for file_name in files:
         contents = Path(file_name).read_text()
-        token_length = Coder.get_token_length(contents)
-        if token_length > 2_000:
-            logger.warning(f"File {file_name} is large, using {token_length} tokens")
-        else:
-            logger.debug(f"File {file_name} is {token_length} tokens")
         files_context += f"--- START OF FILE: {file_name} ---\n"
         files_context += contents
         files_context += f"\n--- END OF FILE: {file_name} ---\n\n"
@@ -341,7 +338,9 @@ def get_prompt(command, structured_output=False):
             "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context"]),
             "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output"]),
             "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
-            "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"]),
+            "sidekick": PromptTemplate(
+                template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"]
+            ),
         }
 
         try:

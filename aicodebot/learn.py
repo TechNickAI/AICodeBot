@@ -99,7 +99,9 @@ def store_documents(documents, vector_store_dir):
                 f"Processing {document.metadata['file_path']} as {language_extension_map[file_type].value} code"
             )
             splitter = RecursiveCharacterTextSplitter.from_language(
-                language=language_extension_map[document.metadata["file_type"].lower()], chunk_size=50, chunk_overlap=0
+                language=language_extension_map[document.metadata["file_type"].lower()],
+                chunk_size=50,
+                chunk_overlap=0,
             )
         else:
             # TODO: Check if it's a text file
@@ -119,7 +121,9 @@ def load_learned_repo(repo_name):
     """Load a vector store from a learned repo."""
     vector_store_file = Path(get_local_data_dir() / "vector_stores" / repo_name / "faiss_index")
     if not vector_store_file.exists():
-        raise ValueError(f"Vector store for {repo_name} does not exist. Please run `aicodebot learn $githuburl` first.")
+        raise ValueError(
+            f"Vector store for {repo_name} does not exist. Please run `aicodebot learn $githuburl` first."
+        )
 
     embeddings = OpenAIEmbeddings()
     return FAISS.load_local(vector_store_file, embeddings)

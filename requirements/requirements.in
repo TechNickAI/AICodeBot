@@ -9,6 +9,7 @@ beautifulsoup4 # needed by langchain
 click # command line interface helpers
 faiss-cpu
 GitPython
+humanize
 langchain
 loguru
 openai
