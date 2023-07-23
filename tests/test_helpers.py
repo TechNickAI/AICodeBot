@@ -3,9 +3,9 @@ from pathlib import Path
 import pytest
 
 
-def test_create_and_write_file():
+def test_create_and_write_file(tmp_path):
     # Test creating a file that does not exist
-    filename = "test.txt"
+    filename = tmp_path / "test.txt"
     text = "This is a test file."
     create_and_write_file(filename, text)
     assert Path(filename).exists()

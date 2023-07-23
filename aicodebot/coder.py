@@ -22,7 +22,8 @@ class Coder:
 
     @staticmethod
     def clone_repo(repo_url, repo_dir):
-        """Clone a git repository to a directory."""
+        """Clones a git repository from the provided URL to the specified directory.
+        If the directory already exists, it updates the repository instead."""
         if Path(repo_dir).exists():
             logger.info(f"Repo {repo_dir} already exists, updating it instead")
             # Reset it first to make sure we don't have any local changes
@@ -34,7 +35,8 @@ class Coder:
 
     @classmethod
     def filtered_file_list(cls, path, ignore_patterns=None, use_gitignore=True):
-        """Walk a directory and return a list of files that are not ignored."""
+        """Walks through a directory and returns a list of files that are not ignored
+        based on the provided ignore patterns and .gitignore files."""
         ignore_patterns = ignore_patterns.copy() if ignore_patterns else []
 
         base_path = Path(path)
@@ -59,7 +61,7 @@ class Coder:
 
     @classmethod
     def generate_directory_structure(cls, path, ignore_patterns=None, use_gitignore=True, indent=0):
-        """Generate a text representation of the directory structure of a path."""
+        """Generate a text representation of the directory structure of a path, used for context for prompts"""
         ignore_patterns = ignore_patterns.copy() if ignore_patterns else []
 
         base_path = Path(path)
@@ -84,7 +86,8 @@ class Coder:
 
     @classmethod
     def get_file_info(cls, file_path):
-        # Use the mimetypes module to guess the MIME type
+        """Gets information about a file, including whether it's binary and its file type."""
+
         mime_type = mimetypes.guess_type(file_path)[0]
 
         # Use the is_binary_file function to check if the file is binary
@@ -128,6 +131,7 @@ class Coder:
         streaming=False,
         callbacks=None,
     ):
+        """Initializes a language model for chat with the specified parameters."""
         config = read_config()
         if "openrouter_api_key" in config:
             # If the openrouter_api_key is set, use the Open Router API
@@ -165,6 +169,7 @@ class Coder:
 
     @staticmethod
     def get_llm_headers():
+        """Certain providers require extra headers to be set in order to access their models."""
         config = read_config()
         if "openrouter_api_key" in config:
             return {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
@@ -173,6 +178,7 @@ class Coder:
 
     @staticmethod
     def get_llm_model_name(token_size=0):
+        """Gets the name of the model to use for the specified token size."""
         config = read_config()
         if os.getenv("AICODEBOT_LLM_MODEL"):
             logger.info(
@@ -291,7 +297,20 @@ class Coder:
         return exec_and_get_output(["git", "diff", "HEAD", "--name-only"]).splitlines()
 
     @staticmethod
+    def identify_languages(files):
+        """Identify the languages of a list of files."""
+        languages = set()
+        for file in files:
+            _, language = Coder.get_file_info(file)
+            if language != Coder.UNKNOWN_FILE_TYPE:
+                languages.add(language)
+
+        return sorted(list(languages))
+
+    @staticmethod
     def is_binary_file(file_path):
+        """Checks if a file is binary or not byt looking for a null byte,
+        stopping when you find one or reach the end of the file."""
         chunksize = 4000
         with Path(file_path).open("rb") as file:
             while True:
@@ -304,10 +323,7 @@ class Coder:
 
     @staticmethod
     def parse_github_url(repo_url):
-        """
-        Parse a GitHub URL and return the owner and repo name.
-        Returns: A tuple containing the owner and repo name.
-        """
+        """Parse a GitHub URL and return the owner and repo name."""
         pattern = r"(?:https:\/\/github\.com\/|git@github\.com:)([^\/]+)\/([^\/]+?)(?:\.git)?$"
         match = re.match(pattern, repo_url)
 
@@ -319,7 +335,9 @@ class Coder:
 
 
 class SidekickCompleter(Completer):
-    """A custom prompt_toolkit completer for sidekick."""
+    """A custom prompt_toolkit completer for sidekick.
+    Handles the autocomplete for the sidekick commands and file names.
+    """
 
     def get_completions(self, document, complete_event):
         # Get the text before the cursor
@@ -334,7 +352,8 @@ class SidekickCompleter(Completer):
                     yield Completion(command, start_position=-len(text))
 
         if text.startswith(("/add ", "/drop ")):
-            # If the text starts with /add or /drop, it's a file
+            # If the text starts with /add or /drop, it's a file, so autocomplete the file name
+            # Get the list of files in the current directory, filtered by the .gitignore file
             files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
             for file in files:
                 if str(file).startswith(text.split()[-1]):

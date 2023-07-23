@@ -1,5 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import create_and_write_file
+from pathlib import Path
 import os, pytest
 
 
@@ -81,6 +82,7 @@ def test_get_token_length():
 
 
 def test_git_diff_context(temp_git_repo):
+    original_dir = Path.cwd()
     os.chdir(temp_git_repo.working_dir)
 
     # Test empty repo (no commits, no staged files, no unstaged changes)
@@ -144,6 +146,23 @@ def test_git_diff_context(temp_git_repo):
     commit = temp_git_repo.head.commit.hexsha
     diff = Coder.git_diff_context(commit)
     assert "renamedfile.txt" in diff
+
+    # Change working directory back
+    os.chdir(original_dir)
+
+
+def test_identify_languages():
+    # Create a list of test files
+    test_files = ["tests/test_coder.py", "LICENSE", "README.md", "pyproject.toml", "assets/robot.png", "setup.py"]
+
+    # Call the identify_languages function
+    result = Coder.identify_languages(test_files)
+
+    # Should not do anything for LICENSE
+    # Should not do anything for the binary file
+    # Should not duplicate the two python files
+    # Should be in alphabetical order
+    assert result == ["Markdown", "Python", "TOML"]
 
 
 def test_parse_github_url():
