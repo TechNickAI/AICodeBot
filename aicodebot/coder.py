@@ -229,7 +229,7 @@ class Coder:
         tokens = encoding.encode(text)
         token_length = len(tokens)
         short_text = (text[0:20] + "..." if len(text) > 10 else text).strip()
-        logger.debug(f"Token length for {short_text}: {token_length}")
+        logger.trace(f"Token length for {short_text}: {token_length}")
         return token_length
 
     @staticmethod

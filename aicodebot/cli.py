@@ -384,21 +384,21 @@ def learn(repo_url, verbose):
 
     owner, repo_name = Coder.parse_github_url(repo_url)
 
-    start_time = datetime.utcnow()
-
     local_data_dir = get_local_data_dir()
 
     Coder.clone_repo(repo_url, local_data_dir / "repos" / repo_name)
     console.print("✅ Repo cloned.")
 
-    console.log("Loading documents")
+    console.print("Loading documents from repo...")
     vector_store_dir = local_data_dir / "vector_stores" / repo_name
     documents = load_documents_from_repo(local_data_dir / "repos" / repo_name)
-    console.print("✅ Repo loaded and indexed.")
 
-    with console.status("Storing the repo in the vector store", spinner=DEFAULT_SPINNER):
-        store_documents(documents, vector_store_dir)
-    console.print(f"✅ Repo loaded and indexed in {datetime.utcnow() - start_time} seconds.")
+    num_documents = humanize.intcomma(len(documents))
+    console.print(f"✅ {num_documents} documents loaded")
+
+    console.print("Storking documents from into vector store...")
+    store_documents(documents, vector_store_dir)
+    console.print(f"✅ Repo loaded and indexed. You can now use it with the sidekick command with -l {repo_name}")
 
 
 @cli.command

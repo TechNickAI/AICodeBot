@@ -1,3 +1,4 @@
+from aicodebot.coder import Coder
 from aicodebot.config import get_local_data_dir
 from aicodebot.helpers import logger
 from git import Repo
@@ -6,6 +7,7 @@ from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter, Language, RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from pathlib import Path
+import time
 
 DEFAULT_EXCLUDE = [".csv", ".enex", ".json", ".jsonl"]
 
@@ -90,8 +92,11 @@ def store_documents(documents, vector_store_dir):
         files += 1
 
         # Clean up
-        # Remove magic text that breaks processing
-        content = document.page_content.replace("<|end" + "of" + "text|>", "")  # noqa: ISC003
+        # Remove magic string that breaks OPENAI processing
+        magic_string = "<|end" + "of" + "text|>"  # noqa: ISC003
+        content = document.page_content
+        if magic_string in document.page_content:
+            content = content.replace(magic_string, "")
 
         if file_type in language_extension_map:
             # Use a recursive splitter for code files
@@ -100,19 +105,43 @@ def store_documents(documents, vector_store_dir):
             )
             splitter = RecursiveCharacterTextSplitter.from_language(
                 language=language_extension_map[document.metadata["file_type"].lower()],
-                chunk_size=50,
+                chunk_size=1_000,
                 chunk_overlap=0,
             )
         else:
             # TODO: Check if it's a text file
             if file_type not in [".txt", ".md", ".yml", ".yaml"]:
                 logger.info(f"Processing {document.metadata['file_path']} as a text file")
-            splitter = CharacterTextSplitter(separator="\n", chunk_size=1_000, chunk_overlap=200)
+            splitter = CharacterTextSplitter(separator="\n", chunk_size=1_000, chunk_overlap=150)
 
         chunks += splitter.create_documents([content])
 
     logger.info(f"Storing {len(chunks)} chunks from {files} files in {vector_store_dir}")
-    vector_store = FAISS.from_documents(chunks, embeddings)
+
+    # Store the chunks in the vector store. Respect OPENAI's rate limit of 1M tokens per minute
+    # Initialize token counter and time
+    tokens_sent = 0
+    batch_size = 1_000
+    token_limit = 1_000_000
+    start_time = time.time()
+
+    for i in range(0, len(chunks), batch_size):
+        batch = chunks[i : i + batch_size]
+        tokens_in_batch = Coder.get_token_length(" ".join([chunk.page_content for chunk in batch]))
+        logger.debug(f"Storing chunk {i} of {len(chunks)} with {tokens_in_batch} tokens")
+
+        # If the tokens in the batch would exceed the limit, wait until the next minute
+        if tokens_sent + tokens_in_batch > token_limit:
+            time_to_wait = round(60 - (time.time() - start_time))
+            if time_to_wait > 0:
+                logger.info(f"Waiting {time_to_wait} seconds to respect OPENAI's rate limit")
+                time.sleep(time_to_wait)
+            tokens_sent = 0
+            start_time = time.time()
+
+        vector_store = FAISS.from_documents(batch, embeddings)
+        tokens_sent += tokens_in_batch
+
     vector_store.save_local(vector_store_file)
     return vector_store
 
