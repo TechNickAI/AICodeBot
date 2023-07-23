@@ -188,9 +188,8 @@ END DIFF
 
 EXPERT_SOFTWARE_ENGINEER = """
 You are an expert software engineer, versed in many programming languages,
-especially Python. You follow software development best practices and you know how to
+especially {languages}. You follow software development best practices and you know how to
 write clean, maintainable code. You are a champion for code quality.
-You are terse and to the point.
 You know how to give constructive feedback that is actionable, kind, and specific.
 """
 
@@ -276,14 +275,15 @@ COMMIT_TEMPLATE = (
     END DIFF
 
     Instructions for the commit message:
-    * Start with a short summary (<72 characters).
+    * Start with a short summary (less than 72 characters).
     * Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient,
         then omit the detailed text.
     * Use imperative mood (e.g., "Add feature").
     * Be in GitHub-flavored markdown format.
-    * Include contextually appropriate emojis (optional), but don't over do it.
     * Have a length that scales with the length of the diff context. If the DIFF is a small change,
       respond quickly with a terse message so we can go faster.
+    * Do not repeat information that is already known from the git commit.
+    * Be terse.
 
     BEGIN SAMPLE COMMIT MESSAGE
     Update README with better instructions for installation
@@ -293,8 +293,9 @@ COMMIT_TEMPLATE = (
     new users get started faster.
     END SAMPLE COMMIT MESSAGE
 
+    Formatting instructions:
     Start your response with the commit message. No prefix or introduction.
-    Your entire response will be the commit message.
+    Your entire response will be the commit message. No quotation marks.
 """
 )
 
@@ -355,7 +356,7 @@ REVIEW_TEMPLATE = (
     * "COMMENTS" - there were some issues found, but they should not block the build and are informational only
     * "FAILED" - there were serious, blocking issues found that should be fixed before merging the code
 
-    The review message should be a markdown-formatted string for display with rich.Markdown or GitHub markdown.
+    The review message should be a markdown-formatted string for display with GitHub markdown.
 """
 )
 
@@ -368,24 +369,24 @@ def get_prompt(command, structured_output=False):
             parser = PydanticOutputParser(pydantic_object=ReviewResult)
             return PromptTemplate(
                 template=REVIEW_TEMPLATE + "\n{format_instructions}",
-                input_variables=["diff_context"],
+                input_variables=["diff_context", "languages"],
                 partial_variables={"format_instructions": parser.get_format_instructions()},
                 output_parser=parser,
             )
         else:
             return PromptTemplate(
                 template=REVIEW_TEMPLATE + "\nRespond in markdown format",
-                input_variables=["diff_context"],
+                input_variables=["diff_context", "languages"],
             )
 
     else:
         prompt_map = {
             "alignment": PromptTemplate(template=ALIGNMENT_TEMPLATE, input_variables=[]),
-            "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context"]),
-            "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output"]),
+            "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context", "languages"]),
+            "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output", "languages"]),
             "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
             "sidekick": PromptTemplate(
-                template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context"]
+                template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context", "languages"]
             ),
         }
 

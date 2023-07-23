@@ -120,6 +120,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         files = staged_files
 
     diff_context = Coder.git_diff_context()
+    languages = ",".join(Coder.identify_languages(files))
     if not diff_context:
         console.print("No changes to commit. 🤷")
         return
@@ -166,7 +167,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
 
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-        response = chain.run(diff_context)
+        response = chain.run({"diff_context": diff_context, "languages": languages})
 
     commit_message_approved = click.confirm(
         "Do you want to use this commit message (type n to edit)?", default=True
@@ -333,7 +334,7 @@ def debug(command, verbose):
 
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-        chain.run(error_output)
+        chain.run({"error_output": error_output, "languages": ["unix", "bash", "shell"]})
 
     sys.exit(process.returncode)
 
@@ -421,6 +422,7 @@ def review(commit, verbose, output_format, response_token_size, files):
     if not diff_context:
         console.print("No changes detected for review. 🤷")
         return
+    languages = ",".join(Coder.identify_languages(files))
 
     # Load the prompt
     prompt = get_prompt("review", structured_output=output_format == "json")
@@ -437,7 +439,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 
     if output_format == "json":
         with console.status("Examining the diff and generating the review", spinner=DEFAULT_SPINNER):
-            response = chain.run(diff_context)
+            response = chain.run({"diff_context": diff_context, "languages": languages})
 
         parsed_response = prompt.output_parser.parse(response)
         data = {
@@ -458,7 +460,7 @@ def review(commit, verbose, output_format, response_token_size, files):
             llm.streaming = True
             llm.callbacks = [RichLiveCallbackHandler(live, bot_style)]
 
-            chain.run(diff_context)
+            chain.run({"diff_context": diff_context, "languages": languages})
 
 
 @cli.command
@@ -481,6 +483,7 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
     # Style guides/reference code
     # git history
     context = generate_files_context(files)
+    languages = ",".join(Coder.identify_languages(files))
 
     def show_file_context(files):
         console.print("Files loaded in this session:")
@@ -552,6 +555,7 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
                     console.print(f"✅ Dropped '{filename}' from the list of files.")
 
                 context = generate_files_context(files)
+                languages = ",".join(Coder.identify_languages(files))
                 show_file_context(files)
                 continue
 
@@ -577,7 +581,7 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
             callback = RichLiveCallbackHandler(live, bot_style)
             llm.callbacks = [callback]  # a fresh callback handler for each question
 
-            chain.run({"task": human_input, "context": context})
+            chain.run({"task": human_input, "context": context, "languages": languages})
 
         if request:
             # If we were given a request, then we only want to run once
