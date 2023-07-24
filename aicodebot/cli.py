@@ -590,7 +590,8 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
 
 
 @cli.command
-def sidekick_agent():
+@click.option("-l", "--learned-repos", multiple=True, help="The name of the repo to use for learned information")
+def sidekick_agent(learned_repos):
     """
     EXPREMENTAL: Coding help from your AI sidekick, made agentic with tools\n
     """
@@ -598,7 +599,7 @@ def sidekick_agent():
 
     console.print("This is an experimental feature.", style=warning_style)
 
-    agent = SidekickAgent.get_agent_executor()
+    agent = SidekickAgent.get_agent_executor(learned_repos)
     history_file = Path.home() / ".aicodebot_request_history"
 
     console.print("Enter a request for your AICodeBot sidekick", style=bot_style)
