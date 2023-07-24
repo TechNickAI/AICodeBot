@@ -147,9 +147,7 @@ def test_sidekick(cli_runner):
     mock_files = [".gitignore"]
 
     # Invoke the sidekick command
-    result = cli_runner.invoke(
-        cli, ["sidekick", "-t", TEST_RESPONSE_TOKEN_SIZE, "--request", mock_request] + mock_files
-    )
+    result = cli_runner.invoke(cli, ["sidekick", "--request", mock_request] + mock_files)
 
     assert result.exit_code == 0, f"Output: {result.output}"
     assert "5" in result.output

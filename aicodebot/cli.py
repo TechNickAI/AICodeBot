@@ -467,60 +467,71 @@ def review(commit, verbose, output_format, response_token_size, files):
 
 
 @cli.command
-@click.option("--request", "-r", help="What to ask your sidekick to do")
+@click.option("-r", "--request", help="What to ask your sidekick to do")
+@click.option("-n", "--no-files", is_flag=True, help="Don't automatically load any files for context")
+@click.option("-m", "--max-file-tokens", type=int, default=10_000, help="Don't load files larger than this")
 @click.option("-v", "--verbose", count=True)
-@click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 3)
 @click.argument("files", nargs=-1)
-def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
+def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR0915
     """
     Coding help from your AI sidekick\n
     FILES: List of files to be used as context for the session
     """
     setup_config()
 
-    console.print("This is an experimental feature.", style=warning_style)
+    console.print("This is an experimental feature. We love bug reports 😉", style=warning_style)
 
-    # Pull in context. Right now it's just the contents of files that we passed in.
-    # Soon, we could add vector embeddings of:
-    # imported code / modules / libraries
-    # Style guides/reference code
-    # git history
-    context = generate_files_context(files)
-    languages = ",".join(Coder.identify_languages(files))
+    # ----------------- Determine which files to use for context ----------------- #
+    model_name = Coder.get_llm_model_name(-1, biggest_available=True)
+    model_token_limit = Coder.get_model_token_limit(model_name)
+    file_context_limit = model_token_limit * 0.75
+    console.print(f"Using the {model_name} model, which has a {humanize.intcomma(model_token_limit)} token limit.")
 
-    def show_file_context(files):
-        console.print("Files loaded in this session:")
-        for file in files:
-            token_length = Coder.get_token_length(Path(file).read_text())
-            console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
+    if files:  # User supplied list of files
+        context = generate_files_context(files)
+        file_token_size = Coder.get_token_length(context)
+        if file_token_size > file_context_limit:
+            raise click.ClickException(
+                f"The file(s) you supplied are too large ({file_token_size} tokens). 😢 Try again with less files."
+            )
+    elif not no_files:
+        # Determine which files to use for context automagically, with git
+        files = Coder.auto_file_context(file_context_limit, max_file_tokens)
+        context = generate_files_context(files)
+        file_token_size = Coder.get_token_length(context)
+    else:
+        context = generate_files_context()
+        file_token_size = 0
 
-    files = set(files)  # Create a set for deduplication
-    if files:
-        show_file_context(files)
+    # Convert it from a list or a tuple to a set to remove duplicates
+    files = set(files)
+    # ----------------------------- Set up langchain ----------------------------- #
 
     # Generate the prompt and set up the model
     prompt = get_prompt("sidekick")
-    memory_token_size = response_token_size * 2  # Allow decent history
-    request_token_size = Coder.get_token_length(prompt.template) + Coder.get_token_length(context)
-    model_name = Coder.get_llm_model_name(request_token_size + response_token_size + memory_token_size)
-    if model_name is None:
-        raise click.ClickException(
-            f"The file context you supplied is too large ({request_token_size} tokens). 😢 Try again with less files."
-        )
+    memory_token_size = model_token_limit * 0.1
+
+    # Determine the max token size for the response
+    response_token_size = model_token_limit - (
+        memory_token_size + file_token_size + Coder.get_token_length(prompt.template)
+    )
 
     llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
-
-    # Set up the chain
     memory = ConversationTokenBufferMemory(
         memory_key="chat_history", input_key="task", llm=llm, max_token_limit=memory_token_size
     )
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
-    history_file = Path.home() / ".aicodebot_request_history"
+
+    # ---------------------- Set up the chat loop and prompt --------------------- #
+    show_file_context(files)
+    languages = ",".join(Coder.identify_languages(files))
 
     console.print(
         "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n",
         style=bot_style,
     )
+    history_file = Path.home() / ".aicodebot_request_history"
+
     while True:  # continuous loop for multiple questions
         edited_input = None
         if request:
@@ -535,7 +546,8 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
 
         if human_input.startswith("/"):
             cmd = human_input.lower().split()[0]
-            # Handle commands
+
+            # ------------------------------ Handle commands ----------------------------- #
             if cmd in ["/add", "/drop"]:
                 # Get the filename
                 # If they didn't specify a file, then ignore
@@ -575,6 +587,7 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
             # If the text ends wit then we want to edit it
             human_input = edited_input = click.edit(human_input[:-2])
 
+        # --------------- Process the input and stream it to the human --------------- #
         if edited_input:
             # If the user edited the input, then we want to print it out so they
             # have a record of what they asked for on their terminal
@@ -632,7 +645,6 @@ def sidekick_agent(learned_repos):
 
 # ---------------------------------------------------------------------------- #
 #                               Helper functions                               #
-# ---------------------------------------------------------------------------- #
 
 
 def setup_config():
@@ -644,6 +656,16 @@ def setup_config():
     else:
         os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
         return existing_config
+
+
+def show_file_context(files):
+    if not files:
+        return
+
+    console.print("Files loaded in this session:")
+    for file in files:
+        token_length = Coder.get_token_length(Path(file).read_text())
+        console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
 
 
 if __name__ == "__main__":  # pragma: no cover
