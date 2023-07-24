@@ -5,9 +5,10 @@
 
 # Keep this list sorted alphabetically.
 
+arrow
 beautifulsoup4 # needed by langchain
-click # command line interface helpers
-faiss-cpu
+click
+faiss-cpu # for learn
 GitPython
 humanize
 langchain

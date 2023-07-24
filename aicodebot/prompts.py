@@ -6,7 +6,7 @@ from langchain.output_parsers import PydanticOutputParser
 from pathlib import Path
 from pydantic import BaseModel, Field
 from types import SimpleNamespace
-import functools, os
+import arrow, functools, os
 
 # ---------------------------------------------------------------------------- #
 #                              Personality helpers                             #
@@ -228,10 +228,15 @@ def generate_files_context(files):
 
     files_context += "Here are the relevant files we are working with in this session:\n"
     for file_name in files:
-        contents = Path(file_name).read_text()
-        files_context += f"--- START OF FILE: {file_name} ---\n"
-        files_context += contents
-        files_context += f"\n--- END OF FILE: {file_name} ---\n\n"
+        is_binary, file_info = Coder.get_file_info(file_name)
+        modification_ago = arrow.get(Path(file_name).stat().st_mtime).humanize()
+        if is_binary:
+            files_context += f"Binary file: {file_name}, modified {modification_ago}\n"
+        else:
+            files_context += f"--- START OF FILE: {file_name} {file_info} file, modified {modification_ago} ---\n"
+            contents = Path(file_name).read_text()
+            files_context += contents
+            files_context += f"\n--- END OF FILE: {file_name} ---\n\n"
 
     return files_context
 
