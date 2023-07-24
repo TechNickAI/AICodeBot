@@ -399,7 +399,9 @@ def learn(repo_url, verbose):
 
     console.print("Storking documents from into vector store...")
     store_documents(documents, vector_store_dir)
-    console.print(f"✅ Repo loaded and indexed. You can now use it with the sidekick command with -l {repo_name}")
+    console.print(
+        f"✅ Repo loaded and indexed. You can now use it with the sidekick-agent command with -l {repo_name}"
+    )
 
 
 @cli.command

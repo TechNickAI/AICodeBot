@@ -1,5 +1,5 @@
 from aicodebot.coder import Coder
-from aicodebot.config import get_local_data_dir
+from aicodebot.config import get_local_data_dir, read_config
 from aicodebot.helpers import logger
 from git import Repo
 from langchain.document_loaders import GitLoader, NotebookLoader
@@ -61,7 +61,8 @@ def load_documents_from_repo(repo_dir, exclude=DEFAULT_EXCLUDE):
 def store_documents(documents, vector_store_dir):
     """Store documents in the vector store."""
     vector_store_file = Path(vector_store_dir / "faiss_index")
-    embeddings = OpenAIEmbeddings()
+    config = read_config()
+    embeddings = OpenAIEmbeddings(openai_api_key=config["openai_api_key"])
     if Path(vector_store_file).exists():
         logger.info(f"Loading existing vector store {vector_store_file}")
         return FAISS.load_local(vector_store_file, embeddings)
@@ -154,5 +155,6 @@ def load_learned_repo(repo_name):
             f"Vector store for {repo_name} does not exist. Please run `aicodebot learn $githuburl` first."
         )
 
-    embeddings = OpenAIEmbeddings()
+    config = read_config()
+    embeddings = OpenAIEmbeddings(openai_api_key=config["openai_api_key"])
     return FAISS.load_local(vector_store_file, embeddings)

@@ -136,8 +136,8 @@ class Coder:
         if "openrouter_api_key" in config:
             # If the openrouter_api_key is set, use the Open Router API
             # OpenRouter allows for access to many models that have larger token limits
-            openai.api_key = config["openrouter_api_key"]
-            openai.api_base = "https://openrouter.ai/api/v1"
+            api_key = config["openrouter_api_key"]
+            api_base = "https://openrouter.ai/api/v1"
             headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
 
             # In order to get conversation buffer memory to work, we need to set the tiktoken model name
@@ -151,12 +151,14 @@ class Coder:
                 tiktoken_model_name = "gpt-4"
 
         else:
-            openai.api_key = config["openai_api_key"]
+            api_key = config["openai_api_key"]
+            api_base = None
             headers = None
             tiktoken_model_name = model_name
 
         return ChatOpenAI(
-            openai_api_key=openai.api_key,
+            openai_api_key=api_key,
+            openai_api_base=api_base,
             model=model_name,
             max_tokens=response_token_size,
             verbose=verbose,
@@ -217,7 +219,7 @@ class Coder:
         )
         if "openrouter_api_key" not in config:
             logger.critical(
-                "If you provide an Open Router API key, you can access larger models, up to 32k tokens"
+                "If you provide an Open Router API key, you can access larger models, up to 100k tokens"
             )
 
         return None
