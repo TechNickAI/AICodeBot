@@ -21,6 +21,59 @@ class Coder:
     UNKNOWN_FILE_TYPE = "unknown"
 
     @staticmethod
+    def auto_file_context(max_tokens, max_file_tokens):
+        """Automatically generate a file context based on what we think the user is working on"""
+        files_to_include = []
+        file_scores = {}
+
+        # To determine the pool of possible files, we start with files that have been recently commmited
+        possible_files = Coder.git_recent_commited_files()
+
+        # then we add any staged and unstaged files
+        possible_files += Coder.git_staged_files()
+        possible_files += Coder.git_unstaged_files()
+
+        for file in possible_files:
+            # Skip directories and empty files
+            file_status = Path(file).stat()
+            if Path(file).is_dir() or file_status.st_size == 0:
+                continue
+
+            # Get the modification and access times
+            modification_time = file_status.st_mtime
+            access_time = file_status.st_atime
+
+            # Skip binary files
+            if Coder.is_binary_file(file):
+                continue
+
+            # Calculate the score based on the modification and access times
+            # For now, we'll just add the two times together, giving a slight preference to modification time
+            score = modification_time + (access_time * 0.9)
+
+            # Store the score in the dictionary
+            # Store the file without the directory
+            file_scores[str(file)] = score
+
+        # Sort the files by score in descending order
+        sorted_files = sorted(file_scores, key=file_scores.get, reverse=True)
+
+        # Add files to the list until we reach the max_tokens limit
+        for file in sorted_files:
+            token_length = Coder.get_token_length(Path(file).read_text())
+            if token_length > max_file_tokens:
+                continue
+
+            if token_length <= max_tokens:
+                files_to_include.append(file)
+                max_tokens -= token_length
+
+            if max_tokens <= 0:
+                break
+
+        return files_to_include
+
+    @staticmethod
     def clone_repo(repo_url, repo_dir):
         """Clones a git repository from the provided URL to the specified directory.
         If the directory already exists, it updates the repository instead."""
@@ -179,7 +232,23 @@ class Coder:
             return None
 
     @staticmethod
-    def get_llm_model_name(token_size=0):
+    def get_model_token_limit(model_name):
+        model_token_limits = {
+            "openai/gpt-4": 8192,
+            "openai/gpt-4-32k": 32768,
+            "anthropic/claude-2": 100_000,
+            "gpt-4": 8192,
+            "gpt-4-32k": 32768,
+            "gpt-3.5-turbo": 4096,
+            "gpt-3.5-turbo-16k": 16384,
+        }
+        if model_name in model_token_limits:
+            return model_token_limits[model_name]
+        else:
+            raise ValueError(f"Model {model_name} not found")
+
+    @staticmethod
+    def get_llm_model_name(token_size=0, biggest_available=False):
         """Gets the name of the model to use for the specified token size."""
         config = read_config()
         if os.getenv("AICODEBOT_LLM_MODEL"):
@@ -189,38 +258,45 @@ class Coder:
             return os.getenv("AICODEBOT_LLM_MODEL")
 
         if "openrouter_api_key" in config:
-            model_options = {
-                "openai/gpt-4": 8192,
-                "openai/gpt-4-32k": 32768,
-                "anthropic/claude-2": 100_000,
-            }
-
-            supported_engines = model_options.keys()
+            model_options = supported_engines = ["openai/gpt-4", "openai/gpt-4-32k"]
         else:
-            model_options = {
-                "gpt-4": 8192,
-                "gpt-4-32k": 32768,
-                "gpt-3.5-turbo": 4096,
-                "gpt-3.5-turbo-16k": 16384,
-            }
+            model_options = ["gpt-4", "gpt-4-32k", "gpt-3.5-turbo", "gpt-3.5-turbo-16k"]
             # Pull the list of supported engines from the OpenAI API for this key
             supported_engines = Coder.get_openai_supported_engines()
 
-        # For some unknown reason, tiktoken often underestimates the token size by ~5%, so let's buffer
-        token_size = int(token_size * 1.05)
+        if biggest_available:
+            # For some tasks we want to use the biggest model we can, only using gpt 3.5 if we have to
+            biggest_choices = [
+                "anthropic/claude-2",
+                "gpt-4-32k",
+                "openai/gpt-4-32k",
+                "gpt-4",
+                "openai/gpt-4",
+                "gpt-3.5-turbo-16k",
+                "gpt-3.5-turbo",
+            ]
+            for model in biggest_choices:
+                if model in supported_engines:
+                    logger.info(f"Using {model} for biggest available model")
+                    return model
 
-        for model, max_tokens in model_options.items():
-            if model in supported_engines and token_size <= max_tokens:
-                logger.info(f"Using {model} for token size {token_size}")
-                return model
+        else:
+            # For some unknown reason, tiktoken often underestimates the token size by ~5%, so let's buffer
+            token_size = int(token_size * 1.05)
 
-        logger.critical(
-            f"The context is too large ({token_size}) for any of the models supported by your API key. 😞"
-        )
-        if "openrouter_api_key" not in config:
+            for model_name in model_options:
+                max_tokens = Coder.get_model_token_limit(model_name)
+                if model_name in supported_engines and token_size <= max_tokens:
+                    logger.info(f"Using {model_name} for token size {token_size}")
+                    return model_name
+
             logger.critical(
-                "If you provide an Open Router API key, you can access larger models, up to 100k tokens"
+                f"The context is too large ({token_size}) for any of the models supported by your API key. 😞"
             )
+            if "openrouter_api_key" not in config:
+                logger.critical(
+                    "If you provide an Open Router API key, you can access larger models, up to 100k tokens"
+                )
 
         return None
 
@@ -289,6 +365,20 @@ class Coder:
                     diffs.append(exec_and_get_output(base_git_diff + [diff_type, "--", file_name]))
 
             return "\n".join(diffs)
+
+    @staticmethod
+    def git_recent_commited_files(max_files=10, max_commits=3):
+        """Get a list of files that have been in the last max_days days."""
+        recent_commits = exec_and_get_output(["git", "log", "--format=%H", f"-{max_commits}"]).splitlines()
+        if not recent_commits:
+            return []
+        else:
+            # Get the list of files that have been changed in those commits
+            out = set()
+            for commit in recent_commits:
+                out.update(exec_and_get_output(["git", "diff", "--name-only", commit]).splitlines())
+
+            return list(out)[:max_files]
 
     @staticmethod
     def git_staged_files():

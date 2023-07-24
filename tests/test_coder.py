@@ -1,7 +1,42 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import create_and_write_file
 from pathlib import Path
+from tests.conftest import in_temp_directory
 import os, pytest
+
+
+def test_auto_file_context(temp_git_repo):
+    # Change the current directory to the temporary git repository
+
+    with in_temp_directory(temp_git_repo.working_dir):
+        # Create some test files in the repository
+        create_and_write_file("file1.txt", "This is a test file.")
+        create_and_write_file("file2.txt", "This is another test file.")
+        create_and_write_file("file3.txt", "This is yet another test file.")
+
+        assert len(Coder.auto_file_context(1000, 500)) == 0
+
+        # Commit the files
+        temp_git_repo.git.add(".")
+        temp_git_repo.git.commit("-m", "Add test files")
+
+        assert len(Coder.auto_file_context(1000, 500)) == 3
+
+        # Create an old file, it should not be included because it's not in git, not staged, etc.
+        create_and_write_file("file5.txt", "This is an old test file.", overwrite=True)
+        # Set the atime and the mtime to 10 days ago
+        created = os.stat("file5.txt").st_mtime  # noqa: PTH116
+        ten_days_ago = created - (10 * 24 * 60 * 60)
+        os.utime("file5.txt", (ten_days_ago, ten_days_ago))
+
+        # Create a new file, and stage it
+        create_and_write_file("file4.txt", "This is a new test file.")
+        assert len(Coder.auto_file_context(1000, 500)) == 3
+
+        temp_git_repo.git.add("file4.txt")
+        assert len(Coder.auto_file_context(1000, 500)) == 4
+
+        assert len(Coder.auto_file_context(1000, 500)) == 4
 
 
 def test_generate_directory_structure(tmp_path):
