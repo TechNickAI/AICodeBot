@@ -1,7 +1,9 @@
 from aicodebot.helpers import create_and_write_file
 from click.testing import CliRunner
+from contextlib import contextmanager
 from git import Repo
-import pytest
+from pathlib import Path
+import os, pytest
 
 
 @pytest.fixture
@@ -23,6 +25,16 @@ def temp_git_repo(tmp_path):
     repo.index.commit("Initial commit")
 
     return repo
+
+
+@contextmanager
+def in_temp_directory(tmp_path):
+    old_dir = Path.cwd()
+    os.chdir(tmp_path)
+    try:
+        yield
+    finally:
+        os.chdir(old_dir)
 
 
 @pytest.fixture(autouse=True)
