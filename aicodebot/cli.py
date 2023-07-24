@@ -1,4 +1,5 @@
 from aicodebot import version as aicodebot_version
+from aicodebot.agents import SidekickAgent
 from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder, SidekickCompleter
 from aicodebot.config import get_config_file, get_local_data_dir, read_config
 from aicodebot.helpers import RichLiveCallbackHandler, create_and_write_file, exec_and_get_output, logger
@@ -470,7 +471,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 @click.argument("files", nargs=-1)
 def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
     """
-    EXPERIMENTAL: Coding help from your AI sidekick\n
+    Coding help from your AI sidekick\n
     FILES: List of files to be used as context for the session
     """
     setup_config()
@@ -586,6 +587,44 @@ def sidekick(request, verbose, response_token_size, files):  # noqa: PLR0915
         if request:
             # If we were given a request, then we only want to run once
             break
+
+
+@cli.command
+def sidekick_agent():
+    """
+    EXPREMENTAL: Coding help from your AI sidekick, made agentic with tools\n
+    """
+    setup_config()
+
+    console.print("This is an experimental feature.", style=warning_style)
+
+    agent = SidekickAgent.get_agent_executor()
+    history_file = Path.home() / ".aicodebot_request_history"
+
+    console.print("Enter a request for your AICodeBot sidekick", style=bot_style)
+
+    edited_input = None
+    while True:  # continuous loop for multiple questions
+        human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file))
+        human_input = human_input.strip()
+
+        if not human_input:
+            # Must have been spaces or blank line
+            continue
+
+        elif human_input.lower()[-2:] == r"\e":
+            # If the text ends wit then we want to edit it
+            human_input = edited_input = click.edit(human_input[:-2])
+
+        if edited_input:
+            # If the user edited the input, then we want to print it out so they
+            # have a record of what they asked for on their terminal
+            console.print(f"Request:\n{edited_input}")
+
+        response = agent.run(human_input)
+        # Remove everything after Action: (if it exists)
+        response = response.split("Action:")[0]
+        console.print(Markdown(response))
 
 
 # ---------------------------------------------------------------------------- #
