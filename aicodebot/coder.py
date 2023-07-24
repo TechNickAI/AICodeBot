@@ -34,9 +34,13 @@ class Coder:
         possible_files += Coder.git_unstaged_files()
 
         for file in possible_files:
-            # Skip directories and empty files
+            # Skip directories and files that don't exist
+            if not Path(file).exists() or Path(file).is_dir():
+                continue
+
+            # empty files
             file_status = Path(file).stat()
-            if Path(file).is_dir() or file_status.st_size == 0:
+            if file_status.st_size == 0:
                 continue
 
             # Get the modification and access times
