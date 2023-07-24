@@ -1,6 +1,5 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import create_and_write_file
-from pathlib import Path
 from tests.conftest import in_temp_directory
 import os, pytest
 
@@ -117,73 +116,68 @@ def test_get_token_length():
 
 
 def test_git_diff_context(temp_git_repo):
-    original_dir = Path.cwd()
-    os.chdir(temp_git_repo.working_dir)
+    with in_temp_directory(temp_git_repo.working_dir):
+        # Test empty repo (no commits, no staged files, no unstaged changes)
+        diff = Coder.git_diff_context()
+        assert not diff
 
-    # Test empty repo (no commits, no staged files, no unstaged changes)
-    diff = Coder.git_diff_context()
-    assert not diff
+        # Add a new file but don't stage it
+        create_and_write_file("newfile.txt", "This is a new file.")
+        diff = Coder.git_diff_context()
+        assert not diff, "New file should not be included in diff until it is staged"
 
-    # Add a new file but don't stage it
-    create_and_write_file("newfile.txt", "This is a new file.")
-    diff = Coder.git_diff_context()
-    assert not diff, "New file should not be included in diff until it is staged"
+        # Stage the new file
+        temp_git_repo.git.add("newfile.txt")
+        diff = Coder.git_diff_context()
+        assert "## New file added: newfile.txt" in diff
+        assert "This is a new file." in diff
 
-    # Stage the new file
-    temp_git_repo.git.add("newfile.txt")
-    diff = Coder.git_diff_context()
-    assert "## New file added: newfile.txt" in diff
-    assert "This is a new file." in diff
+        # Commit the new file
+        temp_git_repo.git.commit("-m", "Add newfile.txt")
+        diff = Coder.git_diff_context()
+        assert not diff
 
-    # Commit the new file
-    temp_git_repo.git.commit("-m", "Add newfile.txt")
-    diff = Coder.git_diff_context()
-    assert not diff
+        # Test diff for a specific commit
+        commit = temp_git_repo.head.commit.hexsha
+        diff = Coder.git_diff_context(commit)
+        assert "This is a new file." in diff
 
-    # Test diff for a specific commit
-    commit = temp_git_repo.head.commit.hexsha
-    diff = Coder.git_diff_context(commit)
-    assert "This is a new file." in diff
+        # Modify the file but don't stage it
+        create_and_write_file("newfile.txt", "This is a modified file.", overwrite=True)
+        diff = Coder.git_diff_context()
+        assert "## File changed: newfile.txt" in diff
+        assert "This is a modified file." in diff
 
-    # Modify the file but don't stage it
-    create_and_write_file("newfile.txt", "This is a modified file.", overwrite=True)
-    diff = Coder.git_diff_context()
-    assert "## File changed: newfile.txt" in diff
-    assert "This is a modified file." in diff
+        # Stage the modified file
+        temp_git_repo.git.add("newfile.txt")
+        diff = Coder.git_diff_context()
+        assert "## File changed: newfile.txt" in diff
+        assert "This is a modified file." in diff
 
-    # Stage the modified file
-    temp_git_repo.git.add("newfile.txt")
-    diff = Coder.git_diff_context()
-    assert "## File changed: newfile.txt" in diff
-    assert "This is a modified file." in diff
+        # Commit the modified file
+        temp_git_repo.git.commit("-m", "Modify newfile.txt")
+        diff = Coder.git_diff_context()
+        assert not diff
 
-    # Commit the modified file
-    temp_git_repo.git.commit("-m", "Modify newfile.txt")
-    diff = Coder.git_diff_context()
-    assert not diff
+        # Rename the file but don't stage it
+        temp_git_repo.git.mv("newfile.txt", "renamedfile.txt")
+        diff = Coder.git_diff_context()
+        assert "## File renamed: newfile.txt -> renamedfile.txt" in diff
 
-    # Rename the file but don't stage it
-    temp_git_repo.git.mv("newfile.txt", "renamedfile.txt")
-    diff = Coder.git_diff_context()
-    assert "## File renamed: newfile.txt -> renamedfile.txt" in diff
+        # Stage the renamed file
+        temp_git_repo.git.add("renamedfile.txt")
+        diff = Coder.git_diff_context()
+        assert "## File renamed: newfile.txt -> renamedfile.txt" in diff
 
-    # Stage the renamed file
-    temp_git_repo.git.add("renamedfile.txt")
-    diff = Coder.git_diff_context()
-    assert "## File renamed: newfile.txt -> renamedfile.txt" in diff
+        # Commit the renamed file
+        temp_git_repo.git.commit("-m", "Rename newfile.txt to renamedfile.txt")
+        diff = Coder.git_diff_context()
+        assert not diff
 
-    # Commit the renamed file
-    temp_git_repo.git.commit("-m", "Rename newfile.txt to renamedfile.txt")
-    diff = Coder.git_diff_context()
-    assert not diff
-
-    # Test diff for a specific commit
-    commit = temp_git_repo.head.commit.hexsha
-    diff = Coder.git_diff_context(commit)
-    assert "renamedfile.txt" in diff
-
-    # Change working directory back
-    os.chdir(original_dir)
+        # Test diff for a specific commit
+        commit = temp_git_repo.head.commit.hexsha
+        diff = Coder.git_diff_context(commit)
+        assert "renamedfile.txt" in diff
 
 
 def test_identify_languages():

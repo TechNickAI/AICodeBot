@@ -26,8 +26,8 @@ class Coder:
         files_to_include = []
         file_scores = {}
 
-        # To determine the pool of possible files, we start with files that have been recently commmited
-        possible_files = Coder.git_recent_commited_files()
+        # To determine the pool of possible files, we start with files that have been recently committed
+        possible_files = Coder.git_recent_committed_files()
 
         # then we add any staged and unstaged files
         possible_files += Coder.git_staged_files()
@@ -367,7 +367,7 @@ class Coder:
             return "\n".join(diffs)
 
     @staticmethod
-    def git_recent_commited_files(max_files=10, max_commits=3):
+    def git_recent_committed_files(max_files=10, max_commits=3):
         """Get a list of files that have been in the last max_days days."""
         recent_commits = exec_and_get_output(["git", "log", "--format=%H", f"-{max_commits}"]).splitlines()
         if not recent_commits:

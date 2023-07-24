@@ -5,6 +5,7 @@ from aicodebot.helpers import create_and_write_file
 from aicodebot.prompts import DEFAULT_PERSONALITY
 from git import Repo
 from pathlib import Path
+from tests.conftest import in_temp_directory
 import json, os, pytest
 
 # smaller than the default size to speed up the tests
@@ -19,9 +20,7 @@ def test_alignment(cli_runner):
 
 @pytest.mark.vcr()
 def test_commit(cli_runner, temp_git_repo):
-    with cli_runner.isolated_filesystem():
-        os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
-
+    with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
         # Scenario 1: Only unstaged changes
         create_and_write_file("test1.txt", "This is a test file.")
         repo = Repo(temp_git_repo.working_dir)
@@ -103,16 +102,8 @@ def test_debug_failure(cli_runner):
 
 
 @pytest.mark.vcr()
-def test_fun_fact(cli_runner):
-    result = cli_runner.invoke(cli, ["fun-fact", "-t", TEST_RESPONSE_TOKEN_SIZE])
-    assert result.exit_code == 0, f"Output: {result.output}"
-
-
-@pytest.mark.vcr()
 def test_review(cli_runner, temp_git_repo):
-    with cli_runner.isolated_filesystem():
-        os.chdir(temp_git_repo.working_dir)  # change to the temporary repo directory
-
+    with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
         # Add a new file
         create_and_write_file("test.txt", "Adding a new line.")
 

@@ -5,7 +5,6 @@ from aicodebot.config import get_config_file, get_local_data_dir, read_config
 from aicodebot.helpers import RichLiveCallbackHandler, create_and_write_file, exec_and_get_output, logger
 from aicodebot.learn import load_documents_from_repo, store_documents
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
-from datetime import datetime
 from langchain.chains import LLMChain
 from langchain.memory import ConversationTokenBufferMemory
 from openai.api_resources import engine
@@ -16,7 +15,7 @@ from rich.console import Console
 from rich.live import Live
 from rich.markdown import Markdown
 from rich.style import Style
-import click, humanize, json, langchain, openai, os, random, shutil, subprocess, sys, tempfile, webbrowser, yaml
+import click, humanize, json, langchain, openai, os, shutil, subprocess, sys, tempfile, webbrowser, yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -38,6 +37,7 @@ warning_style = Style(color="#FFA500")
 @click.help_option("--help", "-h")
 @click.option("-d", "--debug", is_flag=True, help="Enable langchain debug output")
 def cli(debug):
+    # Turn on langchain debug output if requested
     langchain.debug = debug
 
 
@@ -340,36 +340,6 @@ def debug(command, verbose):
     sys.exit(process.returncode)
 
 
-@cli.command()
-@click.option("-v", "--verbose", count=True)
-@click.option("-t", "--response-token-size", type=int, default=250)
-def fun_fact(verbose, response_token_size):
-    """Get a fun fact about programming and artificial intelligence."""
-    setup_config()
-
-    # Load the prompt
-    prompt = get_prompt("fun_fact")
-    logger.trace(f"Prompt: {prompt}")
-
-    # Set up the language model
-    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template))
-
-    with Live(Markdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
-            model_name,
-            verbose,
-            response_token_size=response_token_size,
-            temperature=CREATIVE_TEMPERATURE,
-            streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
-        )
-        # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-
-        year = random.randint(1942, datetime.utcnow().year)
-        chain.run(f"programming and artificial intelligence in the year {year}")
-
-
 @cli.command
 @click.option("-v", "--verbose", count=True)
 @click.option("-r", "--repo-url", help="The URL of the repository to learn from")
@@ -485,7 +455,10 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     model_name = Coder.get_llm_model_name(-1, biggest_available=True)
     model_token_limit = Coder.get_model_token_limit(model_name)
     file_context_limit = model_token_limit * 0.75
-    console.print(f"Using the {model_name} model, which has a {humanize.intcomma(model_token_limit)} token limit.")
+    console.print(
+        f"Using the [bold underline]{model_name}[/bold underline] model, "
+        f"which has a {humanize.intcomma(model_token_limit)} token limit."
+    )
 
     if files:  # User supplied list of files
         context = generate_files_context(files)
@@ -500,7 +473,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
         context = generate_files_context(files)
         file_token_size = Coder.get_token_length(context)
     else:
-        context = generate_files_context()
+        context = generate_files_context([])
         file_token_size = 0
 
     # Convert it from a list or a tuple to a set to remove duplicates

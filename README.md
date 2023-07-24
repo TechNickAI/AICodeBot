@@ -81,14 +81,16 @@ Usage: aicodebot [OPTIONS] COMMAND [ARGS]...
 Options:
   -V, --version  Show the version and exit.
   -h, --help     Show this message and exit.
+  -d, --debug    Enable langchain debug output
 
 Commands:
-  alignment  Get a message about Heart-Centered AI Alignment ❤ + 🤖.
-  commit     Generate a commit message based on your changes.
-  configure  Create or update the config file
-  debug      Run a command and debug the output.
-  fun-fact   Get a fun fact about programming and artificial intelligence.
-  review     Do a code review, with [un]staged changes, or a specifc commit.
+  alignment       A message from AICodeBot about AI Alignment ❤ + 🤖.
+  commit          Generate a commit message based on your changes.
+  configure       Create or update the configuration file
+  debug           Run a command and debug the output.
+  learn           NOT WORKING YET: Learn new skills and gain additional...
+  review          Do a code review, with [un]staged changes, or a...
+  sidekick        Coding help from your AI sidekick
 ```
 
 ### Open AI key setup
@@ -139,7 +141,6 @@ How about automated code reviews on every commit? You can have AICodeBot run as 
 
 ### Fun
 
-* [X] **Fun Facts**: Provides fun facts about programming or AI. It could also share interesting news or articles related to AI and programming. Try it out with `aicodebot fun-fact`.
 * [X] **Alignment**: Gives a heart-centered inspirational message about how we can build AI in a way that aligns with humanity. Try it out with `aicodebot alignment`.
 * [ ] **Telling Jokes**: We've gotta figure out how to teach LLMs about humor. :)
 * [ ] **Supportive Encouragement**: High fives and kudos for a job well done
