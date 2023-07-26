@@ -20,7 +20,7 @@ class OurCodeBlock(CodeBlock):
     def __rich_console__(self, console, options):
         code = str(self.text)
         # set dedent=True to remove leading spaces and turn off padding
-        syntax = Syntax(code, self.lexer_name, theme=self.theme, word_wrap=True, dedent=True, padding=0)
+        syntax = Syntax(code, self.lexer_name, theme=self.theme, word_wrap=True, padding=0)
         yield syntax
 
 
