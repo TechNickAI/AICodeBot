@@ -480,12 +480,24 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 
     # Generate the prompt and set up the model
     prompt = get_prompt("sidekick")
-    memory_token_size = model_token_limit * 0.1
+    memory_token_size = round(model_token_limit * 0.1)
 
     # Determine the max token size for the response
-    response_token_size = model_token_limit - (
-        memory_token_size + file_token_size + Coder.get_token_length(prompt.template)
-    )
+    def calc_response_token_size(files):
+        file_token_size = 0
+        for file in files:
+            file_token_size += Coder.get_token_length(Path(file).read_text())
+        prompt_token_size = Coder.get_token_length(prompt.template)
+        logger.trace(
+            f"File token size: {file_token_size}, memory token size: {memory_token_size}, "
+            f"prompt token size: {prompt_token_size}, model token limit: {model_token_limit}"
+        )
+        out = model_token_limit - (memory_token_size + file_token_size + prompt_token_size)
+        out = round(out * 0.95)  # Small buffer
+        logger.debug(f"Response max token size: {out}")
+        return out
+
+    response_token_size = calc_response_token_size(files)
 
     llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
     memory = ConversationTokenBufferMemory(
@@ -571,6 +583,8 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
         with Live(Markdown(""), auto_refresh=True) as live:
             callback = RichLiveCallbackHandler(live, bot_style)
             llm.callbacks = [callback]  # a fresh callback handler for each question
+            # Recalculate the response token size in case the files changed
+            llm.max_tokens = calc_response_token_size(files)
 
             chain.run({"task": human_input, "context": context, "languages": languages})
 
