@@ -169,6 +169,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run({"diff_context": diff_context, "languages": languages})
+        console.print("got LLM response", response)
 
     if not yes:
         commit_message_approved = click.confirm(
