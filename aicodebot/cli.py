@@ -537,22 +537,23 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
                 # Get the filename
                 # If they didn't specify a file, then ignore
                 try:
-                    filename = human_input.split()[1]
+                    filenames = human_input.split()[1:]
                 except IndexError:
                     continue
 
                 # If the file doesn't exist, or we can't open it, let them know
-                if not Path(filename).exists():
-                    console.print(f"File '{filename}' doesn't exist.", style=error_style)
-                    continue
+                for filename in filenames:
+                    if not Path(filename).exists():
+                        console.print(f"File '{filename}' doesn't exist.", style=error_style)
+                        continue
 
-                if cmd == "/add":
-                    files.add(filename)
-                    console.print(f"✅ Added '{filename}' to the list of files.")
-                elif cmd == "/drop":
-                    # Drop the file from the list
-                    files.discard(filename)
-                    console.print(f"✅ Dropped '{filename}' from the list of files.")
+                    if cmd == "/add":
+                        files.add(filename)
+                        console.print(f"✅ Added '{filename}' to the list of files.")
+                    elif cmd == "/drop":
+                        # Drop the file from the list
+                        files.discard(filename)
+                        console.print(f"✅ Dropped '{filename}' from the list of files.")
 
                 # Update the context for the new list of files
                 context = generate_files_context(files)
