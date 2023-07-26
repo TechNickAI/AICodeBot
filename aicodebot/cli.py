@@ -311,8 +311,6 @@ def debug(command, verbose):
         return
 
     # If the command failed, send its output to ChatGPT for analysis
-    error_output = process.stderr
-
     console.print(f"The command exited with status {process.returncode}.")
 
     # Load the prompt
@@ -320,7 +318,7 @@ def debug(command, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    request_token_size = Coder.get_token_length(error_output) + Coder.get_token_length(prompt.template)
+    request_token_size = Coder.get_token_length(output) + Coder.get_token_length(prompt.template)
     model_name = Coder.get_llm_model_name(request_token_size + DEFAULT_MAX_TOKENS)
     if model_name is None:
         raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
@@ -335,7 +333,7 @@ def debug(command, verbose):
 
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-        chain.run({"error_output": error_output, "languages": ["unix", "bash", "shell"]})
+        chain.run({"command_output": output, "languages": ["unix", "bash", "shell"]})
 
     sys.exit(process.returncode)
 
@@ -583,7 +581,7 @@ def sidekick_agent(learned_repos):
     """
     EXPREMENTAL: Coding help from your AI sidekick, made agentic with tools\n
     """
-    setup_config()
+    setup_cli(verify_git_repo=True)
 
     console.print("This is an experimental feature.", style=warning_style)
 
@@ -618,6 +616,7 @@ def sidekick_agent(learned_repos):
 
 # ---------------------------------------------------------------------------- #
 #                               Helper functions                               #
+# ---------------------------------------------------------------------------- #
 
 
 def setup_cli(verify_git_repo=False):

@@ -86,7 +86,6 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     assert config_data["personality"] == DEFAULT_PERSONALITY.name
 
 
-@pytest.mark.vcr()
 def test_debug_success(cli_runner):
     result = cli_runner.invoke(cli, ["debug", "echo", "Hello, world!"])
     assert result.exit_code == 0, f"Output: {result.output}"
