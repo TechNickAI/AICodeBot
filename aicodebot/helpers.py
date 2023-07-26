@@ -1,7 +1,5 @@
-from langchain.callbacks.base import BaseCallbackHandler
 from loguru import logger
 from pathlib import Path
-from rich.markdown import Markdown
 import os, subprocess, sys
 
 # ---------------------------------------------------------------------------- #
@@ -38,14 +36,3 @@ def exec_and_get_output(command):
     if result.returncode != 0:
         raise Exception(f"Command '{' '.join(command)}' failed with error:\n{result.stderr}")  # noqa: TRY002
     return result.stdout
-
-
-class RichLiveCallbackHandler(BaseCallbackHandler):
-    def __init__(self, live, style):
-        self.buffer = []
-        self.live = live
-        self.style = style
-
-    def on_llm_new_token(self, token, **kwargs):
-        self.buffer.append(token)
-        self.live.update(Markdown("".join(self.buffer), style=self.style))
