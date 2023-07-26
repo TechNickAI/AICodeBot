@@ -1,15 +1,23 @@
 from aicodebot.config import read_config
 from aicodebot.helpers import exec_and_get_output, logger
+from langchain import HuggingFacePipeline
 from langchain.chat_models import ChatOpenAI
 from openai.api_resources import engine
 from pathlib import Path
 from prompt_toolkit.completion import Completer, Completion
 from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
-import fnmatch, functools, mimetypes, openai, os, re, subprocess, tiktoken
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+import fnmatch, functools, mimetypes, openai, os, re, subprocess, tiktoken, torch, transformers
 
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
 CREATIVE_TEMPERATURE = 0.6
+quantization_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_compute_dtype=torch.float16,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_use_double_quant=True,
+)
 
 
 class Coder:
@@ -212,7 +220,26 @@ class Coder:
             api_base = None
             headers = None
             tiktoken_model_name = model_name
-
+        if model_name == "vilsonrodrigues/falcon-7b-instruct-sharded":
+            # Add the code to initialize the model and tokenizer
+            model_4bit = AutoModelForCausalLM.from_pretrained(
+                model_name, device_map="auto", quantization_config=quantization_config, trust_remote_code=True
+            )
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            pipeline = transformers.pipeline(
+                "text-generation",
+                model=model_4bit,
+                tokenizer=tokenizer,
+                use_cache=True,
+                device_map="auto",
+                max_length=296,
+                do_sample=True,
+                top_k=10,
+                num_return_sequences=1,
+                eos_token_id=tokenizer.eos_token_id,
+                pad_token_id=tokenizer.eos_token_id,
+            )
+            return HuggingFacePipeline(pipeline=pipeline)
         return ChatOpenAI(
             openai_api_key=api_key,
             openai_api_base=api_base,

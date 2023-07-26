@@ -4,17 +4,25 @@
 # requirements.txt file.
 
 # Keep this list sorted alphabetically.
-
+accelerate
 arrow
 beautifulsoup4 # needed by langchain
+bitsandbytes
 click
+einops
 faiss-cpu # for learn
 GitPython
 humanize
 langchain
 loguru
 openai
+peft
 prompt-toolkit
 pyyaml
 rich
+safetensors
+scipy
 tiktoken
+torch
+transformers
+xformers
