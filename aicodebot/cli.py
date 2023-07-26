@@ -106,13 +106,16 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
     if not staged_files:
         # If no files are staged, they probably want to commit all changed files, confirm.
         if not files and not yes:
-            click.confirm(
+            confirm = click.confirm(
                 "Since there are no git staged files, all of the modified files will be committed:\n\t"
                 + "\n\t".join(unstaged_files)
                 + "\nDoes that look correct?",
                 default=True,
-                abort=True,
             )
+            if not confirm:
+                console.print("Aborting commit.")
+                return
+
         files = unstaged_files
     else:
         # The list of files to be committed is the same as the list of staged files
@@ -189,10 +192,14 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
-    if yes or click.confirm("Are you ready to commit the changes?", default=True, abort=True):
-        # Commit the changes using the temporary file for the commit message
-        exec_and_get_output(["git", "commit", "-F", temp_file_name])
-        console.print(f"✅ {len(files)} file(s) committed.")
+    if not yes:
+        confirm = click.confirm("Are you ready to commit the changes?", default=True)
+        if confirm:
+            # Commit the changes using the temporary file for the commit message
+            exec_and_get_output(["git", "commit", "-F", temp_file_name])
+            console.print(f"✅ {len(files)} file(s) committed.")
+        else:
+            console.print("Aborting commit.")
 
     # Delete the temporary file
     Path(temp_file_name).unlink()
@@ -562,12 +569,23 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
                 show_file_context(files)
                 continue
 
+            elif cmd == "/commit":
+                # Call the commit function with the parsed arguments
+                args = human_input.split()[1:]
+                ctx = click.get_current_context()
+                ctx.invoke(commit, *args)
+                continue
             elif cmd == "/edit":
                 human_input = edited_input = click.edit()
             elif cmd == "/files":
                 show_file_context(files)
                 continue
-
+            elif cmd == "/review":
+                # Call the review function with the parsed arguments
+                args = human_input.split()[1:]
+                ctx = click.get_current_context()
+                ctx.invoke(review, *args)
+                continue
             elif cmd == "/quit":
                 break
 

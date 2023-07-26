@@ -445,12 +445,13 @@ class SidekickCompleter(Completer):
     """
 
     files = []  # List of files that we have loaded in the current context
+    project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
 
     def get_completions(self, document, complete_event):
         # Get the text before the cursor
         text = document.text_before_cursor
 
-        supported_commands = ["/add", "/drop", "/edit", "/files", "/quit"]
+        supported_commands = ["/add", "/commit", "/drop", "/edit", "/files", "/review", "/quit"]
 
         # If the text starts with a slash, it's a command
         if text.startswith("/"):
@@ -459,15 +460,21 @@ class SidekickCompleter(Completer):
                     yield Completion(command, start_position=-len(text))
 
         if text.startswith("/add "):
-            # If the text starts with /add or /drop, it's a file, so autocomplete the file name
+            # For /add autocomplete the file name from the project file listing
             # Get the list of files in the current directory, filtered by the .gitignore file
-            project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
-            for file in project_files:
+            for file in self.project_files:
                 if str(file).startswith(text.split()[-1]):
                     yield Completion(str(file), start_position=-len(text.split()[-1]))
 
         elif text.startswith("/drop "):
-            # If the text starts with /drop, use the current context files for autocomplete
+            # For /drop, use the current context files for autocomplete
             for file in self.files:
+                if file.startswith(text.split()[-1]):
+                    yield Completion(file, start_position=-len(text.split()[-1]))
+
+        elif text.startswith(("/review ", "/commit ")):
+            # For /review and /commit, use the staged/unstaged files for autocomplete
+            changed_files = Coder.git_staged_files() + Coder.git_unstaged_files()
+            for file in changed_files:
                 if file.startswith(text.split()[-1]):
                     yield Completion(file, start_position=-len(text.split()[-1]))
