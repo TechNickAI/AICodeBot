@@ -55,7 +55,7 @@ def cli(debug):
 @click.option("-v", "--verbose", count=True)
 def alignment(response_token_size, verbose):
     """A message from AICodeBot about AI Alignment ❤ + 🤖."""
-    setup_config()
+    setup_cli()
 
     # Load the prompt
     prompt = get_prompt("alignment")
@@ -92,7 +92,7 @@ def alignment(response_token_size, verbose):
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
 def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     """Generate a commit message based on your changes."""
-    setup_config()
+    setup_cli(verify_git_repo=True)
 
     # If files are specified, only consider those files
     if files:
@@ -294,7 +294,7 @@ def configure(verbose, openai_api_key):
 @click.option("-v", "--verbose", count=True)
 def debug(command, verbose):
     """Run a command and debug the output."""
-    setup_config()
+    setup_cli()
 
     # Run the command and capture its output
     command_str = " ".join(command)
@@ -349,7 +349,7 @@ def learn(repo_url, verbose):
     # local vector store, and pre-query this vector store for the LLM to use a
     # context for the prompt
 
-    setup_config()
+    setup_cli()
 
     console.print("This is an experimental feature.", style=warning_style)
 
@@ -382,7 +382,7 @@ def learn(repo_url, verbose):
 @click.argument("files", nargs=-1)
 def review(commit, verbose, output_format, response_token_size, files):
     """Do a code review, with [un]staged changes, or a specified commit."""
-    setup_config()
+    setup_cli(verify_git_repo=True)
 
     # If files are specified, only consider those files
     # Otherwise, use git to get the list of files
@@ -447,7 +447,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     Coding help from your AI sidekick\n
     FILES: List of files to be used as context for the session
     """
-    setup_config()
+    setup_cli(verify_git_repo=True)
 
     console.print("This is an experimental feature. We love bug reports 😉", style=warning_style)
 
@@ -620,7 +620,11 @@ def sidekick_agent(learned_repos):
 #                               Helper functions                               #
 
 
-def setup_config():
+def setup_cli(verify_git_repo=False):
+    if verify_git_repo and not Coder.is_inside_git_repo():
+        console.print("🛑 This command must be run from within a git repository.", style=error_style)
+        sys.exit(1)
+
     existing_config = read_config()
     if not existing_config:
         console.print("Welcome to AICodeBot 🤖. Let's set up your config file.\n", style=bot_style)

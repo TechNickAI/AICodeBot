@@ -26,7 +26,7 @@ def test_commit(cli_runner, temp_git_repo):
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test1.txt")  # stage the new file
         result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE, "test1.txt"])
-        assert result.exit_code == 0
+        assert result.exit_code == 0, f"Output: {result.output}"
         assert "✅ 1 file(s) committed" in result.output
 
         # Scenario 2: Both staged and unstaged changes
@@ -35,12 +35,12 @@ def test_commit(cli_runner, temp_git_repo):
         repo.git.add("test2.txt")  # stage the new file
         create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
         result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
-        assert result.exit_code == 0
+        assert result.exit_code == 0, f"Output: {result.output}"
         assert "✅ 1 file(s) committed" in result.output
 
         # Scenario 3: No changes at all
         result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
-        assert result.exit_code == 0
+        assert result.exit_code == 0, f"Output: {result.output}"
         assert "No changes" in result.output
 
 
@@ -115,7 +115,7 @@ def test_review(cli_runner, temp_git_repo):
         result = cli_runner.invoke(cli, ["review", "-t", TEST_RESPONSE_TOKEN_SIZE, "test.txt"])
 
         # Check that the review command ran successfully
-        assert result.exit_code == 0
+        assert result.exit_code == 0, f"Output: {result.output}"
         assert len(result.output) > 20
 
         # Again with json output

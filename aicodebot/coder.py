@@ -403,6 +403,15 @@ class Coder:
 
         return sorted(list(languages))
 
+    def is_inside_git_repo():
+        """Checks if the current directory is inside a git repository."""
+        out = subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], capture_output=True, text=True)
+        if out.returncode == 0:
+            return True
+        else:
+            logger.debug(f"Not inside a git repo: {out.stderr}")
+            return False
+
     @staticmethod
     def is_binary_file(file_path):
         """Checks if a file is binary or not byt looking for a null byte,
