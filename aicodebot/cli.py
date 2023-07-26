@@ -169,10 +169,11 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run({"diff_context": diff_context, "languages": languages})
-
-    commit_message_approved = click.confirm(
-        "Do you want to use this commit message (type n to edit)?", default=True
-    )
+    
+    if not yes:
+        commit_message_approved = click.confirm(
+            "Do you want to use this commit message (type n to edit)?", default=True
+        )
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
@@ -183,7 +184,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         temp.write(commit_message)
         temp_file_name = temp.name
 
-    if not commit_message_approved:
+    if not commit_message_approved and not yes:
         # Open the temporary file in the user's editor
         editor = os.getenv("EDITOR", "vim")
         subprocess.call([editor, temp_file_name])  # noqa: S603
