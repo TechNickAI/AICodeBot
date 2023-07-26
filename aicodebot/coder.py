@@ -232,7 +232,7 @@ class Coder:
                 tokenizer=tokenizer,
                 use_cache=True,
                 device_map="auto",
-                max_length=296,
+                max_length=2048,
                 do_sample=True,
                 top_k=10,
                 num_return_sequences=1,
