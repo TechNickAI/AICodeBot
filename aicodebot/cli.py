@@ -169,11 +169,13 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run({"diff_context": diff_context, "languages": languages})
-    
+
     if not yes:
         commit_message_approved = click.confirm(
             "Do you want to use this commit message (type n to edit)?", default=True
         )
+    else:
+        commit_message_approved = False
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:

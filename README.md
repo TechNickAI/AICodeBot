@@ -195,7 +195,14 @@ We'd love your help! If you're interested in contributing, here's how to get sta
 
 ## Docker
 
+Assumes you have changes in current working dir that are already added.
 ```
 docker build -t aicodebot .
-docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit
+docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
+```
+
+ugly hack to run LLM locally
+
+```
+AICODEBOT_LLM_MODEL=vilsonrodrigues/falcon-7b-instruct-sharded docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
 ```
