@@ -283,12 +283,14 @@ COMMIT_TEMPLATE = (
     * Start with a short summary (less than 72 characters).
     * Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient,
         then omit the detailed text.
-    * Use imperative mood (e.g., "Add feature").
+    * Determine what functionality was added or modified instead of just describing the exact changes.
+    * Use imperative mood (e.g., "Add feature")
     * Be in GitHub-flavored markdown format.
     * Have a length that scales with the length of the diff context. If the DIFF is a small change,
       respond quickly with a terse message so we can go faster.
     * Do not repeat information that is already known from the git commit.
     * Be terse.
+    * Do not add anything other then description of code changes.
 
     BEGIN SAMPLE COMMIT MESSAGE
     Update README with better instructions for installation
