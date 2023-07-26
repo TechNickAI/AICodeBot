@@ -502,13 +502,15 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
         style=bot_style,
     )
     history_file = Path.home() / ".aicodebot_request_history"
+    completer = SidekickCompleter()
+    completer.files = files
 
     while True:  # continuous loop for multiple questions
         edited_input = None
         if request:
             human_input = request
         else:
-            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file), completer=SidekickCompleter())
+            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file), completer=completer)
             human_input = human_input.strip()
 
         if not human_input:
@@ -540,7 +542,9 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
                     files.discard(filename)
                     console.print(f"✅ Dropped '{filename}' from the list of files.")
 
+                # Update the context for the new list of files
                 context = generate_files_context(files)
+                completer.files = files
                 languages = ",".join(Coder.identify_languages(files))
                 show_file_context(files)
                 continue

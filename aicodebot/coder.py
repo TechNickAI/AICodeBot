@@ -444,6 +444,8 @@ class SidekickCompleter(Completer):
     Handles the autocomplete for the sidekick commands and file names.
     """
 
+    files = []  # List of files that we have loaded in the current context
+
     def get_completions(self, document, complete_event):
         # Get the text before the cursor
         text = document.text_before_cursor
@@ -456,10 +458,16 @@ class SidekickCompleter(Completer):
                 if command.startswith(text):
                     yield Completion(command, start_position=-len(text))
 
-        if text.startswith(("/add ", "/drop ")):
+        if text.startswith("/add "):
             # If the text starts with /add or /drop, it's a file, so autocomplete the file name
             # Get the list of files in the current directory, filtered by the .gitignore file
-            files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
-            for file in files:
+            project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
+            for file in project_files:
                 if str(file).startswith(text.split()[-1]):
                     yield Completion(str(file), start_position=-len(text.split()[-1]))
+
+        elif text.startswith("/drop "):
+            # If the text starts with /drop, use the current context files for autocomplete
+            for file in self.files:
+                if file.startswith(text.split()[-1]):
+                    yield Completion(file, start_position=-len(text.split()[-1]))
