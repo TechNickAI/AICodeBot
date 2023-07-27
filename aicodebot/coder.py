@@ -446,18 +446,26 @@ class SidekickCompleter(Completer):
 
     files = []  # List of files that we have loaded in the current context
     project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
+    commands = {
+        "/edit": "Use your editor for multi line input",
+        "/add": "Add a file to the context for the LLM",
+        "/drop": "Remove a file from the context for the LLM",
+        "/review": "Do a code review on your [un]staged changes",
+        "/commit": "Generate a commit message based on your [un]staged changes",
+        "/sh": "Execute a shell command",
+        "/files": "Show the list of files currently loaded in the context",
+        "/quit": "👋 Say Goodbye!",
+    }
 
     def get_completions(self, document, complete_event):
         # Get the text before the cursor
         text = document.text_before_cursor
 
-        supported_commands = ["/add", "/commit", "/drop", "/edit", "/files", "/review", "/sh", "/quit"]
-
         # If the text starts with a slash, it's a command
         if text.startswith("/"):
-            for command in supported_commands:
+            for command, description in self.commands.items():
                 if command.startswith(text):
-                    yield Completion(command, start_position=-len(text))
+                    yield Completion(command, start_position=-len(text), display_meta=description)
 
         if text.startswith("/add "):
             # For /add autocomplete the file name from the project file listing
