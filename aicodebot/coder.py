@@ -451,7 +451,7 @@ class SidekickCompleter(Completer):
         # Get the text before the cursor
         text = document.text_before_cursor
 
-        supported_commands = ["/add", "/commit", "/drop", "/edit", "/files", "/review", "/quit"]
+        supported_commands = ["/add", "/commit", "/drop", "/edit", "/files", "/review", "/sh", "/quit"]
 
         # If the text starts with a slash, it's a command
         if text.startswith("/"):

@@ -586,6 +586,17 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
                 ctx = click.get_current_context()
                 ctx.invoke(review, *args)
                 continue
+            elif cmd == "/sh":
+                # Strip off the /sh and any leading/trailing whitespace
+                shell_command = human_input[3:].strip()
+
+                if not shell_command:
+                    continue
+
+                # Execute the shell command and let the output go directly to the console
+                subprocess.run(shell_command, shell=True)  # noqa: S602
+                continue
+
             elif cmd == "/quit":
                 break
 
