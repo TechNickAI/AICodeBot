@@ -173,7 +173,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run({"diff_context": diff_context, "languages": languages})
 
-    commit_message_approved = click.confirm(
+    commit_message_approved = not console.is_terminal or click.confirm(
         "Do you want to use this commit message (type n to edit)?", default=True
     )
 
@@ -192,14 +192,13 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         subprocess.call([editor, temp_file_name])  # noqa: S603
 
     # Ask the user if they want to commit the changes
-    if not yes:
-        confirm = click.confirm("Are you ready to commit the changes?", default=True)
-        if confirm:
-            # Commit the changes using the temporary file for the commit message
-            exec_and_get_output(["git", "commit", "-F", temp_file_name])
-            console.print(f"✅ {len(files)} file(s) committed.")
-        else:
-            console.print("Aborting commit.")
+    confirm = yes or not console.is_terminal or click.confirm("Are you ready to commit the changes?", default=True)
+    if confirm:
+        # Commit the changes using the temporary file for the commit message
+        exec_and_get_output(["git", "commit", "-F", temp_file_name])
+        console.print(f"✅ {len(files)} file(s) committed.")
+    else:
+        console.print("Aborting commit.")
 
     # Delete the temporary file
     Path(temp_file_name).unlink()
