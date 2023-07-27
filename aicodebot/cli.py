@@ -448,7 +448,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 @click.argument("files", nargs=-1)
 def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR0915
     """
-    Coding help from your AI sidekick\n
+    Coding help from your AI sidekick
     FILES: List of files to be used as context for the session
     """
     setup_cli(verify_git_repo=True)
@@ -473,6 +473,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
             )
     elif not no_files:
         # Determine which files to use for context automagically, with git
+        console.print("Using recent git commits and current changes for context.")
         files = Coder.auto_file_context(file_context_limit, max_file_tokens)
         context = generate_files_context(files)
         file_token_size = Coder.get_token_length(context)
