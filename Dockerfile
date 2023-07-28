@@ -32,7 +32,7 @@ RUN python3 -m pip install  install numba typing datasets>=2.6.1 git+https://git
 WORKDIR /aicodebot
 COPY . /aicodebot
 RUN pip install -r requirements/requirements-dev.txt
-RUN pip-compile requirements/requirements.in
+# RUN pip-compile requirements/requirements.in
 RUN git config --global user.email "aicodebot@fakeemail.com"
 RUN git config --global user.name "aicodebot"
 WORKDIR /app
