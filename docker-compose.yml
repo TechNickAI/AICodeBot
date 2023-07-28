@@ -14,17 +14,38 @@ services:
       - nats_data1:/data
     networks:
       - aicodebot
-  falcon7b:
+  # falcon7b:
+  #   environment:
+  #     - CUDA_LAUNCH_BLOCKING=1
+  #     - NATS_USER=falcon7b
+  #     - NATS_PASS=password
+  #   build:
+  #     context: ./services/falcon7b
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ~/.cache:/home/user/.cache/
+  #     - ~/.ssh:/home/user/.ssh
+  #   networks:
+  #     - aicodebot
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: 1
+  #             capabilities: [ gpu ]
+
+  llama2:
     environment:
       - CUDA_LAUNCH_BLOCKING=1
       - NATS_USER=falcon7b
       - NATS_PASS=password
     build:
-      context: ./services/falcon7b
+      context: ./services/llama2
       dockerfile: Dockerfile
     volumes:
-      - ~/.cache:/home/user/.cache/
-      - ~/.ssh:/home/user/.ssh
+      - ~/.cache:/root/.cache/
+      - ~/.ssh:/root/.ssh
     networks:
       - aicodebot
     deploy:
