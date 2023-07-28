@@ -1,7 +1,7 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.agents import SidekickAgent
 from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
-from aicodebot.config import get_config_file, get_local_data_dir, read_config
+from aicodebot.config import Session, get_config_file, get_local_data_dir, read_config
 from aicodebot.helpers import create_and_write_file, exec_and_get_output, logger
 from aicodebot.input import Chat, SidekickCompleter
 from aicodebot.learn import load_documents_from_repo, store_documents
@@ -474,8 +474,14 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
             )
     elif not no_files:
         # Determine which files to use for context automagically, with git
-        console.print("Using recent git commits and current changes for context.")
-        files = Coder.auto_file_context(file_context_limit, max_file_tokens)
+        session_data = Session.read()
+        if session_data.get("files"):
+            console.print("Using files from the last session for context.")
+            files = session_data["files"]
+        else:
+            console.print("Using recent git commits and current changes for context.")
+            files = Coder.auto_file_context(file_context_limit, max_file_tokens)
+
         context = generate_files_context(files)
         file_token_size = Coder.get_token_length(context)
     else:
@@ -539,7 +545,11 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
         # Update the context for the new list of files
         context = generate_files_context(chat.files)
         languages = ",".join(Coder.identify_languages(chat.files))
-        completer.files = chat.files
+        if completer.files != chat.files:
+            completer.files = chat.files
+            session_data = Session.read()
+            session_data["files"] = list(chat.files)
+            Session.write(session_data)
 
         if parsed_human_input == chat.CONTINUE:
             continue
