@@ -16,7 +16,19 @@ from prompt_toolkit.history import FileHistory
 from rich.console import Console
 from rich.live import Live
 from rich.style import Style
-import click, humanize, json, langchain, openai, os, shutil, subprocess, sys, tempfile, webbrowser, yaml
+import asyncclick as click
+import humanize
+import json
+import langchain
+import nats
+import openai
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import webbrowser
+import yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
@@ -49,6 +61,10 @@ def cli(debug):
 # Commands are defined as functions with the @click decorator.
 # The function name is the command name, and the docstring is the help text.
 # Keep the commands in alphabetical order.
+
+
+class ConfigError(Exception):
+    pass
 
 
 @cli.command()
@@ -91,7 +107,7 @@ def alignment(response_token_size, verbose):
     help="Skip running pre-commit (otherwise run it if it is found).",
 )
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
-def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
+async def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     """Generate a commit message based on your changes."""
     setup_cli(verify_git_repo=True)
 
@@ -159,20 +175,40 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         raise click.ClickException(
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
         )
-
+    console.print("got model name", model_name)
     console.print("Examining the diff and generating the commit message")
-    with Live(Markdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
-            model_name,
-            verbose,
-            350,
-            streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
-        )
 
-        # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-        response = chain.run({"diff_context": diff_context, "languages": languages})
+    # TODO cant get agenerate to work, need async for nc.connect.
+    # would be cleaner to put this into a customLLM from langchain otherwise
+    config = read_config()
+    if "nats_user" in config:
+        if "nats_pass" not in config:
+            raise ConfigError("require both nats_user and nats_pass")
+        if model_name == "vilsonrodrigues/falcon-7b-instruct-sharded":
+            nc = await nats.connect(
+                servers=["nats://nats_local:4222"], user=config["nats_user"], password=config["nats_pass"]
+            )
+            formatted_template = prompt.template.format(diff_context=diff_context, languages="python")
+            console.print("formatted_template", formatted_template)
+            encodedres = await nc.request("service.falcon7b", formatted_template.encode(), timeout=60000)
+            response = encodedres.data.decode()
+        else:
+            raise ConfigError("only falcon7b supported for now")
+    else:
+        with Live(Markdown(""), auto_refresh=True) as live:
+            llm = Coder.get_llm(
+                model_name,
+                verbose,
+                350,
+                streaming=True,
+                callbacks=[RichLiveCallbackHandler(live, bot_style)],
+            )
+            console.print("got llm", llm)
+            # Set up the chain
+            chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+            # TODO not sure if agenerate breaks sync llms
+            response = await chain.agenerate({"diff_context": diff_context, "languages": languages})
+            console.print("llm res", response)
 
     commit_message_approved = not console.is_terminal or click.confirm(
         "Do you want to use this commit message (type n to edit)?", default=True
