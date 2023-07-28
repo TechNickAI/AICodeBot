@@ -614,13 +614,17 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
             # have a record of what they asked for on their terminal
             console.print(f"Request:\n{edited_input}")
 
-        with Live(Markdown(""), auto_refresh=True) as live:
-            callback = RichLiveCallbackHandler(live, bot_style)
-            llm.callbacks = [callback]  # a fresh callback handler for each question
-            # Recalculate the response token size in case the files changed
-            llm.max_tokens = calc_response_token_size(files)
+        try:
+            with Live(Markdown(""), auto_refresh=True) as live:
+                callback = RichLiveCallbackHandler(live, bot_style)
+                llm.callbacks = [callback]  # a fresh callback handler for each question
+                # Recalculate the response token size in case the files changed
+                llm.max_tokens = calc_response_token_size(files)
 
-            chain.run({"task": human_input, "context": context, "languages": languages})
+                chain.run({"task": human_input, "context": context, "languages": languages})
+        except KeyboardInterrupt:
+            console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=bot_style)
+            continue
 
         if request:
             # If we were given a request, then we only want to run once
