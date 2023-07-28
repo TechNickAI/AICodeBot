@@ -3,7 +3,7 @@ from aicodebot.agents import SidekickAgent
 from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
 from aicodebot.config import get_config_file, get_local_data_dir, read_config
 from aicodebot.helpers import create_and_write_file, exec_and_get_output, logger
-from aicodebot.input import SidekickCompleter
+from aicodebot.input import Chat, SidekickCompleter
 from aicodebot.learn import load_documents_from_repo, store_documents
 from aicodebot.output import OurMarkdown as Markdown, RichLiveCallbackHandler
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
@@ -514,114 +514,54 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
 
     # ---------------------- Set up the chat loop and prompt --------------------- #
-    show_file_context(files)
+    chat = Chat(console, files)
+    chat.show_file_context()
     languages = ",".join(Coder.identify_languages(files))
 
     console.print(
         "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n",
-        style=bot_style,
+        style=Chat.bot_style,
     )
     history_file = Path.home() / ".aicodebot_request_history"
     completer = SidekickCompleter()
     completer.files = files
 
     while True:  # continuous loop for multiple questions
-        edited_input = None
         if request:
             human_input = request
         else:
             human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file), completer=completer)
-            human_input = human_input.strip()
 
-        if not human_input:
-            # Must have been spaces or blank line
+        parsed_human_input = chat.parse_human_input(human_input)
+        if parsed_human_input == chat.BREAK:
+            break
+
+        # Update the context for the new list of files
+        context = generate_files_context(chat.files)
+        languages = ",".join(Coder.identify_languages(chat.files))
+        completer.files = chat.files
+
+        if parsed_human_input == chat.CONTINUE:
             continue
 
-        if human_input.startswith("/"):
-            cmd = human_input.lower().split()[0]
-
-            # ------------------------------ Handle commands ----------------------------- #
-            if cmd in ["/add", "/drop"]:
-                # Get the filename
-                # If they didn't specify a file, then ignore
-                try:
-                    filenames = human_input.split()[1:]
-                except IndexError:
-                    continue
-
-                # If the file doesn't exist, or we can't open it, let them know
-                for filename in filenames:
-                    if cmd == "/add":
-                        try:
-                            # Test opening the file
-                            with Path(filename).open("r"):
-                                files.add(filename)
-                                console.print(f"✅ Added '{filename}' to the list of files.")
-                        except OSError as e:
-                            console.print(f"Unable to open '{filename}': {e.strerror}", style=error_style)
-                            continue
-
-                    elif cmd == "/drop":
-                        # Drop the file from the list
-                        files.discard(filename)
-                        console.print(f"✅ Dropped '{filename}' from the list of files.")
-
-                # Update the context for the new list of files
-                context = generate_files_context(files)
-                completer.files = files
-                languages = ",".join(Coder.identify_languages(files))
-                show_file_context(files)
-                continue
-
-            elif cmd == "/commit":
-                # Call the commit function with the parsed arguments
-                args = human_input.split()[1:]
-                ctx = click.get_current_context()
-                ctx.invoke(commit, *args)
-                continue
-            elif cmd == "/edit":
-                human_input = edited_input = click.edit()
-            elif cmd == "/files":
-                show_file_context(files)
-                continue
-            elif cmd == "/review":
-                # Call the review function with the parsed arguments
-                args = human_input.split()[1:]
-                ctx = click.get_current_context()
-                ctx.invoke(review, *args)
-                continue
-            elif cmd == "/sh":
-                # Strip off the /sh and any leading/trailing whitespace
-                shell_command = human_input[3:].strip()
-
-                if not shell_command:
-                    continue
-
-                # Execute the shell command and let the output go directly to the console
-                subprocess.run(shell_command, shell=True)  # noqa: S602
-                continue
-
-            elif cmd == "/quit":
-                break
-
-        elif human_input.lower()[-2:] == r"\e":
-            # If the text ends wit then we want to edit it
-            human_input = edited_input = click.edit(human_input[:-2])
+        # If we got this far, it's a string that we are going to pass to the LLM
 
         # --------------- Process the input and stream it to the human --------------- #
-        if edited_input:
+        if parsed_human_input != human_input:
             # If the user edited the input, then we want to print it out so they
             # have a record of what they asked for on their terminal
-            console.print(f"Request:\n{edited_input}")
+            console.print(parsed_human_input)
 
         try:
             with Live(Markdown(""), auto_refresh=True) as live:
                 callback = RichLiveCallbackHandler(live, bot_style)
                 llm.callbacks = [callback]  # a fresh callback handler for each question
+
                 # Recalculate the response token size in case the files changed
                 llm.max_tokens = calc_response_token_size(files)
 
-                chain.run({"task": human_input, "context": context, "languages": languages})
+                chain.run({"task": parsed_human_input, "context": context, "languages": languages})
+
         except KeyboardInterrupt:
             console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=bot_style)
             continue
@@ -688,16 +628,6 @@ def setup_cli(verify_git_repo=False):
     else:
         os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
         return existing_config
-
-
-def show_file_context(files):
-    if not files:
-        return
-
-    console.print("Files loaded in this session:")
-    for file in files:
-        token_length = Coder.get_token_length(Path(file).read_text())
-        console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
 
 
 if __name__ == "__main__":  # pragma: no cover
