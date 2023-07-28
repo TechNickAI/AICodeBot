@@ -191,3 +191,12 @@ There are a couple of things you can do:
 ## Development / Contributing
 
 We'd love your help! If you're interested in contributing, here's how to get started. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more details.
+
+
+## Docker
+
+Assumes you have changes in current working dir that are already added.
+```
+docker build -t aicodebot .
+docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
+```
