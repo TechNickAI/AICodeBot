@@ -20,6 +20,7 @@ import asyncclick as click
 import humanize
 import json
 import langchain
+import nats
 import openai
 import os
 import shutil
@@ -60,6 +61,10 @@ def cli(debug):
 # Commands are defined as functions with the @click decorator.
 # The function name is the command name, and the docstring is the help text.
 # Keep the commands in alphabetical order.
+
+
+class ConfigError(Exception):
+    pass
 
 
 @cli.command()
@@ -172,20 +177,40 @@ async def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # 
         )
     console.print("got model name", model_name)
     console.print("Examining the diff and generating the commit message")
-    with Live(Markdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
-            model_name,
-            verbose,
-            350,
-            streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
-        )
-        console.print("got llm", llm)
-        # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-        # TODO not sure if agenerate breaks sync llms
-        response = await chain.agenerate({"diff_context": diff_context, "languages": languages})
-        console.print("llm res", response)
+
+    # TODO cant get agenerate to work, need async for nc.connect.
+    # would be cleaner to put this into a customLLM from langchain otherwise
+    config = read_config()
+    if "nats_user" in config:
+        if "nats_pass" not in config:
+            raise ConfigError("require both nats_user and nats_pass")
+        if model_name == "vilsonrodrigues/falcon-7b-instruct-sharded":
+            nc = await nats.connect(
+                servers=["nats://nats_local:4222"], user=config["nats_user"], password=config["nats_pass"]
+            )
+            formatted_template = prompt.template.format(diff_context=diff_context, languages=["en"])
+            console.print("formatted_template", formatted_template)
+            encodedres = await nc.request("service.falcon7b", formatted_template.encode(), timeout=60000)
+            console.print("encodedres", encodedres)
+            response = encodedres.data.decode()
+            console.print("got nats res", response)
+        else:
+            raise ConfigError("only falcon7b supported for now")
+    else:
+        with Live(Markdown(""), auto_refresh=True) as live:
+            llm = Coder.get_llm(
+                model_name,
+                verbose,
+                350,
+                streaming=True,
+                callbacks=[RichLiveCallbackHandler(live, bot_style)],
+            )
+            console.print("got llm", llm)
+            # Set up the chain
+            chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+            # TODO not sure if agenerate breaks sync llms
+            response = await chain.agenerate({"diff_context": diff_context, "languages": languages})
+            console.print("llm res", response)
 
     commit_message_approved = not console.is_terminal or click.confirm(
         "Do you want to use this commit message (type n to edit)?", default=True

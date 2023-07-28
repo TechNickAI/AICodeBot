@@ -1,42 +1,14 @@
 from aicodebot.config import read_config
 from aicodebot.helpers import exec_and_get_output, logger
 from langchain.chat_models import ChatOpenAI
-from langchain.llms.base import LLM
 from openai.api_resources import engine
 from pathlib import Path
 from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
-import fnmatch, functools, mimetypes, nats, openai, os, re, subprocess, tiktoken
+import fnmatch, functools, mimetypes, openai, os, re, subprocess, tiktoken
 
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
 CREATIVE_TEMPERATURE = 0.6
-
-
-class ConfigError(Exception):
-    pass
-
-
-class NatsLLM(LLM):
-    nats_user: str
-    nats_pass: str
-
-    @property
-    def _llm_type(self):
-        return "nats"
-
-    async def _call(self, prompt, stop=None, run_manager=None):
-        if stop is not None:
-            raise ValueError("stop kwargs are not permitted.")
-        logger.info("NatsLLM called", prompt, stop)
-        nc = await nats.connect(servers=["nats://nats_local:4222"], user=self.nats_user, password=self.nats_pass)
-        response = nc.request("service.falcon7b", prompt.encode())
-        logger.info("got res", response.decode())
-        return response.decode()
-
-    @property
-    def _identifying_params(self):
-        """Get the identifying parameters."""
-        return {"nats_user": self.nats_user}
 
 
 class Coder:
@@ -217,14 +189,6 @@ class Coder:
     ):
         """Initializes a language model for chat with the specified parameters."""
         config = read_config()
-        """Nats LLM"""
-        if "nats_user" in config:
-            if "nats_pass" not in config:
-                raise ConfigError("require both nats_user and nats_pass")
-            if model_name == "vilsonrodrigues/falcon-7b-instruct-sharded":
-                return NatsLLM(nats_user=config["nats_user"], nats_pass=config["nats_pass"])
-            else:
-                raise ConfigError("only falcon7b supported for now")
         if "openrouter_api_key" in config:
             # If the openrouter_api_key is set, use the Open Router API
             # OpenRouter allows for access to many models that have larger token limits

@@ -1,10 +1,8 @@
-import asyncio
-import nats
-import json
-import torch
-import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-import transformers
+import asyncio, nats, os, torch, transformers
+
+nats_user = value = os.getenv("NATS_USER")
+nats_pass = value = os.getenv("NATS_PASS")
 device = "cuda" if torch.cuda.is_available() else "cpu"
 MODEL = "vilsonrodrigues/falcon-7b-instruct-sharded"
 quantization_config = BitsAndBytesConfig(
@@ -34,19 +32,20 @@ pipeline = transformers.pipeline(
 subject_main = "service"
 subject = "service.falcon7b"
 
+# print("pipeline",pipeline("write me a function to square two numbers"))
 
-async def processLLM(msg):
-    # decode msg.data into Float32Array from Uint8 of nats. 
-    data = json.loads(msg.data.decode())
+
+async def process(msg):
+    # decode msg.data into Float32Array from Uint8 of nats.
+    data = msg.data.decode()
     response = pipeline(data)
-    print("response", response)
-    await msg.respond(response.encode())
+    await msg.respond(response[0]["generated_text"].encode())
+
+
 async def sub():
     # Connect to NATS server
-    nc = await nats.connect(servers=["nats://nats_local:4222"], user="falcon7b", password="password")
-    print("got nc")
-    sub = await nc.subscribe(subject, subject, cb=processLLM)
-    print("got sub", sub)
+    nc = await nats.connect(servers=["nats://nats_local:4222"], user=nats_user, password=nats_pass)
+    await nc.subscribe(subject, subject, cb=process)
 
 
 loop = asyncio.new_event_loop()

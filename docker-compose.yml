@@ -12,17 +12,21 @@ services:
     volumes:
       - ./services/nats/nats.conf:/nats/nats.conf
       - nats_data1:/data
-
+    networks:
+      - aicodebot
   falcon7b:
     environment:
       - CUDA_LAUNCH_BLOCKING=1
+      - NATS_USER=falcon7b
+      - NATS_PASS=password
     build:
       context: ./services/falcon7b
       dockerfile: Dockerfile
     volumes:
       - ~/.cache:/home/user/.cache/
       - ~/.ssh:/home/user/.ssh
-
+    networks:
+      - aicodebot
     deploy:
       resources:
         reservations:
@@ -33,3 +37,7 @@ services:
 
 volumes:
   nats_data1:
+
+
+networks:
+  aicodebot:

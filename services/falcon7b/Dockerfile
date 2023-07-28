@@ -28,7 +28,7 @@ RUN python3 -m pip install --upgrade pip
 RUN conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
 
 RUN python3 -m pip install  install numba typing datasets>=2.6.1 git+https://github.com/huggingface/transformers git+https://github.com/huggingface/peft.git git+https://github.com/huggingface/accelerate.git gradio huggingface_hub librosa evaluate>=0.30 jiwer
-RUN pip install nats.py 
+RUN pip install nats.py
 # TODO xformers upgrades pytorch, not sure if it breaks torchaudio
 RUN python3 -m pip install bitsandbytes xformers
 # Set the working directory

@@ -204,6 +204,7 @@ docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot c
 
 test NatsLLM
 ```
-docker run --gpus all -e AICODEBOT_LLM_MODEL=vilsonrodrigues/falcon-7b-instruct-sharded -v ~/.cache:/home/user/.cache -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
+docker compose up -d
+docker run --gpus all --network=aicodebot_aicodebot -e AICODEBOT_LLM_MODEL=vilsonrodrigues/falcon-7b-instruct-sharded -v ~/.cache:/home/user/.cache -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
 
 ```
