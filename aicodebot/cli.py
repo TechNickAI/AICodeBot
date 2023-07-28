@@ -192,7 +192,6 @@ async def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # 
             console.print("formatted_template", formatted_template)
             encodedres = await nc.request("service.falcon7b", formatted_template.encode(), timeout=60000)
             response = encodedres.data.decode()
-            console.print("got nats res", response)
         else:
             raise ConfigError("only falcon7b supported for now")
     else:

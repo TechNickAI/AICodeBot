@@ -32,11 +32,8 @@ pipeline = transformers.pipeline(
 subject_main = "service"
 subject = "service.falcon7b"
 
-# print("pipeline",pipeline("write me a function to square two numbers"))
-
 
 async def process(msg):
-    # decode msg.data into Float32Array from Uint8 of nats.
     data = msg.data.decode()
     response = pipeline(data)
     await msg.respond(response[0]["generated_text"].encode())
