@@ -200,3 +200,10 @@ Assumes you have changes in current working dir that are already added.
 docker build -t aicodebot .
 docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
 ```
+
+
+test NatsLLM
+```
+docker run --gpus all -e AICODEBOT_LLM_MODEL=vilsonrodrigues/falcon-7b-instruct-sharded -v ~/.cache:/home/user/.cache -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
+
+```

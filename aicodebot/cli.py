@@ -159,7 +159,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         raise click.ClickException(
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
         )
-
+    console.print("got model name", model_name)
     console.print("Examining the diff and generating the commit message")
     with Live(Markdown(""), auto_refresh=True) as live:
         llm = Coder.get_llm(
