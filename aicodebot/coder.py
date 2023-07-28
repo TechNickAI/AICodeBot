@@ -1,6 +1,7 @@
 from aicodebot.config import read_config
 from aicodebot.helpers import exec_and_get_output, logger
 from langchain.chat_models import ChatOpenAI
+from langchain.llms.base import LLM
 from openai.api_resources import engine
 from pathlib import Path
 from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
@@ -9,6 +10,25 @@ import fnmatch, functools, mimetypes, openai, os, re, subprocess, tiktoken
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
 CREATIVE_TEMPERATURE = 0.6
+
+
+class NatsLLM(LLM):
+    n: int
+    @property
+    def _llm_type(self):
+        return "nats"
+
+    def _call(self, prompt, stop=None, run_manager=None):
+        if stop is not None:
+            raise ValueError("stop kwargs are not permitted.")
+        logger.info("NatsLLM called", prompt, stop)
+        return prompt[: self.n]
+
+    @property
+    def _identifying_params(self):
+        """Get the identifying parameters."""
+        logger.info("_identifying_params called", self.n)
+        return {"n": self.n}
 
 
 class Coder:
@@ -187,6 +207,9 @@ class Coder:
         streaming=False,
         callbacks=None,
     ):
+        """Nats LLM"""
+        if model_name == "vilsonrodrigues/falcon-7b-instruct-sharded":
+            return NatsLLM(n=10)
         """Initializes a language model for chat with the specified parameters."""
         config = read_config()
         if "openrouter_api_key" in config:
