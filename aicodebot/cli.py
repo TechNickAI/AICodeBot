@@ -550,13 +550,16 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 
                 # If the file doesn't exist, or we can't open it, let them know
                 for filename in filenames:
-                    if not Path(filename).exists():
-                        console.print(f"File '{filename}' doesn't exist.", style=error_style)
-                        continue
-
                     if cmd == "/add":
-                        files.add(filename)
-                        console.print(f"✅ Added '{filename}' to the list of files.")
+                        try:
+                            # Test opening the file
+                            with Path(filename).open("r"):
+                                files.add(filename)
+                                console.print(f"✅ Added '{filename}' to the list of files.")
+                        except OSError as e:
+                            console.print(f"Unable to open '{filename}': {e.strerror}", style=error_style)
+                            continue
+
                     elif cmd == "/drop":
                         # Drop the file from the list
                         files.discard(filename)
