@@ -191,7 +191,6 @@ async def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # 
             formatted_template = prompt.template.format(diff_context=diff_context, languages=["en"])
             console.print("formatted_template", formatted_template)
             encodedres = await nc.request("service.falcon7b", formatted_template.encode(), timeout=60000)
-            console.print("encodedres", encodedres)
             response = encodedres.data.decode()
             console.print("got nats res", response)
         else:
