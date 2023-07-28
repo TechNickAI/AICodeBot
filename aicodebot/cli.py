@@ -188,7 +188,7 @@ async def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # 
             nc = await nats.connect(
                 servers=["nats://nats_local:4222"], user=config["nats_user"], password=config["nats_pass"]
             )
-            formatted_template = prompt.template.format(diff_context=diff_context, languages=["en"])
+            formatted_template = prompt.template.format(diff_context=diff_context, languages="python")
             console.print("formatted_template", formatted_template)
             encodedres = await nc.request("service.falcon7b", formatted_template.encode(), timeout=60000)
             response = encodedres.data.decode()
