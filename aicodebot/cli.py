@@ -16,7 +16,18 @@ from prompt_toolkit.history import FileHistory
 from rich.console import Console
 from rich.live import Live
 from rich.style import Style
-import click, humanize, json, langchain, openai, os, shutil, subprocess, sys, tempfile, webbrowser, yaml
+import asyncclick as click
+import humanize
+import json
+import langchain
+import openai
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+import webbrowser
+import yaml
 
 # ----------------------------- Default settings ----------------------------- #
 
