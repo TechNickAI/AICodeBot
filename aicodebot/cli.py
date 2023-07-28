@@ -1,8 +1,9 @@
 from aicodebot import version as aicodebot_version
 from aicodebot.agents import SidekickAgent
-from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder, SidekickCompleter
+from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
 from aicodebot.config import get_config_file, get_local_data_dir, read_config
 from aicodebot.helpers import create_and_write_file, exec_and_get_output, logger
+from aicodebot.input import SidekickCompleter
 from aicodebot.learn import load_documents_from_repo, store_documents
 from aicodebot.output import OurMarkdown as Markdown, RichLiveCallbackHandler
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
