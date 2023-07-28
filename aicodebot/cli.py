@@ -445,7 +445,7 @@ def review(commit, verbose, output_format, response_token_size, files):
 @click.option("-n", "--no-files", is_flag=True, help="Don't automatically load any files for context")
 @click.option("-m", "--max-file-tokens", type=int, default=10_000, help="Don't load files larger than this")
 @click.option("-v", "--verbose", count=True)
-@click.argument("files", nargs=-1)
+@click.argument("files", nargs=-1, type=click.Path(exists=True, readable=True))
 def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR0915
     """
     Coding help from your AI sidekick
