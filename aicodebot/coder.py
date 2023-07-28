@@ -14,6 +14,7 @@ CREATIVE_TEMPERATURE = 0.6
 
 class NatsLLM(LLM):
     n: int
+
     @property
     def _llm_type(self):
         return "nats"
