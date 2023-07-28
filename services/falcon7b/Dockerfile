@@ -27,13 +27,13 @@ RUN conda install python=$PYTHON_VERSION
 RUN python3 -m pip install --upgrade pip
 RUN conda install pytorch==2.0.0 torchvision==0.15.0 torchaudio==2.0.0 pytorch-cuda=11.8 -c pytorch -c nvidia
 
-# jupyter
-RUN python3 -m pip install  install numba typing datasets>=2.6.1 git+https://github.com/huggingface/transformers@de9255de27abfcae4a1f816b904915f0b1e23cd9 git+https://github.com/huggingface/peft.git git+https://github.com/huggingface/accelerate.git gradio huggingface_hub librosa evaluate>=0.30 jiwer
-WORKDIR /aicodebot
-COPY . /aicodebot
-RUN pip install -r requirements/requirements-dev.txt
-RUN pip-compile requirements/requirements.in
-RUN git config --global user.email "aicodebot@fakeemail.com"
-RUN git config --global user.name "aicodebot"
+RUN python3 -m pip install  install numba typing datasets>=2.6.1 git+https://github.com/huggingface/transformers git+https://github.com/huggingface/peft.git git+https://github.com/huggingface/accelerate.git gradio huggingface_hub librosa evaluate>=0.30 jiwer
+RUN pip install nats.py 
+# TODO xformers upgrades pytorch, not sure if it breaks torchaudio
+RUN python3 -m pip install bitsandbytes xformers
+# Set the working directory
 WORKDIR /app
-ENTRYPOINT ["python","-m", "aicodebot.cli"]
+
+COPY . /app
+
+CMD ["python", "nats_falcon7b.py"]

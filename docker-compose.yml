@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  nats_local:
+    image: nats:2.9.19
+    ports:
+      - "4222:4222"
+      - "8088:8088"
+      - "6222:6222"
+    command: "-js -c /nats/nats.conf --name nats_local -p 4222"
+    # command: "-js"
+    volumes:
+      - ./services/nats/nats.conf:/nats/nats.conf
+      - nats_data1:/data
+
+  falcon7b:
+    environment:
+      - CUDA_LAUNCH_BLOCKING=1
+    build:
+      context: ./services/falcon7b
+      dockerfile: Dockerfile
+    volumes:
+      - ~/.cache:/home/user/.cache/
+      - ~/.ssh:/home/user/.ssh
+
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+volumes:
+  nats_data1:

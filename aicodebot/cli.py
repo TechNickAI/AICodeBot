@@ -169,7 +169,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, bot_style)],
         )
-        console.print("got llm",llm)
+        console.print("got llm", llm)
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
         response = chain.run({"diff_context": diff_context, "languages": languages})

@@ -6,7 +6,7 @@ from openai.api_resources import engine
 from pathlib import Path
 from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
 import fnmatch, functools, mimetypes, openai, os, re, subprocess, tiktoken
-
+import nats.py
 DEFAULT_MAX_TOKENS = 512
 PRECISE_TEMPERATURE = 0.05
 CREATIVE_TEMPERATURE = 0.6
@@ -14,15 +14,15 @@ CREATIVE_TEMPERATURE = 0.6
 
 class NatsLLM(LLM):
     n: int
-
     @property
     def _llm_type(self):
         return "nats"
 
-    def _call(self, prompt, stop=None, run_manager=None):
+    async def _call(self, prompt, stop=None, run_manager=None):
         if stop is not None:
             raise ValueError("stop kwargs are not permitted.")
         logger.info("NatsLLM called", prompt, stop)
+        nc = await nats.connect(servers=["nats://nats_local:4222"], user="falcon7b", password="password")
         return prompt[: self.n]
 
     @property

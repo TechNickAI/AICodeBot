@@ -13,6 +13,7 @@ GitPython
 humanize
 langchain
 loguru
+nats.py
 openai
 prompt-toolkit
 pyyaml
