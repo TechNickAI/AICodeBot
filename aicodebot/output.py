@@ -1,3 +1,4 @@
+from aicodebot.helpers import logger
 from langchain.callbacks.base import BaseCallbackHandler
 from rich.markdown import CodeBlock, Markdown
 from rich.syntax import Syntax
@@ -9,9 +10,22 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
         self.live = live
         self.style = style
 
+    def on_llm_start(self, *args, **kwargs):
+        self.live.update(Markdown("**Thinking...**"))
+
     def on_llm_new_token(self, token, **kwargs):
         self.buffer.append(token)
-        self.live.update(OurMarkdown("".join(self.buffer), style=self.style))
+        self.live.update(OurMarkdown("".join(self.buffer), style=self.style), refresh=True)
+
+    def on_llm_end(self, *args, **kwargs):
+        self.buffer = []
+        self.live.stop()
+
+    def on_llm_error(self, error, **kwargs):
+        """Run when LLM errors."""
+        logger.exception(error)
+        self.buffer = []
+        self.live.stop()
 
 
 class OurCodeBlock(CodeBlock):
