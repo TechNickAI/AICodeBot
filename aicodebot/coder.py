@@ -24,13 +24,13 @@ class NatsLLM(LLM):
     def _llm_type(self):
         return "nats"
 
-    def _call(self, prompt, stop=None, run_manager=None):
+    async def _call(self, prompt, stop=None, run_manager=None):
         if stop is not None:
             raise ValueError("stop kwargs are not permitted.")
         logger.info("NatsLLM called", prompt, stop)
-        nc = nats.connect(servers=["nats://nats_local:4222"], user=self.nats_user, password=self.nats_pass)
+        nc = await nats.connect(servers=["nats://nats_local:4222"], user=self.nats_user, password=self.nats_pass)
         response = nc.request("service.falcon7b", prompt.encode())
-        logger.info("got res",response.decode())
+        logger.info("got res", response.decode())
         return response.decode()
 
     @property
@@ -221,7 +221,6 @@ class Coder:
         if "nats_user" in config:
             if "nats_pass" not in config:
                 raise ConfigError("require both nats_user and nats_pass")
-
             if model_name == "vilsonrodrigues/falcon-7b-instruct-sharded":
                 return NatsLLM(nats_user=config["nats_user"], nats_pass=config["nats_pass"])
             else:

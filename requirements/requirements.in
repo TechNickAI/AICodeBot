@@ -6,8 +6,8 @@
 # Keep this list sorted alphabetically.
 
 arrow
+asyncclick
 beautifulsoup4 # needed by langchain
-click
 faiss-cpu # for learn
 GitPython
 humanize

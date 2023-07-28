@@ -91,7 +91,7 @@ def alignment(response_token_size, verbose):
     help="Skip running pre-commit (otherwise run it if it is found).",
 )
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
-def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
+async def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     """Generate a commit message based on your changes."""
     setup_cli(verify_git_repo=True)
 
@@ -172,7 +172,8 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         console.print("got llm", llm)
         # Set up the chain
         chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-        response = chain.run({"diff_context": diff_context, "languages": languages})
+        # TODO not sure if agenerate breaks sync llms
+        response = await chain.agenerate({"diff_context": diff_context, "languages": languages})
         console.print("llm res", response)
 
     commit_message_approved = not console.is_terminal or click.confirm(
