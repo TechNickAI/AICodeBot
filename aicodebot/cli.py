@@ -1,6 +1,6 @@
 from aicodebot import version as aicodebot_version
-from aicodebot.coder import CREATIVE_TEMPERATURE, DEFAULT_MAX_TOKENS, Coder
-from aicodebot.commands import configure, debug, learn, sidekick, sidekick_agent
+from aicodebot.coder import DEFAULT_MAX_TOKENS, Coder
+from aicodebot.commands import alignment, configure, debug, learn, sidekick, sidekick_agent
 from aicodebot.config import read_config
 from aicodebot.helpers import exec_and_get_output, logger
 from aicodebot.output import OurMarkdown as Markdown, RichLiveCallbackHandler, get_console
@@ -35,8 +35,9 @@ def cli(ctx, debug_output):
     langchain.debug = debug_output
 
 
-cli.add_command(debug)
+cli.add_command(alignment)
 cli.add_command(configure)
+cli.add_command(debug)
 cli.add_command(sidekick)
 if os.getenv("AICODEBOT_ENABLE_EXPERIMENTAL_FEATURES"):
     cli.add_command(learn)
@@ -49,35 +50,6 @@ if os.getenv("AICODEBOT_ENABLE_EXPERIMENTAL_FEATURES"):
 # Commands are defined as functions with the @click decorator.
 # The function name is the command name, and the docstring is the help text.
 # Keep the commands in alphabetical order.
-
-
-@cli.command()
-@click.option("-t", "--response-token-size", type=int, default=350)
-@click.option("-v", "--verbose", count=True)
-def alignment(response_token_size, verbose):
-    """A message from AICodeBot about AI Alignment ❤ + 🤖."""
-
-    # Load the prompt
-    prompt = get_prompt("alignment")
-    logger.trace(f"Prompt: {prompt}")
-
-    # Set up the language model
-    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template) + response_token_size)
-
-    with Live(Markdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
-            model_name,
-            verbose,
-            response_token_size,
-            temperature=CREATIVE_TEMPERATURE,
-            streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
-        )
-
-        # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
-
-        chain.run({})
 
 
 @cli.command()
