@@ -1,5 +1,5 @@
 from aicodebot.coder import Coder
-from aicodebot.learn import load_learned_repo
+from aicodebot.commands.learn import load_learned_repo
 from aicodebot.prompts import get_personality_prompt
 from langchain.agents import AgentExecutor, StructuredChatAgent, Tool
 from langchain.agents.agent_toolkits import FileManagementToolkit

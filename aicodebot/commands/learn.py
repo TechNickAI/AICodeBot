@@ -1,15 +1,49 @@
 from aicodebot.coder import Coder
 from aicodebot.config import get_local_data_dir, read_config
 from aicodebot.helpers import logger
+from aicodebot.output import get_console
 from git import Repo
 from langchain.document_loaders import GitLoader, NotebookLoader
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter, Language, RecursiveCharacterTextSplitter
 from langchain.vectorstores import FAISS
 from pathlib import Path
-import time
+import click, humanize, time
 
 DEFAULT_EXCLUDE = [".csv", ".enex", ".json", ".jsonl"]
+
+
+@click.command
+@click.option("-v", "--verbose", count=True)
+@click.option("-r", "--repo-url", help="The URL of the repository to learn from")
+def learn(repo_url, verbose):
+    """NOT WORKING YET: Learn new skills and gain additional knowledge from a repository"""
+    # Clone the supplied repo locally and walk through it, load it into a
+    # local vector store, and pre-query this vector store for the LLM to use a
+    # context for the prompt
+    console = get_console()
+
+    console.print("This is an experimental feature.", style=console.warning_style)
+
+    owner, repo_name = Coder.parse_github_url(repo_url)
+
+    local_data_dir = get_local_data_dir()
+
+    Coder.clone_repo(repo_url, local_data_dir / "repos" / repo_name)
+    console.print("✅ Repo cloned.")
+
+    console.print("Loading documents from repo...")
+    vector_store_dir = local_data_dir / "vector_stores" / repo_name
+    documents = load_documents_from_repo(local_data_dir / "repos" / repo_name)
+
+    num_documents = humanize.intcomma(len(documents))
+    console.print(f"✅ {num_documents} documents loaded")
+
+    console.print("Storking documents from into vector store...")
+    store_documents(documents, vector_store_dir)
+    console.print(
+        f"✅ Repo loaded and indexed. You can now use it with the sidekick-agent command with -l {repo_name}"
+    )
 
 
 def load_documents_from_repo(repo_dir, exclude=DEFAULT_EXCLUDE):
