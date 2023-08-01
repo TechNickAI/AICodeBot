@@ -64,4 +64,4 @@ class Session:
         session_file = cls.get_config_file()
         logger.debug(f"Writing session data to {session_file}")
         data = yaml.safe_dump(session_data)
-        create_and_write_file(session_file, data)
+        create_and_write_file(session_file, data, overwrite=True)
