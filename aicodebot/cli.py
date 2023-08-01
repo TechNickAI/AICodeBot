@@ -5,7 +5,7 @@ from aicodebot.config import Session, get_config_file, get_local_data_dir, read_
 from aicodebot.helpers import create_and_write_file, exec_and_get_output, logger
 from aicodebot.input import Chat, SidekickCompleter
 from aicodebot.learn import load_documents_from_repo, store_documents
-from aicodebot.output import OurMarkdown as Markdown, RichLiveCallbackHandler
+from aicodebot.output import OurMarkdown as Markdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES, generate_files_context, get_prompt
 from langchain.chains import LLMChain
 from langchain.memory import ConversationTokenBufferMemory
@@ -13,24 +13,12 @@ from openai.api_resources import engine
 from pathlib import Path
 from prompt_toolkit import prompt as input_prompt
 from prompt_toolkit.history import FileHistory
-from rich.console import Console
 from rich.live import Live
-from rich.style import Style
 import click, humanize, json, langchain, openai, os, shutil, subprocess, sys, tempfile, webbrowser, yaml
 
-# ----------------------------- Default settings ----------------------------- #
-
-DEFAULT_SPINNER = "point"
-
-# ----------------------- Setup for rich console output ---------------------- #
-
-console = Console()
-bot_style = Style(color="#30D5C8")
-error_style = Style(color="#FF0000")
-warning_style = Style(color="#FFA500")
-
-
 # -------------------------- Top level command group ------------------------- #
+
+console = get_console()
 
 
 @click.group()
@@ -72,7 +60,7 @@ def alignment(response_token_size, verbose):
             response_token_size,
             temperature=CREATIVE_TEMPERATURE,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
+            callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
 
         # Set up the chain
@@ -135,7 +123,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
         if not shutil.which("pre-commit"):
             console.print(
                 "This project uses pre-commit, but it is not installed. Skipping pre-commit checks.",
-                style=warning_style,
+                style=console.warning_style,
             )
         else:
             console.print("Running pre-commit checks...")
@@ -167,7 +155,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
             verbose,
             350,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
+            callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
 
         # Set up the chain
@@ -257,7 +245,7 @@ def configure(verbose, openai_api_key):
     if config_data["openai_api_key"] is None:
         console.print(
             "You need an OpenAI API Key for AICodeBot. You can get one on the OpenAI website.",
-            style=bot_style,
+            style=console.bot_style,
         )
         openai_api_key_url = "https://platform.openai.com/account/api-keys"
         if click.confirm("Open the api keys page in a browser?", default=False):
@@ -268,7 +256,7 @@ def configure(verbose, openai_api_key):
     # Validate the API key
     try:
         openai.api_key = config_data["openai_api_key"]
-        with console.status("Validating the OpenAI API key", spinner=DEFAULT_SPINNER):
+        with console.status("Validating the OpenAI API key", spinner=console.DEFAULT_SPINNER):
             engine.Engine.list()
     except Exception as e:
         raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
@@ -279,7 +267,7 @@ def configure(verbose, openai_api_key):
     # Pull the choices from the name from each of the PERSONALITIES
     console.print(
         "\nHow would you like your AI to act? You can choose from the following personalities:\n",
-        style=bot_style,
+        style=console.bot_style,
     )
     personality_choices = ""
     for key, personality in PERSONALITIES.items():
@@ -335,7 +323,7 @@ def debug(command, verbose):
             model_name,
             verbose,
             streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, bot_style)],
+            callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
 
         # Set up the chain
@@ -356,7 +344,7 @@ def learn(repo_url, verbose):
 
     setup_cli()
 
-    console.print("This is an experimental feature.", style=warning_style)
+    console.print("This is an experimental feature.", style=console.warning_style)
 
     owner, repo_name = Coder.parse_github_url(repo_url)
 
@@ -416,7 +404,7 @@ def review(commit, verbose, output_format, response_token_size, files):
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     if output_format == "json":
-        with console.status("Examining the diff and generating the review", spinner=DEFAULT_SPINNER):
+        with console.status("Examining the diff and generating the review", spinner=console.DEFAULT_SPINNER):
             response = chain.run({"diff_context": diff_context, "languages": languages})
 
         parsed_response = prompt.output_parser.parse(response)
@@ -436,7 +424,7 @@ def review(commit, verbose, output_format, response_token_size, files):
         )
         with Live(Markdown(""), auto_refresh=True) as live:
             llm.streaming = True
-            llm.callbacks = [RichLiveCallbackHandler(live, bot_style)]
+            llm.callbacks = [RichLiveCallbackHandler(live, console.bot_style)]
 
             chain.run({"diff_context": diff_context, "languages": languages})
 
@@ -454,7 +442,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     """
     setup_cli(verify_git_repo=True)
 
-    console.print("This is an experimental feature. We love bug reports 😉", style=warning_style)
+    console.print("This is an experimental feature. We love bug reports 😉", style=console.warning_style)
 
     # ----------------- Determine which files to use for context ----------------- #
     model_name = Coder.get_llm_model_name(-1, biggest_available=True)
@@ -526,7 +514,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 
     console.print(
         "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n",
-        style=Chat.bot_style,
+        style=console.bot_style,
     )
     history_file = Path.home() / ".aicodebot_request_history"
     completer = SidekickCompleter()
@@ -564,7 +552,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 
         try:
             with Live(Markdown(""), auto_refresh=True) as live:
-                callback = RichLiveCallbackHandler(live, bot_style)
+                callback = RichLiveCallbackHandler(live, console.bot_style)
                 llm.callbacks = [callback]  # a fresh callback handler for each question
 
                 # Recalculate the response token size in case the files changed
@@ -573,7 +561,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
                 chain.run({"task": parsed_human_input, "context": context, "languages": languages})
 
         except KeyboardInterrupt:
-            console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=bot_style)
+            console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=console.bot_style)
             continue
 
         if request:
@@ -589,12 +577,12 @@ def sidekick_agent(learned_repos):
     """
     setup_cli(verify_git_repo=True)
 
-    console.print("This is an experimental feature.", style=warning_style)
+    console.print("This is an experimental feature.", style=console.warning_style)
 
     agent = SidekickAgent.get_agent_executor(learned_repos)
     history_file = Path.home() / ".aicodebot_request_history"
 
-    console.print("Enter a request for your AICodeBot sidekick", style=bot_style)
+    console.print("Enter a request for your AICodeBot sidekick", style=console.bot_style)
 
     edited_input = None
     while True:  # continuous loop for multiple questions
@@ -627,12 +615,12 @@ def sidekick_agent(learned_repos):
 
 def setup_cli(verify_git_repo=False):
     if verify_git_repo and not Coder.is_inside_git_repo():
-        console.print("🛑 This command must be run from within a git repository.", style=error_style)
+        console.print("🛑 This command must be run from within a git repository.", style=console.error_style)
         sys.exit(1)
 
     existing_config = read_config()
     if not existing_config:
-        console.print("Welcome to AICodeBot 🤖. Let's set up your config file.\n", style=bot_style)
+        console.print("Welcome to AICodeBot 🤖. Let's set up your config file.\n", style=console.bot_style)
         configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
         sys.exit(0)
     else:

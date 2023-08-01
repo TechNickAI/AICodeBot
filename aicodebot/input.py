@@ -1,15 +1,10 @@
 from aicodebot.coder import Coder
 from pathlib import Path
 from prompt_toolkit.completion import Completer, Completion
-from rich.style import Style
 import click, humanize, subprocess
 
 
 class Chat:
-    bot_style = Style(color="#30D5C8")
-    error_style = Style(color="#FF0000")
-    warning_style = Style(color="#FFA500")
-
     console = files = None
 
     CONTINUE = 1  # Continue to the next iteration of the while loop
@@ -35,7 +30,7 @@ class Chat:
                 try:
                     filenames = human_input.split()[1:]
                 except IndexError:
-                    self.console.print(f"{cmd} requires a file name", style=self.error_style)
+                    self.console.print(f"{cmd} requires a file name", style=self.console.error_style)
                     return self.CONTINUE
 
                 # If the file doesn't exist, or we can't open it, let them know
@@ -48,7 +43,7 @@ class Chat:
                                 self.console.print(f"✅ Added '{filename}' to the list of files.")
                         except OSError as e:
                             self.console.print(
-                                f"Unable to open '{filename}': {e.strerror}", style=self.error_style
+                                f"Unable to open '{filename}': {e.strerror}", style=self.console.error_style
                             )
                             return self.CONTINUE
 

@@ -1,6 +1,9 @@
 from aicodebot.helpers import logger
+from functools import cache
 from langchain.callbacks.base import BaseCallbackHandler
+from rich.console import Console
 from rich.markdown import CodeBlock, Markdown
+from rich.style import Style
 from rich.syntax import Syntax
 
 
@@ -40,3 +43,14 @@ class OurCodeBlock(CodeBlock):
 
 class OurMarkdown(Markdown):
     elements = {**Markdown.elements, "fence": OurCodeBlock, "code_block": OurCodeBlock}
+
+
+@cache
+def get_console():
+    """Get a console object, with cache so that we reuse the same console object."""
+    console = Console()
+    console.DEFAULT_SPINNER = "point"
+    console.bot_style = Style(color="#30D5C8")
+    console.error_style = Style(color="#FF0000")
+    console.warning_style = Style(color="#FFA500")
+    return console
