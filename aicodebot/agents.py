@@ -46,8 +46,9 @@ class SidekickAgent(StructuredChatAgent):
 
     @classmethod
     def get_agent_executor(cls, learned_repos=None):
-        model_name = LLM.get_llm_model_name(5_000)
-        llm = LLM.get_llm(model_name, streaming=True, callbacks=[StreamingStdOutCallbackHandler()])
+        lmm = LanguageModelManager()
+        model_name = lmm.choose_model(2_000)
+        llm = lmm.get_langchain_model(model_name, streaming=True, callbacks=[StreamingStdOutCallbackHandler()])
         tools = cls.get_sidekick_tools(llm, learned_repos)
         agent = cls.from_llm_and_tools(
             llm=llm,

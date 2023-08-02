@@ -9,7 +9,7 @@ import click
 @click.command()
 @click.option("-t", "--response-token-size", type=int, default=350)
 def alignment(response_token_size):
-    """A message from AICodeBot about AI Alignment ❤ + 🤖."""
+    """A message from 🤖 AICodeBot about AI Alignment ❤"""
     console = get_console()
 
     # Load the prompt

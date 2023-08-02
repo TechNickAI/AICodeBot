@@ -2,7 +2,6 @@ from aicodebot.helpers import logger
 from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager, get_token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
-from langchain.chains import LLMChain
 from rich.live import Live
 import click, subprocess, sys
 

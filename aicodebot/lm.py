@@ -148,16 +148,14 @@ class LanguageModelManager:
             )
         return None
 
+    @staticmethod
     def get_token_length(text, model=DEFAULT_MODEL):
         """Get the number of tokens in a string using the tiktoken library."""
         encoding = tiktoken.encoding_for_model(model)
         tokens = encoding.encode(text)
-        token_length = len(tokens)
-        short_text = (text[0:20] + "..." if len(text) > 10 else text).strip()
-        logger.trace(f"Token length for {short_text}: {token_length}")
-        return token_length
+        return len(tokens)
 
 
-def get_token_size(text, model=DEFAULT_MODEL):
-    # shortcut
-    return LanguageModelManager.get_token_length(text, model)
+def get_token_size(text):
+    # Shortcut
+    return LanguageModelManager.get_token_length(text)

@@ -3,7 +3,6 @@ from aicodebot.helpers import exec_and_get_output, logger
 from aicodebot.lm import LanguageModelManager, get_token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
-from langchain.chains import LLMChain
 from pathlib import Path
 from rich.live import Live
 import click, os, shutil, subprocess, sys, tempfile
@@ -46,7 +45,9 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         files = unstaged_files
     else:
         # The list of files to be committed is the same as the list of staged files
-        console.print("The following staged files will be committed:\n\t" + "\n\t".join(staged_files))
+        console.print(
+            "The following files have been staged and are ready for commit::\n\t" + "\n\t".join(staged_files)
+        )
 
         files = staged_files
 
@@ -90,7 +91,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
         )
 
-    console.print("Examining the diff and generating the commit message")
+    console.print("Analyzing the differences and generating a commit message")
     with Live(OurMarkdown(""), auto_refresh=True) as live:
         llm = lmm.get_langchain_model(
             model_name,
@@ -104,7 +105,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         response = chain.run({"diff_context": diff_context, "languages": languages})
 
     commit_message_approved = not console.is_terminal or click.confirm(
-        "Do you want to use this commit message (type n to edit)?", default=True
+        "Would you like to use this generated commit message? Type 'n' to edit it.", default=True
     )
 
     # Write the commit message to a temporary file
