@@ -1,5 +1,5 @@
-from aicodebot.coder import DEFAULT_MAX_TOKENS, Coder
 from aicodebot.helpers import logger
+from aicodebot.llm import DEFAULT_MAX_TOKENS, LLM
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -37,13 +37,13 @@ def debug(ctx, command, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    request_token_size = Coder.get_token_length(output) + Coder.get_token_length(prompt.template)
-    model_name = Coder.get_llm_model_name(request_token_size + DEFAULT_MAX_TOKENS)
+    request_token_size = LLM.get_token_length(output) + LLM.get_token_length(prompt.template)
+    model_name = LLM.get_llm_model_name(request_token_size + DEFAULT_MAX_TOKENS)
     if model_name is None:
         raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
 
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
+        llm = LLM.get_llm(
             model_name,
             verbose,
             streaming=True,

@@ -1,5 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import exec_and_get_output, logger
+from aicodebot.llm import LLM
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -79,8 +80,8 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
-    request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
-    model_name = Coder.get_llm_model_name(request_token_size + response_token_size)
+    request_token_size = LLM.get_token_length(diff_context) + LLM.get_token_length(prompt.template)
+    model_name = LLM.get_llm_model_name(request_token_size + response_token_size)
     if model_name is None:
         raise click.ClickException(
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
@@ -88,7 +89,7 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
 
     console.print("Examining the diff and generating the commit message")
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
+        llm = LLM.get_llm(
             model_name,
             verbose,
             350,

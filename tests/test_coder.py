@@ -74,14 +74,6 @@ def test_get_file_info():
         Coder.get_file_info("non_existent_file.txt")
 
 
-def test_get_token_length():
-    text = ""
-    assert Coder.get_token_length(text) == 0
-
-    text = "Code with heart, align AI with humanity. ❤️🤖"
-    assert Coder.get_token_length(text) == 14
-
-
 def test_git_diff_context(temp_git_repo):
     original_dir = Path.cwd()
     os.chdir(temp_git_repo.working_dir)

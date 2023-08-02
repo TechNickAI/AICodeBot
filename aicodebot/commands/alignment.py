@@ -1,5 +1,5 @@
-from aicodebot.coder import CREATIVE_TEMPERATURE, Coder
 from aicodebot.helpers import logger
+from aicodebot.llm import CREATIVE_TEMPERATURE, LLM
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -19,10 +19,10 @@ def alignment(response_token_size, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    model_name = Coder.get_llm_model_name(Coder.get_token_length(prompt.template) + response_token_size)
+    model_name = LLM.get_llm_model_name(LLM.get_token_length(prompt.template) + response_token_size)
 
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = Coder.get_llm(
+        llm = LLM.get_llm(
             model_name,
             verbose,
             response_token_size,

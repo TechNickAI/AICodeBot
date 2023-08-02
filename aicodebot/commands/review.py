@@ -1,5 +1,6 @@
-from aicodebot.coder import DEFAULT_MAX_TOKENS, Coder
+from aicodebot.coder import Coder
 from aicodebot.helpers import logger
+from aicodebot.llm import DEFAULT_MAX_TOKENS, LLM
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -38,12 +39,12 @@ def review(commit, verbose, output_format, response_token_size, files):
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
-    request_token_size = Coder.get_token_length(diff_context) + Coder.get_token_length(prompt.template)
-    model_name = Coder.get_llm_model_name(request_token_size + response_token_size)
+    request_token_size = LLM.get_token_length(diff_context) + LLM.get_token_length(prompt.template)
+    model_name = LLM.get_llm_model_name(request_token_size + response_token_size)
     if model_name is None:
         raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
-    llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
+    llm = LLM.get_llm(model_name, verbose, response_token_size, streaming=True)
     chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
 
     if output_format == "json":

@@ -3,6 +3,7 @@ from aicodebot.coder import Coder
 from aicodebot.config import Session
 from aicodebot.helpers import logger
 from aicodebot.input import Chat, SidekickCompleter
+from aicodebot.llm import LLM
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
 from langchain.chains import LLMChain
@@ -33,8 +34,8 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     console.print("This is an experimental feature. We love bug reports 😉", style=console.warning_style)
 
     # ----------------- Determine which files to use for context ----------------- #
-    model_name = Coder.get_llm_model_name(-1, biggest_available=True)
-    model_token_limit = Coder.get_model_token_limit(model_name)
+    model_name = LLM.get_llm_model_name(-1, biggest_available=True)
+    model_token_limit = LLM.get_model_token_limit(model_name)
     file_context_limit = model_token_limit * 0.75
     console.print(
         f"Using the [bold underline]{model_name}[/bold underline] model, "
@@ -43,7 +44,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 
     if files:  # User supplied list of files
         context = generate_files_context(files)
-        file_token_size = Coder.get_token_length(context)
+        file_token_size = LLM.get_token_length(context)
         if file_token_size > file_context_limit:
             raise click.ClickException(
                 f"The file(s) you supplied are too large ({file_token_size} tokens). 😢 Try again with less files."
@@ -59,7 +60,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
             files = Coder.auto_file_context(file_context_limit, max_file_tokens)
 
         context = generate_files_context(files)
-        file_token_size = Coder.get_token_length(context)
+        file_token_size = LLM.get_token_length(context)
     else:
         context = generate_files_context([])
         file_token_size = 0
@@ -76,8 +77,8 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     def calc_response_token_size(files):
         file_token_size = 0
         for file in files:
-            file_token_size += Coder.get_token_length(Path(file).read_text())
-        prompt_token_size = Coder.get_token_length(prompt.template)
+            file_token_size += LLM.get_token_length(Path(file).read_text())
+        prompt_token_size = LLM.get_token_length(prompt.template)
         logger.trace(
             f"File token size: {file_token_size}, memory token size: {memory_token_size}, "
             f"prompt token size: {prompt_token_size}, model token limit: {model_token_limit}"
@@ -89,7 +90,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 
     response_token_size = calc_response_token_size(files)
 
-    llm = Coder.get_llm(model_name, verbose, response_token_size, streaming=True)
+    llm = LLM.get_llm(model_name, verbose, response_token_size, streaming=True)
     memory = ConversationTokenBufferMemory(
         memory_key="chat_history", input_key="task", llm=llm, max_token_limit=memory_token_size
     )

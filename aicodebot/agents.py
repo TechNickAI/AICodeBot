@@ -1,5 +1,5 @@
-from aicodebot.coder import Coder
 from aicodebot.commands.learn import load_learned_repo
+from aicodebot.llm import LLM
 from aicodebot.prompts import get_personality_prompt
 from langchain.agents import AgentExecutor, StructuredChatAgent, Tool
 from langchain.agents.agent_toolkits import FileManagementToolkit
@@ -46,8 +46,8 @@ class SidekickAgent(StructuredChatAgent):
 
     @classmethod
     def get_agent_executor(cls, learned_repos=None):
-        model_name = Coder.get_llm_model_name(5_000)
-        llm = Coder.get_llm(model_name, streaming=True, callbacks=[StreamingStdOutCallbackHandler()])
+        model_name = LLM.get_llm_model_name(5_000)
+        llm = LLM.get_llm(model_name, streaming=True, callbacks=[StreamingStdOutCallbackHandler()])
         tools = cls.get_sidekick_tools(llm, learned_repos)
         agent = cls.from_llm_and_tools(
             llm=llm,
