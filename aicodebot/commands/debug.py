@@ -1,5 +1,5 @@
 from aicodebot.helpers import logger
-from aicodebot.llm import DEFAULT_MAX_TOKENS, LLM
+from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager, get_token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -9,9 +9,8 @@ import click, subprocess, sys
 
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("command", nargs=-1)
-@click.option("-v", "--verbose", count=True)
 @click.pass_context
-def debug(ctx, command, verbose):
+def debug(ctx, command):
     """Run a command and debug the output."""
     console = get_console()
 
@@ -37,21 +36,21 @@ def debug(ctx, command, verbose):
     logger.trace(f"Prompt: {prompt}")
 
     # Set up the language model
-    request_token_size = LLM.get_token_length(output) + LLM.get_token_length(prompt.template)
-    model_name = LLM.get_llm_model_name(request_token_size + DEFAULT_MAX_TOKENS)
+    request_token_size = get_token_size(output) + get_token_size(prompt.template)
+    lmm = LanguageModelManager()
+    model_name = lmm.get_llm_model_name(request_token_size + DEFAULT_RESPONSE_TOKENS)
     if model_name is None:
         raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
 
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = LLM.get_llm(
+        llm = lmm.choose_model(
             model_name,
-            verbose,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
 
         # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+        chain = lmm.get_langchain_chain(llm=llm, prompt=prompt)
         chain.run({"command_output": output, "languages": ["unix", "bash", "shell"]})
 
     sys.exit(process.returncode)

@@ -1,6 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import exec_and_get_output, logger
-from aicodebot.llm import LLM
+from aicodebot.lm import LanguageModelManager, get_token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -10,12 +10,11 @@ import click, os, shutil, subprocess, sys, tempfile
 
 
 @click.command()
-@click.option("-v", "--verbose", count=True)
 @click.option("-t", "--response-token-size", type=int, default=250)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit.")
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
-def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
+def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     """Generate a commit message based on your changes."""
     console = get_console()
     if not Coder.is_inside_git_repo():
@@ -51,6 +50,9 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
 
         files = staged_files
 
+    # Don't look at files that were deleted/moved
+    files = [f for f in files if Path(f).exists()]
+
     diff_context = Coder.git_diff_context()
     languages = ",".join(Coder.identify_languages(files))
     if not diff_context:
@@ -80,8 +82,9 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
-    request_token_size = LLM.get_token_length(diff_context) + LLM.get_token_length(prompt.template)
-    model_name = LLM.get_llm_model_name(request_token_size + response_token_size)
+    request_token_size = get_token_size(diff_context) + get_token_size(prompt.template)
+    lmm = LanguageModelManager()
+    model_name = lmm.choose_model(request_token_size + response_token_size)
     if model_name is None:
         raise click.ClickException(
             f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
@@ -89,16 +92,15 @@ def commit(verbose, response_token_size, yes, skip_pre_commit, files):  # noqa: 
 
     console.print("Examining the diff and generating the commit message")
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = LLM.get_llm(
+        llm = lmm.get_langchain_model(
             model_name,
-            verbose,
             350,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
 
         # Set up the chain
-        chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+        chain = lmm.get_langchain_chain(llm=llm, prompt=prompt)
         response = chain.run({"diff_context": diff_context, "languages": languages})
 
     commit_message_approved = not console.is_terminal or click.confirm(

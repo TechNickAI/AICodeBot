@@ -1,27 +1,23 @@
 from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
-from aicodebot.helpers import logger
 from aicodebot.input import Chat, SidekickCompleter
-from aicodebot.llm import LLM
+from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, DEFAULT_MEMORY_TOKENS, LanguageModelManager, get_token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
-from langchain.chains import LLMChain
-from langchain.memory import ConversationTokenBufferMemory
 from pathlib import Path
 from prompt_toolkit import prompt as input_prompt
 from prompt_toolkit.history import FileHistory
 from rich.live import Live
-import click, humanize, sys
+import click, sys
 
 
 @click.command
 @click.option("-r", "--request", help="What to ask your sidekick to do")
 @click.option("-n", "--no-files", is_flag=True, help="Don't automatically load any files for context")
 @click.option("-m", "--max-file-tokens", type=int, default=10_000, help="Don't load files larger than this")
-@click.option("-v", "--verbose", count=True)
 @click.argument("files", nargs=-1, type=click.Path(exists=True, readable=True))
-def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR0915
+def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
     """
     Coding help from your AI sidekick
     FILES: List of files to be used as context for the session
@@ -34,21 +30,9 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     console.print("This is an experimental feature. We love bug reports 😉", style=console.warning_style)
 
     # ----------------- Determine which files to use for context ----------------- #
-    model_name = LLM.get_llm_model_name(-1, biggest_available=True)
-    model_token_limit = LLM.get_model_token_limit(model_name)
-    file_context_limit = model_token_limit * 0.75
-    console.print(
-        f"Using the [bold underline]{model_name}[/bold underline] model, "
-        f"which has a {humanize.intcomma(model_token_limit)} token limit."
-    )
 
     if files:  # User supplied list of files
         context = generate_files_context(files)
-        file_token_size = LLM.get_token_length(context)
-        if file_token_size > file_context_limit:
-            raise click.ClickException(
-                f"The file(s) you supplied are too large ({file_token_size} tokens). 😢 Try again with less files."
-            )
     elif not no_files:
         # Determine which files to use for context automagically, with git
         session_data = Session.read()
@@ -57,44 +41,30 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
             files = session_data["files"]
         else:
             console.print("Using recent git commits and current changes for context.")
-            files = Coder.auto_file_context(file_context_limit, max_file_tokens)
+            files = Coder.auto_file_context(DEFAULT_CONTEXT_TOKENS, max_file_tokens)
 
         context = generate_files_context(files)
-        file_token_size = LLM.get_token_length(context)
     else:
         context = generate_files_context([])
-        file_token_size = 0
 
     # Convert it from a list or a tuple to a set to remove duplicates
     files = set(files)
+
     # ----------------------------- Set up langchain ----------------------------- #
 
+    lmm = LanguageModelManager()
     # Generate the prompt and set up the model
     prompt = get_prompt("sidekick")
-    memory_token_size = round(model_token_limit * 0.1)
 
-    # Determine the max token size for the response
-    def calc_response_token_size(files):
-        file_token_size = 0
-        for file in files:
-            file_token_size += LLM.get_token_length(Path(file).read_text())
-        prompt_token_size = LLM.get_token_length(prompt.template)
-        logger.trace(
-            f"File token size: {file_token_size}, memory token size: {memory_token_size}, "
-            f"prompt token size: {prompt_token_size}, model token limit: {model_token_limit}"
-        )
-        out = model_token_limit - (memory_token_size + file_token_size + prompt_token_size)
-        out = round(out * 0.95)  # Small buffer
-        logger.debug(f"Response max token size: {out}")
-        return out
+    def calculate_request_token_size():
+        return get_token_size(prompt.template) + get_token_size(context) + DEFAULT_MEMORY_TOKENS
 
-    response_token_size = calc_response_token_size(files)
+    request_token_size = calculate_request_token_size()
 
-    llm = LLM.get_llm(model_name, verbose, response_token_size, streaming=True)
-    memory = ConversationTokenBufferMemory(
-        memory_key="chat_history", input_key="task", llm=llm, max_token_limit=memory_token_size
-    )
-    chain = LLMChain(llm=llm, prompt=prompt, memory=memory, verbose=verbose)
+    model_name = lmm.choose_model(request_token_size)
+    langchain_model = lmm.get_langchain_model(model_name, streaming=True)
+    memory = lmm.get_memory(langchain_model)
+    chain = lmm.get_langchain_chain(langchain_model, prompt, memory)
 
     # ---------------------- Set up the chat loop and prompt --------------------- #
     chat = Chat(console, files)
@@ -109,6 +79,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
     completer = SidekickCompleter()
     completer.files = files
 
+    current_model_name = model_name
     while True:  # continuous loop for multiple questions
         if request:
             human_input = request
@@ -139,13 +110,22 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
             # have a record of what they asked for on their terminal
             console.print(parsed_human_input)
 
+        # Reset up the model for each question because the request token size may change it
+        request_token_size = calculate_request_token_size()
+        model_name = lmm.choose_model(request_token_size)
+        if model_name != current_model_name:
+            console.print(
+                f"Using model {model_name} for a token request size of {request_token_size}", style="bold green"
+            )
+            model_name = lmm.choose_model(request_token_size)
+            langchain_model = lmm.get_langchain_model(model_name, streaming=True)
+            chain = lmm.get_langchain_chain(langchain_model, prompt, memory)
+            current_model_name = model_name
+
         try:
             with Live(OurMarkdown(""), auto_refresh=True) as live:
                 callback = RichLiveCallbackHandler(live, console.bot_style)
-                llm.callbacks = [callback]  # a fresh callback handler for each question
-
-                # Recalculate the response token size in case the files changed
-                llm.max_tokens = calc_response_token_size(files)
+                langchain_model.callbacks = [callback]  # a fresh callback handler for each question
 
                 chain.run({"task": parsed_human_input, "context": context, "languages": languages})
 
@@ -162,7 +142,7 @@ def sidekick(request, verbose, no_files, max_file_tokens, files):  # noqa: PLR09
 @click.option("-l", "--learned-repos", multiple=True, help="The name of the repo to use for learned information")
 def sidekick_agent(learned_repos):
     """
-    EXPERIMENTAL: Coding help from your AI sidekick, made agentic with tools\n
+    EXPERIMENTAL: Coding help from your AI sidekick, made agentic with tools
     """
     console = get_console()
     if not Coder.is_inside_git_repo():

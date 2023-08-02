@@ -1,6 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import logger
-from aicodebot.llm import DEFAULT_MAX_TOKENS, LLM
+from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager, get_token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from langchain.chains import LLMChain
@@ -10,11 +10,10 @@ import click, json, sys
 
 @click.command
 @click.option("-c", "--commit", help="The commit hash to review (otherwise look at [un]staged changes).")
-@click.option("-v", "--verbose", count=True)
 @click.option("--output-format", default="text", type=click.Choice(["text", "json"], case_sensitive=False))
-@click.option("-t", "--response-token-size", type=int, default=DEFAULT_MAX_TOKENS * 2)
+@click.option("-t", "--response-token-size", type=int, default=DEFAULT_RESPONSE_TOKENS * 2)
 @click.argument("files", nargs=-1)
-def review(commit, verbose, output_format, response_token_size, files):
+def review(commit, output_format, response_token_size, files):
     """Do a code review, with [un]staged changes, or a specified commit."""
     console = get_console()
     if not Coder.is_inside_git_repo():
@@ -39,13 +38,14 @@ def review(commit, verbose, output_format, response_token_size, files):
     logger.trace(f"Prompt: {prompt}")
 
     # Check the size of the diff context and adjust accordingly
-    request_token_size = LLM.get_token_length(diff_context) + LLM.get_token_length(prompt.template)
-    model_name = LLM.get_llm_model_name(request_token_size + response_token_size)
+    request_token_size = get_token_size(diff_context) + get_token_size(prompt.template)
+    lmm = LanguageModelManager()
+    model_name = lmm.choose_model(request_token_size + response_token_size)
     if model_name is None:
         raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
 
-    llm = LLM.get_llm(model_name, verbose, response_token_size, streaming=True)
-    chain = LLMChain(llm=llm, prompt=prompt, verbose=verbose)
+    llm = lmm.get_langchain_model(model_name, streaming=True)
+    chain = lmm.get_langchain_chain(llm=llm, prompt=prompt)
 
     if output_format == "json":
         with console.status("Examining the diff and generating the review", spinner=console.DEFAULT_SPINNER):

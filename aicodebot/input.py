@@ -1,5 +1,5 @@
 from aicodebot.coder import Coder
-from aicodebot.llm import LLM
+from aicodebot.lm import LanguageModelManager
 from pathlib import Path
 from prompt_toolkit.completion import Completer, Completion
 import click, humanize, subprocess
@@ -80,7 +80,7 @@ class Chat:
             # If the text ends wit then we want to edit it
             return click.edit(human_input[:-2])
 
-        # No magic found, pass to the LLM
+        # No magic found, pass to the LM
         return human_input
 
     def show_file_context(self):
@@ -89,7 +89,7 @@ class Chat:
 
         self.console.print("Files loaded in this session:")
         for file in self.files:
-            token_length = LLM.get_token_length(Path(file).read_text())
+            token_length = LanguageModelManager.get_token_length(Path(file).read_text())
             self.console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
 
 
@@ -102,8 +102,8 @@ class SidekickCompleter(Completer):
     project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
     commands = {
         "/edit": "Use your editor for multi line input",
-        "/add": "Add a file to the context for the LLM",
-        "/drop": "Remove a file from the context for the LLM",
+        "/add": "Add a file to the context for the LM",
+        "/drop": "Remove a file from the context for the LM",
         "/review": "Do a code review on your [un]staged changes",
         "/commit": "Generate a commit message based on your [un]staged changes",
         "/sh": "Execute a shell command",

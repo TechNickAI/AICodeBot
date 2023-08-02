@@ -1,5 +1,5 @@
 from aicodebot.helpers import exec_and_get_output, logger
-from aicodebot.llm import LLM
+from aicodebot.lm import LanguageModelManager
 from pathlib import Path
 from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
 import fnmatch, mimetypes, re, subprocess
@@ -7,8 +7,7 @@ import fnmatch, mimetypes, re, subprocess
 
 class Coder:
     """
-    The Coder class encapsulates the functionality of interacting with LLMs,
-    git, and the local file system.
+    The Coder class encapsulates the functionality of git, and the local file system.
     """
 
     UNKNOWN_FILE_TYPE = "unknown"
@@ -57,7 +56,7 @@ class Coder:
 
         # Add files to the list until we reach the max_tokens limit
         for file in sorted_files:
-            token_length = LLM.get_token_length(Path(file).read_text())
+            token_length = LanguageModelManager.get_token_length(Path(file).read_text())
             if token_length > max_file_tokens:
                 continue
 
