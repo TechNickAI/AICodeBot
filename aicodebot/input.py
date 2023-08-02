@@ -99,7 +99,7 @@ class SidekickCompleter(Completer):
     """
 
     files = []  # List of files that we have loaded in the current context
-    project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
+    _project_files = None
     commands = {
         "/edit": "Use your editor for multi line input",
         "/add": "Add a file to the context for the LM",
@@ -110,6 +110,18 @@ class SidekickCompleter(Completer):
         "/files": "Show the list of files currently loaded in the context",
         "/quit": "👋 Say Goodbye!",
     }
+
+    @property
+    def project_files(self):
+        if self._project_files is None:
+            # If we are in a git repo, then use the gitignore file to filter the list of files
+            if Coder.is_inside_git_repo():
+                self._project_files = Coder.filtered_file_list(".", use_gitignore=True, ignore_patterns=[".git"])
+            else:
+                # We don't want to walk through a ginormous directory tree, so no auto complete if not in a repo
+                self._project_files = []
+
+        return self._project_files
 
     def get_completions(self, document, complete_event):
         # Get the text before the cursor
