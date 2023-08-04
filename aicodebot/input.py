@@ -1,5 +1,5 @@
 from aicodebot.coder import Coder
-from aicodebot.lm import LanguageModelManager
+from aicodebot.lm import token_size
 from pathlib import Path
 from prompt_toolkit.completion import Completer, Completion
 import click, humanize, subprocess
@@ -89,7 +89,7 @@ class Chat:
 
         self.console.print("Files loaded in this session:")
         for file in self.files:
-            token_length = LanguageModelManager.get_token_length(Path(file).read_text())
+            token_length = token_size(Path(file).read_text())
             self.console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
 
 

@@ -1,6 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import exec_and_get_output, logger
-from aicodebot.lm import LanguageModelManager, get_token_size
+from aicodebot.lm import LanguageModelManager, token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from pathlib import Path
@@ -82,26 +82,15 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     prompt = get_prompt("commit")
     logger.trace(f"Prompt: {prompt}")
 
-    # Check the size of the diff context and adjust accordingly
-    request_token_size = get_token_size(diff_context) + get_token_size(prompt.template)
-    lmm = LanguageModelManager()
-    model_name = lmm.choose_model(request_token_size + response_token_size)
-    if model_name is None:
-        raise click.ClickException(
-            f"The diff is too large to generate a commit message ({request_token_size} tokens). 😢"
-        )
-
     console.print("Analyzing the differences and generating a commit message")
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = lmm.get_langchain_model(
-            model_name,
-            350,
+        lmm = LanguageModelManager()
+        chain = lmm.chain_factory(
+            prompt=prompt,
+            response_token_size=response_token_size,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
-
-        # Set up the chain
-        chain = lmm.get_langchain_chain(llm=llm, prompt=prompt)
         response = chain.run({"diff_context": diff_context, "languages": languages})
 
     commit_message_approved = not console.is_terminal or click.confirm(

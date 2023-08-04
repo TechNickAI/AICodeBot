@@ -1,6 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import logger
-from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager, get_token_size
+from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from rich.live import Live
@@ -36,17 +36,10 @@ def review(commit, output_format, response_token_size, files):
     prompt = get_prompt("review", structured_output=output_format == "json")
     logger.trace(f"Prompt: {prompt}")
 
-    # Check the size of the diff context and adjust accordingly
-    request_token_size = get_token_size(diff_context) + get_token_size(prompt.template)
     lmm = LanguageModelManager()
-    model_name = lmm.choose_model(request_token_size + response_token_size)
-    if model_name is None:
-        raise click.ClickException(f"The diff is too large to review ({request_token_size} tokens). 😢")
-
-    llm = lmm.get_langchain_model(model_name, streaming=True)
-    chain = lmm.get_langchain_chain(llm=llm, prompt=prompt)
 
     if output_format == "json":
+        chain = lmm.chain_factory(prompt=prompt, response_token_size=response_token_size)
         with console.status("Examining the diff and generating the review", spinner=console.DEFAULT_SPINNER):
             response = chain.run({"diff_context": diff_context, "languages": languages})
 
@@ -66,7 +59,11 @@ def review(commit, output_format, response_token_size, files):
             "Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files)
         )
         with Live(OurMarkdown(""), auto_refresh=True) as live:
-            llm.streaming = True
-            llm.callbacks = [RichLiveCallbackHandler(live, console.bot_style)]
+            chain = lmm.chain_factory(
+                prompt=prompt,
+                response_token_size=response_token_size,
+                streaming=True,
+                callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
+            )
 
             chain.run({"diff_context": diff_context, "languages": languages})

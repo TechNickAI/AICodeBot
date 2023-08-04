@@ -11,38 +11,82 @@ DEFAULT_MEMORY_TOKENS = DEFAULT_RESPONSE_TOKENS * 2
 DEFAULT_CONTEXT_TOKENS = DEFAULT_RESPONSE_TOKENS * 4
 PRECISE_TEMPERATURE = 0.05
 CREATIVE_TEMPERATURE = 0.6
-DEFAULT_MODEL = "gpt-4"
 
 
 class LanguageModelManager:
     """A class for interacting with language models."""
 
-    model = memory = None
+    provider = model_name = _memory = None
 
-    @functools.lru_cache  # cache so we only make the API call once
-    @staticmethod
-    def openai_supported_engines():
-        """Get a list of the models supported by the OpenAI API key."""
-        config = read_config()
-        openai.api_key = config["openai_api_key"]
-        engines = engine.Engine.list()
-        out = [engine.id for engine in engines.data]
-        logger.trace(f"OpenAI supported engines: {out}")
-        return out
+    OPENAI = "OpenAI"
+    OPENROUTER = "OpenRouter"
+    PROVIDERS = [OPENAI, OPENROUTER]
+    DEFAULT_MODEL = "gpt-4"
+    DEFAULT_PROVIDER = OPENAI
+
+    # --------------------------------- Factories -------------------------------- #
+
+    def chain_factory(
+        self,
+        prompt,
+        response_token_size=None,
+        temperature=PRECISE_TEMPERATURE,
+        streaming=False,
+        callbacks=None,
+        chat_history=False,
+    ):
+        language_model = self.model_factory(response_token_size, temperature, streaming, callbacks)
+        if chat_history:
+            memory = self.get_memory(language_model)
+        else:
+            memory = None
+        return LLMChain(llm=language_model, prompt=prompt, memory=memory)
+
+    def model_factory(
+        self,
+        response_token_size=None,
+        temperature=PRECISE_TEMPERATURE,
+        streaming=False,
+        callbacks=None,
+    ):
+        """Get a model object for the specified model name."""
+
+        # We support multiple approaches for using language models:
+        # 1. OpenAI API
+        # 2. Open Router API
+        # 3. SOON Hugging Face API
+        # 4. FUTURE - Local models
+
+        provider, model_name = self.read_model_config()
+
+        if provider == self.OPENAI:
+            return self.get_openai_model(
+                model_name,
+                response_token_size=response_token_size,
+                temperature=temperature,
+                streaming=streaming,
+                callbacks=callbacks,
+            )
+        elif provider == self.OPENROUTER:
+            return self.get_openrouter_model(
+                model_name,
+                response_token_size=response_token_size,
+                temperature=temperature,
+                streaming=streaming,
+                callbacks=callbacks,
+            )
+        else:  # pragma: no cover
+            raise ValueError(f"Provider {provider} is not one of: {self.PROVIDERS}")
 
     def get_memory(self, llm, token_limit=DEFAULT_MEMORY_TOKENS, memory_key="chat_history", input_key="task"):
         """Initializes a memory object with the specified parameters."""
-        if not self.memory:  # Re-use the same memory object
-            self.memory = ConversationTokenBufferMemory(
+        if not self._memory:  # Re-use the same memory object
+            self._memory = ConversationTokenBufferMemory(
                 memory_key=memory_key, input_key=input_key, llm=llm, max_token_limit=token_limit
             )
-        return self.memory
+        return self._memory
 
-    def get_langchain_chain(self, llm, prompt, memory=None):
-        """Initializes a langchain chain with the specified parameters."""
-        return LLMChain(llm=llm, prompt=prompt, memory=memory)
-
-    def get_langchain_model(
+    def get_openai_model(
         self,
         model_name,
         response_token_size=None,
@@ -50,32 +94,59 @@ class LanguageModelManager:
         streaming=False,
         callbacks=None,
     ):
-        """Initializes a language model for chat with the specified parameters."""
-        config = read_config()
-        if "openrouter_api_key" in config:
-            # If the openrouter_api_key is set, use the Open Router API
-            # OpenRouter allows for access to many models that have larger token limits
-            api_key = config["openrouter_api_key"]
-            api_base = "https://openrouter.ai/api/v1"
-            headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
+        """Get an OpenAI model object for the specified model name."""
+        api_key = self.get_api_key("OPENAI_API_KEY")
 
-            # In order to get conversation buffer memory to work, we need to set the tiktoken model name
-            # For OpenAI models, this is as simple as stripping the prefix "openai/" from the model name
-            # For non-OpenAI models, we need to set the model name to "gpt-4" for now
-            if model_name.startswith("openai/"):
-                tiktoken_model_name = model_name.replace("openai/", "")
-            else:
-                # HACK: For any other model, default to gpt-4. Seems to work?
-                # Tested with anthropic/claude2
-                tiktoken_model_name = DEFAULT_MODEL
+        return ChatOpenAI(
+            openai_api_key=api_key,
+            model=model_name,
+            max_tokens=response_token_size,
+            temperature=temperature,
+            streaming=streaming,
+            callbacks=callbacks,
+        )
 
+    def get_api_key(self, key_name):
+        # Read the api key from either the environment or the config file
+        key_name_upper = key_name.upper()
+        api_key = os.getenv(key_name)
+        if api_key:
+            return api_key
         else:
-            api_key = config["openai_api_key"]
-            api_base = None
-            headers = None
-            tiktoken_model_name = model_name
+            config = read_config()
+            key_name_lower = key_name.lower()
+            # Try both upper and lower case from the config file
+            if key_name_lower in config:
+                return config[key_name_lower]
+            elif key_name_upper in config:
+                return config[key_name_upper]
+            else:
+                return None
 
-        self.langchain_model = ChatOpenAI(
+    def get_openrouter_model(
+        self,
+        model_name,
+        response_token_size=None,
+        temperature=PRECISE_TEMPERATURE,
+        streaming=False,
+        callbacks=None,
+    ):
+        api_key = self.get_api_key("OPENROUTER_API_KEY")
+
+        # Set the API base to the Open Router API, and set special headers that are required
+        api_base = "https://openrouter.ai/api/v1"
+        headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
+
+        # In order to get ConversationBufferMemory to work, we need to set the tiktoken model name
+        if model_name.startswith("openai/"):
+            # For OpenAI models, this is as simple as stripping the prefix "openai/" from the model name
+            tiktoken_model_name = model_name.replace("openai/", "")
+        else:
+            # For non-OpenAI models, we set the model name to "gpt-4" for now. Seems to work.
+            # Tested with anthropic/claude2
+            tiktoken_model_name = self.DEFAULT_MODEL
+
+        return ChatOpenAI(
             openai_api_key=api_key,
             openai_api_base=api_base,
             model=model_name,
@@ -86,18 +157,7 @@ class LanguageModelManager:
             tiktoken_model_name=tiktoken_model_name,
             model_kwargs={"headers": headers},
         )
-        return self.langchain_model
 
-    @staticmethod
-    def get_model_headers():
-        """Certain providers require extra headers to be set in order to access their models."""
-        config = read_config()
-        if "openrouter_api_key" in config:
-            return {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
-        else:
-            return None
-
-    @staticmethod
     def get_model_token_limit(model_name):
         model_token_limits = {
             "openai/gpt-4": 8192,
@@ -113,49 +173,52 @@ class LanguageModelManager:
         else:
             raise ValueError(f"Model {model_name} not found")
 
-    @classmethod
-    def choose_model(cls, token_size=0):
-        """Gets the name of the model to use for the specified token size."""
-        config = read_config()
-        if os.getenv("AICODEBOT_LLM_MODEL"):
-            logger.info(
-                f"Using model {os.getenv('AICODEBOT_LLM_MODEL')} from AICODEBOT_LLM_MODEL environment variable"
-            )
-            return os.getenv("AICODEBOT_LLM_MODEL")
-
-        if "openrouter_api_key" in config:
-            model_options = supported_engines = ["openai/gpt-4", "openai/gpt-4-32k"]
-        else:
-            model_options = ["gpt-4", "gpt-4-32k", "gpt-3.5-turbo", "gpt-3.5-turbo-16k"]
-            # Pull the list of supported engines from the OpenAI API for this key
-            supported_engines = cls.openai_supported_engines()
-
-        # For some unknown reason, tiktoken often underestimates the token size by ~5%, so let's buffer
-        token_size = int(token_size * 1.05)
-
-        for model_name in model_options:
-            max_tokens = cls.get_model_token_limit(model_name)
-            if model_name in supported_engines and token_size <= max_tokens:
-                logger.info(f"Using {model_name} for token size {token_size}")
-                return model_name
-
-        logger.critical(
-            f"The context is too large ({token_size}) for any of the models supported by your API key. 😞"
-        )
-        if "openrouter_api_key" not in config:
-            logger.critical(
-                "If you provide an Open Router API key, you can access larger models, up to 100k tokens"
-            )
-        return None
-
-    @staticmethod
-    def get_token_length(text, model=DEFAULT_MODEL):
+    def get_token_size(self, text):
         """Get the number of tokens in a string using the tiktoken library."""
-        encoding = tiktoken.encoding_for_model(model)
+        if not self.model_name:
+            self.read_model_config()
+
+        encoding = tiktoken.encoding_for_model(self.model_name)
         tokens = encoding.encode(text)
         return len(tokens)
 
+    def read_model_config(self):
+        # Figure out which model to use, based on the config file or environment variables
+        config = read_config()
+        self.provider = os.getenv(
+            "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER)
+        )
+        self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
-def get_token_size(text):
+        # --------------------------- API key verification --------------------------- #
+        if self.provider == self.OPENAI:
+            key_name = "OPENAI_API_KEY"
+        elif self.provider == self.OPENROUTER:
+            key_name = "OPENROUTER_API_KEY"
+        else:
+            raise ValueError(f"Unrecognized provider: {self.provider}")
+
+        if not self.get_api_key(key_name):
+            raise ValueError(
+                f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
+            )
+
+        # TODO: Verify the model
+
+        return self.provider, self.model_name
+
+    @functools.lru_cache  # cache so we only make the API call once
+    @staticmethod
+    def openai_supported_engines():
+        """Get a list of the models supported by the OpenAI API key."""
+        config = read_config()
+        openai.api_key = config["openai_api_key"]
+        engines = engine.Engine.list()
+        out = [engine.id for engine in engines.data]
+        logger.trace(f"OpenAI supported engines: {out}")
+        return out
+
+
+def token_size(text):
     # Shortcut
-    return LanguageModelManager.get_token_length(text)
+    return LanguageModelManager().get_token_size(text)

@@ -1,5 +1,5 @@
 from aicodebot.helpers import logger
-from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager, get_token_size
+from aicodebot.lm import LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from rich.live import Live
@@ -34,22 +34,13 @@ def debug(ctx, command):
     prompt = get_prompt("debug")
     logger.trace(f"Prompt: {prompt}")
 
-    # Set up the language model
-    request_token_size = get_token_size(output) + get_token_size(prompt.template)
-    lmm = LanguageModelManager()
-    model_name = lmm.get_llm_model_name(request_token_size + DEFAULT_RESPONSE_TOKENS)
-    if model_name is None:
-        raise click.ClickException(f"The output is too large to debug ({request_token_size} tokens). 😢")
-
     with Live(OurMarkdown(""), auto_refresh=True) as live:
-        llm = lmm.choose_model(
-            model_name,
+        lmm = LanguageModelManager()
+        chain = lmm.chain_factory(
+            prompt=prompt,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
-
-        # Set up the chain
-        chain = lmm.get_langchain_chain(llm=llm, prompt=prompt)
         chain.run({"command_output": output, "languages": ["unix", "bash", "shell"]})
 
     sys.exit(process.returncode)

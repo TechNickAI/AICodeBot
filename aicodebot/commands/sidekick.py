@@ -2,7 +2,7 @@ from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
 from aicodebot.input import Chat, SidekickCompleter
-from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, DEFAULT_MEMORY_TOKENS, LanguageModelManager, get_token_size
+from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
 from pathlib import Path
@@ -50,22 +50,6 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
     # Convert it from a list or a tuple to a set to remove duplicates
     files = set(files)
 
-    # ----------------------------- Set up langchain ----------------------------- #
-
-    lmm = LanguageModelManager()
-    # Generate the prompt and set up the model
-    prompt = get_prompt("sidekick")
-
-    def calculate_request_token_size():
-        return get_token_size(prompt.template) + get_token_size(context) + DEFAULT_MEMORY_TOKENS
-
-    request_token_size = calculate_request_token_size()
-
-    model_name = lmm.choose_model(request_token_size)
-    langchain_model = lmm.get_langchain_model(model_name, streaming=True)
-    memory = lmm.get_memory(langchain_model)
-    chain = lmm.get_langchain_chain(langchain_model, prompt, memory)
-
     # ---------------------- Set up the chat loop and prompt --------------------- #
     chat = Chat(console, files)
     chat.show_file_context()
@@ -79,7 +63,9 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
     completer = SidekickCompleter()
     completer.files = files
 
-    current_model_name = model_name
+    lmm = LanguageModelManager()
+    prompt = get_prompt("sidekick")
+
     while True:  # continuous loop for multiple questions
         if request:
             human_input = request
@@ -110,22 +96,14 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
             # have a record of what they asked for on their terminal
             console.print(parsed_human_input)
 
-        # Reset up the model for each question because the request token size may change it
-        request_token_size = calculate_request_token_size()
-        model_name = lmm.choose_model(request_token_size)
-        if model_name != current_model_name:
-            console.print(
-                f"Using model {model_name} for a token request size of {request_token_size}", style="bold green"
-            )
-            model_name = lmm.choose_model(request_token_size)
-            langchain_model = lmm.get_langchain_model(model_name, streaming=True)
-            chain = lmm.get_langchain_chain(langchain_model, prompt, memory)
-            current_model_name = model_name
-
         try:
             with Live(OurMarkdown(""), auto_refresh=True) as live:
-                callback = RichLiveCallbackHandler(live, console.bot_style)
-                langchain_model.callbacks = [callback]  # a fresh callback handler for each question
+                chain = lmm.chain_factory(
+                    prompt=prompt,
+                    streaming=True,
+                    callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
+                    chat_history=True,
+                )
 
                 chain.run({"task": parsed_human_input, "context": context, "languages": languages})
 
