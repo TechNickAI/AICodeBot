@@ -46,7 +46,7 @@ idna==3.4
     # via
     #   requests
     #   yarl
-langchain==0.0.242
+langchain==0.0.249
     # via -r requirements/requirements.in
 langsmith==0.0.11
     # via langchain
