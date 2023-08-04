@@ -158,7 +158,7 @@ class LanguageModelManager:
         if api_key:
             return api_key
         else:
-            config = read_config()
+            config = read_config() or {}
             key_name_lower = key_name.lower()
             # Try both upper and lower case from the config file
             if key_name_lower in config:
@@ -218,7 +218,7 @@ class LanguageModelManager:
 
     def read_model_config(self):
         # Figure out which model to use, based on the config file or environment variables
-        config = read_config()
+        config = read_config() or {}
         self.provider = os.getenv(
             "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER)
         )

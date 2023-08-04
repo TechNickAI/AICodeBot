@@ -14,7 +14,13 @@ def test_token_size(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "provider,model_name", [(LanguageModelManager.OPENAI, "gpt-4"), (LanguageModelManager.OPENROUTER, "gpt-4")]
+    "provider,model_name",
+    [
+        (LanguageModelManager.OPENAI, "gpt-4"),
+        (LanguageModelManager.OPENAI, "gpt-3.5-turbo"),
+        (LanguageModelManager.OPENROUTER, "gpt-4"),
+        (LanguageModelManager.OPENROUTER, "gpt-4-32k"),
+    ],
 )
 def test_chain_factory(provider, model_name, monkeypatch):
     monkeypatch.setenv("AICODEBOT_MODEL_PROVIDER", provider)
@@ -31,6 +37,3 @@ def test_chain_factory(provider, model_name, monkeypatch):
     if hasattr(chain.llm, "model_name"):
         # OpenAI compatible
         assert chain.llm.model_name == model_name
-    elif hasattr(chain.llm, "repo_id"):
-        # Hugging Face Hub
-        assert chain.llm.repo_id == model_name
