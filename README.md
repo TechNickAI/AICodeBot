@@ -23,7 +23,7 @@ We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time
 | Writing tests | ✅ |
 | Integration with GitHub | ✅ |
 | Modifying local files | In Progress |
-| Searching the Internet for answers | In Progress |
+| Searching the internet for answers | In Progress |
 | Reading library documentation | In Progress |
 | Coding with a large number of files |  As LLMs improve |
 | Writing senior developer level code | Eventually |
@@ -149,7 +149,7 @@ How about automated code reviews on every commit? You can have AICodeBot run as 
 
 ## Alignment ❤️ + 🤖
 
-Technology itself is amoral; it just imbues the values of the people who create it. We believe that AI should be built in a way that aligns with humanity, and we're building AICodeBot to help us do just that. We're building from a heart-centered space, and contributing to the healthy intersection of AI and humanity.
+Technology itself is amoral; it just imbues the values of the people who create it. We believe that AI should be built-in a way that aligns with humanity, and we're building AICodeBot to help us do just that. We're building from a heart-centered space, and contributing to the healthy intersection of AI and humanity.
 
 ### What it's NOT
 
@@ -157,7 +157,7 @@ Technology itself is amoral; it just imbues the values of the people who create 
 
 ⚠️ AICodeBot currently uses OpenAI's ChatGPT large language models, which can hallucinate and be confidently wrong. Sometimes AICodeBot does dumb things, so it's mostly *reading* and *advising* and not yet *writing*. Much like Tesla's "Full Self Driving", you must keep your hands on the wheel.
 
-It's also not a "build a site for me in 5 minutes" tool that takes a well-constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that. It's not a no-code platform. Instead, AICodeBot is built to work with existing code bases and the git-commit level. It's designed to multiply the effectiveness of capable engineers.
+It's also not a "build a site for me in 5 minutes" tool that takes a well-constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that. It's not a no-code platform. Instead, AICodeBot is built to work with existing codebases and the git-commit level. It's designed to multiply the effectiveness of capable engineers.
 
 ## Configuring the language model to use
 
@@ -191,7 +191,7 @@ In AI models like OpenAI's GPT-4, a "token" is a piece of text, as short as a ch
 
 Each model has a maximum token limit. For example, GPT-3.5 has a limit of 4096 tokens, and GPT-4 has a token limit of 8192 tokens. If a conversation exceeds this limit, you must reduce your text until it fits.
 
-When using commands like the Sidekick command in AICodeBot, which allows you to pass in files for context, it's important to manage your tokens effectively. Due to token limits, it's not feasible to load your entire code base. Instead, you should only load the specific files that are relevant to the task you're working on. This ensures that the AI model can process your request efficiently and provide the most relevant suggestions for your current task.
+When using commands like the Sidekick command in AICodeBot, which allows you to pass in files for context, it's important to manage your tokens effectively. Due to token limits, it's not feasible to load your entire codebase. Instead, you should only load the specific files that are relevant to the task you're working on. This ensures that the AI model can process your request efficiently and provide the most relevant suggestions for your current task.
 
 ### How can I get a larger token limit?
 
