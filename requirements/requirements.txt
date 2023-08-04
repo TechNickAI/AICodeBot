@@ -103,7 +103,7 @@ requests==2.31.0
     #   langsmith
     #   openai
     #   tiktoken
-rich==13.4.2
+rich==13.5.2
     # via -r requirements/requirements.in
 six==1.16.0
     # via python-dateutil
