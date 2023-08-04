@@ -1,13 +1,10 @@
 from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
-from aicodebot.input import Chat, SidekickCompleter
+from aicodebot.input import Chat, generate_prompt_session
 from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
-from pathlib import Path
-from prompt_toolkit import prompt as input_prompt
-from prompt_toolkit.history import FileHistory
 from rich.live import Live
 import click, sys
 
@@ -59,9 +56,8 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n",
         style=console.bot_style,
     )
-    history_file = Path.home() / ".aicodebot_request_history"
-    completer = SidekickCompleter()
-    completer.files = files
+    our_input_session = generate_prompt_session()
+    our_input_session.completer.files = files
 
     lmm = LanguageModelManager()
     prompt = get_prompt("sidekick")
@@ -70,7 +66,7 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         if request:
             human_input = request
         else:
-            human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file), completer=completer)
+            human_input = our_input_session.prompt()
 
         parsed_human_input = chat.parse_human_input(human_input)
         if parsed_human_input == chat.BREAK:
@@ -79,8 +75,8 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         # Update the context for the new list of files
         context = generate_files_context(chat.files)
         languages = ",".join(Coder.identify_languages(chat.files))
-        if completer.files != chat.files:
-            completer.files = chat.files
+        if our_input_session.completer.files != chat.files:
+            our_input_session.completer.files = chat.files
             session_data = Session.read()
             session_data["files"] = list(chat.files)
             Session.write(session_data)
@@ -131,13 +127,15 @@ def sidekick_agent(learned_repos):
     console.print("This is an experimental feature.", style=console.warning_style)
 
     agent = SidekickAgent.get_agent_executor(learned_repos)
-    history_file = Path.home() / ".aicodebot_request_history"
+    our_input_session = generate_prompt_session()
+    our_input_session.completer = None
 
     console.print("Enter a request for your AICodeBot sidekick", style=console.bot_style)
 
     edited_input = None
     while True:  # continuous loop for multiple questions
-        human_input = input_prompt("🤖 ➤ ", history=FileHistory(history_file))
+        human_input = our_input_session.prompt()
+
         human_input = human_input.strip()
 
         if not human_input:

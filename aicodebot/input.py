@@ -1,7 +1,10 @@
 from aicodebot.coder import Coder
 from aicodebot.lm import token_size
 from pathlib import Path
+from prompt_toolkit import PromptSession
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import Completer, Completion
+from prompt_toolkit.history import FileHistory
 import click, humanize, subprocess
 
 
@@ -152,3 +155,15 @@ class SidekickCompleter(Completer):
             for file in changed_files:
                 if file.startswith(text.split()[-1]):
                     yield Completion(file, start_position=-len(text.split()[-1]))
+
+
+def generate_prompt_session():
+    history_file = Path.home() / ".aicodebot_request_history"
+    return PromptSession(
+        history=FileHistory(history_file),
+        completer=SidekickCompleter(),
+        auto_suggest=AutoSuggestFromHistory(),
+        complete_while_typing=True,
+        enable_history_search=True,
+        message=[("class:prompt", "🤖 ➤ ")],
+    )
