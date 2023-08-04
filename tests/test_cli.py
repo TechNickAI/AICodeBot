@@ -13,13 +13,15 @@ TEST_RESPONSE_TOKEN_SIZE = 150
 
 
 @pytest.mark.vcr()
-def test_alignment(cli_runner):
+def test_alignment(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     result = cli_runner.invoke(cli, ["alignment", "-t", "50"])
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
 @pytest.mark.vcr()
-def test_commit(cli_runner, temp_git_repo):
+def test_commit(cli_runner, temp_git_repo, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
         # Scenario 1: Only unstaged changes
         create_and_write_file("test1.txt", "This is a test file.")
@@ -87,7 +89,8 @@ def test_configure(cli_runner, tmp_path, monkeypatch):
     assert config_data["personality"] == DEFAULT_PERSONALITY.name
 
 
-def test_debug_success(cli_runner):
+def test_debug_success(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     result = cli_runner.invoke(cli, ["debug", "echo", "Hello, world!"])
     assert result.exit_code == 0, f"Output: {result.output}"
     assert "echo Hello, world!" in result.output
@@ -95,14 +98,16 @@ def test_debug_success(cli_runner):
 
 
 @pytest.mark.vcr()
-def test_debug_failure(cli_runner):
+def test_debug_failure(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     result = cli_runner.invoke(cli, ["debug", "ls", "-9"])
     assert result.exit_code > 0, f"Output: {result.output}"
     assert "ls -9" in result.output
 
 
 @pytest.mark.vcr()
-def test_review(cli_runner, temp_git_repo):
+def test_review(cli_runner, temp_git_repo, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
         # Add a new file
         create_and_write_file("test.txt", "Adding a new line.")
@@ -132,7 +137,8 @@ def test_review(cli_runner, temp_git_repo):
 
 
 @pytest.mark.vcr()
-def test_sidekick(cli_runner):
+def test_sidekick(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     # Define a mock request and file context
     mock_request = "What is 3 + 2? Just give me the answer, nothing else. Use a number, not text"
     mock_files = [".gitignore"]
@@ -144,7 +150,8 @@ def test_sidekick(cli_runner):
     assert "5" in result.output
 
 
-def test_version(cli_runner):
+def test_version(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     result = cli_runner.invoke(cli, ["-V"])
     assert result.exit_code == 0, f"output: {result.output}"
     assert aicodebot_version in result.output

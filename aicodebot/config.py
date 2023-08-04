@@ -29,10 +29,6 @@ def read_config():
         with Path(config_file).open("r") as f:
             out = yaml.safe_load(f)
 
-            # If the tests are running, don't use openrouter, call open ai directly
-            if "pytest" in sys.modules and "openrouter_api_key" in out:
-                del out["openrouter_api_key"]
-
             # Load the session data
             out["session"] = Session.read()
             return out

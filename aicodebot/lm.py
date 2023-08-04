@@ -137,15 +137,6 @@ class LanguageModelManager:
         api_base = "https://openrouter.ai/api/v1"
         headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
 
-        # In order to get ConversationBufferMemory to work, we need to set the tiktoken model name
-        if model_name.startswith("openai/"):
-            # For OpenAI models, this is as simple as stripping the prefix "openai/" from the model name
-            tiktoken_model_name = model_name.replace("openai/", "")
-        else:
-            # For non-OpenAI models, we set the model name to "gpt-4" for now. Seems to work.
-            # Tested with anthropic/claude2
-            tiktoken_model_name = self.DEFAULT_MODEL
-
         return ChatOpenAI(
             openai_api_key=api_key,
             openai_api_base=api_base,
@@ -154,7 +145,8 @@ class LanguageModelManager:
             temperature=temperature,
             streaming=streaming,
             callbacks=callbacks,
-            tiktoken_model_name=tiktoken_model_name,
+            # In order to get ConversationBufferMemory to work, we need to set the tiktoken model name
+            tiktoken_model_name=self.tiktoken_model_name,
             model_kwargs={"headers": headers},
         )
 
@@ -178,7 +170,7 @@ class LanguageModelManager:
         if not self.model_name:
             self.read_model_config()
 
-        encoding = tiktoken.encoding_for_model(self.model_name)
+        encoding = tiktoken.encoding_for_model(self.tiktoken_model_name)
         tokens = encoding.encode(text)
         return len(tokens)
 
@@ -217,6 +209,19 @@ class LanguageModelManager:
         out = [engine.id for engine in engines.data]
         logger.trace(f"OpenAI supported engines: {out}")
         return out
+
+    @property
+    def tiktoken_model_name(self):
+        if "/" in self.model_name:
+            if self.model_name.startswith("openai/"):
+                # For OpenAI models, this is as simple as stripping the prefix "openai/" from the model name
+                return self.model_name.replace("openai/", "")
+            else:
+                # For non-OpenAI models, we set the model name to "gpt-4" for now. Seems to work.
+                # Tested with anthropic/claude2
+                return self.DEFAULT_MODEL
+        else:
+            return self.model_name
 
 
 def token_size(text):
