@@ -97,7 +97,7 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
             console.print(parsed_human_input)
 
         try:
-            with Live(OurMarkdown(""), auto_refresh=True) as live:
+            with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
                 chain = lmm.chain_factory(
                     prompt=prompt,
                     streaming=True,
@@ -105,7 +105,8 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                     chat_history=True,
                 )
 
-                chain.run({"task": parsed_human_input, "context": context, "languages": languages})
+                response = chain.run({"task": parsed_human_input, "context": context, "languages": languages})
+                live.update(OurMarkdown(response))
 
         except KeyboardInterrupt:
             console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=console.bot_style)

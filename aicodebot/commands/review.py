@@ -58,7 +58,7 @@ def review(commit, output_format, response_token_size, files):
         console.print(
             "Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files)
         )
-        with Live(OurMarkdown(""), auto_refresh=True) as live:
+        with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
             chain = lmm.chain_factory(
                 prompt=prompt,
                 response_token_size=response_token_size,
@@ -66,4 +66,5 @@ def review(commit, output_format, response_token_size, files):
                 callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
             )
 
-            chain.run({"diff_context": diff_context, "languages": languages})
+            response = chain.run({"diff_context": diff_context, "languages": languages})
+            live.update(OurMarkdown(response))

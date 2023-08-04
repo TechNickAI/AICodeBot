@@ -33,14 +33,15 @@ def debug(ctx, command):
     # Load the prompt
     prompt = get_prompt("debug")
     logger.trace(f"Prompt: {prompt}")
+    lmm = LanguageModelManager()
 
-    with Live(OurMarkdown(""), auto_refresh=True) as live:
-        lmm = LanguageModelManager()
+    with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
         chain = lmm.chain_factory(
             prompt=prompt,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
-        chain.run({"command_output": output, "languages": ["unix", "bash", "shell"]})
+        response = chain.run({"command_output": output, "languages": ["unix", "bash", "shell"]})
+        live.update(OurMarkdown(response))
 
     sys.exit(process.returncode)

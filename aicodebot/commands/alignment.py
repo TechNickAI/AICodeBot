@@ -15,9 +15,9 @@ def alignment(response_token_size):
     # Load the prompt
     prompt = get_prompt("alignment")
     logger.trace(f"Prompt: {prompt}")
+    lmm = LanguageModelManager()
 
-    with Live(OurMarkdown(""), auto_refresh=True) as live:
-        lmm = LanguageModelManager()
+    with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
         chain = lmm.chain_factory(
             prompt=prompt,
             response_token_size=response_token_size,
@@ -26,4 +26,5 @@ def alignment(response_token_size):
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
 
-        chain.run({})
+        response = chain.run({})
+        live.update(OurMarkdown(response))

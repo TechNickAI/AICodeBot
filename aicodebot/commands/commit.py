@@ -1,6 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import exec_and_get_output, logger
-from aicodebot.lm import LanguageModelManager, token_size
+from aicodebot.lm import LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
 from pathlib import Path
@@ -81,10 +81,10 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     # Load the prompt
     prompt = get_prompt("commit")
     logger.trace(f"Prompt: {prompt}")
+    lmm = LanguageModelManager()
 
     console.print("Analyzing the differences and generating a commit message")
-    with Live(OurMarkdown(""), auto_refresh=True) as live:
-        lmm = LanguageModelManager()
+    with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
         chain = lmm.chain_factory(
             prompt=prompt,
             response_token_size=response_token_size,
@@ -92,6 +92,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
         response = chain.run({"diff_context": diff_context, "languages": languages})
+        live.update(OurMarkdown(response))
 
     commit_message_approved = not console.is_terminal or click.confirm(
         "Would you like to use this generated commit message? Type 'n' to edit it.", default=True

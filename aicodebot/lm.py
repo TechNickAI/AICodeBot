@@ -1,5 +1,6 @@
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
+from langchain import HuggingFaceHub
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.memory import ConversationTokenBufferMemory
@@ -20,9 +21,16 @@ class LanguageModelManager:
 
     OPENAI = "OpenAI"
     OPENROUTER = "OpenRouter"
-    PROVIDERS = [OPENAI, OPENROUTER]
+    HUGGINGFACE_HUB = "HuggingFace Hub"
+    PROVIDERS = [OPENAI, OPENROUTER, HUGGINGFACE_HUB]
     DEFAULT_MODEL = "gpt-4"
     DEFAULT_PROVIDER = OPENAI
+
+    def __init__(self, model_name=None, provider=None):
+        self.model_name = model_name
+        self.provider = provider
+        if not self.model_name:
+            self.read_model_config()
 
     # --------------------------------- Factories -------------------------------- #
 
@@ -75,8 +83,45 @@ class LanguageModelManager:
                 streaming=streaming,
                 callbacks=callbacks,
             )
+        elif provider == self.HUGGINGFACE_HUB:
+            return self.get_huggingface_hub_model(
+                model_name,
+                response_token_size=response_token_size,
+                temperature=temperature,
+                streaming=streaming,
+                callbacks=callbacks,
+            )
         else:  # pragma: no cover
             raise ValueError(f"Provider {provider} is not one of: {self.PROVIDERS}")
+
+    def get_huggingface_hub_model(
+        self,
+        model_name,
+        response_token_size=None,
+        temperature=PRECISE_TEMPERATURE,
+        streaming=False,
+        callbacks=None,
+    ):
+        # Support for HuggingFace Hub. It works. Barely. Don't expect good results.
+        # And there is no streaming.
+        # If you want to play with it, add the following to your ~/.aicodebot.yaml file:
+        """
+        language_model_provider: HuggingFace Hub
+        huggingface_api_key: hf_xxxxx
+        # This is about the only model I could get to work
+        language_model: google/flan-t5-xxl
+        """
+
+        api_key = self.get_api_key("huggingface_api_key")
+        return HuggingFaceHub(
+            huggingfacehub_api_token=api_key,
+            repo_id=model_name,
+            model_kwargs={
+                "temperature": temperature,
+                "max_length": response_token_size,
+                "max_new_tokens": response_token_size,
+            },
+        )
 
     def get_memory(self, llm, token_limit=DEFAULT_MEMORY_TOKENS, memory_key="chat_history", input_key="task"):
         """Initializes a memory object with the specified parameters."""
@@ -150,7 +195,7 @@ class LanguageModelManager:
             model_kwargs={"headers": headers},
         )
 
-    def get_model_token_limit(model_name):
+    def get_model_token_limit(self, model_name):
         model_token_limits = {
             "openai/gpt-4": 8192,
             "openai/gpt-4-32k": 32768,
@@ -167,9 +212,6 @@ class LanguageModelManager:
 
     def get_token_size(self, text):
         """Get the number of tokens in a string using the tiktoken library."""
-        if not self.model_name:
-            self.read_model_config()
-
         encoding = tiktoken.encoding_for_model(self.tiktoken_model_name)
         tokens = encoding.encode(text)
         return len(tokens)
@@ -187,6 +229,8 @@ class LanguageModelManager:
             key_name = "OPENAI_API_KEY"
         elif self.provider == self.OPENROUTER:
             key_name = "OPENROUTER_API_KEY"
+        elif self.provider == self.HUGGINGFACE_HUB:
+            key_name = "HUGGINGFACE_API_KEY"
         else:
             raise ValueError(f"Unrecognized provider: {self.provider}")
 
