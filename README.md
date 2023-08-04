@@ -88,7 +88,6 @@ Commands:
   commit          Generate a commit message based on your changes.
   configure       Create or update the configuration file
   debug           Run a command and debug the output.
-  learn           NOT WORKING YET: Learn new skills and gain additional...
   review          Do a code review, with [un]staged changes, or a...
   sidekick        Coding help from your AI sidekick
 ```
@@ -160,9 +159,29 @@ Technology itself is amoral; it just imbues the values of the people who create 
 
 It's also not a "build a site for me in 5 minutes" tool that takes a well-constructed prompt and builds a scaffold for you. There are [other tools](https://github.com/AntonOsika/gpt-engineer) for that. It's not a no-code platform. Instead, AICodeBot is built to work with existing code bases and the git-commit level. It's designed to multiply the effectiveness of capable engineers.
 
-## Which Language Model?
+## Configuring the language model to use
 
-Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4. If your OpenAI account supports it, we will check the first time you run it. If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api). You can also use openrouter.ai to get access to advanced models like GPT-4 32k for larger context windows.
+Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4. If your OpenAI account supports it, we will check the first time you run it. If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api). In our testing, GPT-4 is the best model and provides the best results.
+
+To specify a different model, you can set the `language_model` in your `$HOME/.aicodebot.yaml` file. For example:
+
+```yaml
+openai_api_key: sk-*****
+language_model: gpt-3.5-turbo
+personality: Stewie
+version: 1.2
+```
+
+You can also use openrouter.ai to get access to advanced models like GPT-4 32k and Anthropic's 100k model for larger context windows. See [openrouter.ai](https://openrouter.ai) for more details. Here's a sample config:
+
+```yaml
+openai_api_key: sk-*****
+openrouter_api_key: sk-or-****
+language_model_provider: OpenRouter
+language_model: openai/gpt-4-32k # or anthropic/claude-2 for 100k token limit
+personality: Stewie
+version: 1.2
+```
 
 Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
@@ -192,10 +211,10 @@ There are a couple of things you can do:
 
 We'd love your help! If you're interested in contributing, here's how to get started. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more details.
 
-
 ## Docker
 
 Assumes you have changes in current working dir that are already added.
+
 ```
 docker build -t aicodebot .
 docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y

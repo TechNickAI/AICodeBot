@@ -2,7 +2,7 @@ from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
 from aicodebot.input import Chat, generate_prompt_session
-from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager
+from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager, token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
 from rich.live import Live
@@ -91,7 +91,6 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
             # If the user edited the input, then we want to print it out so they
             # have a record of what they asked for on their terminal
             console.print(parsed_human_input)
-
         try:
             with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
                 chain = lmm.chain_factory(
@@ -100,6 +99,12 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                     callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
                     chat_history=True,
                 )
+                old_model, new_model = lmm.use_appropriate_sized_model(chain, token_size(context))
+                if old_model != new_model:
+                    console.print(
+                        f"Changing from {old_model} to {new_model} to handle the context size.",
+                        style=console.warning_style,
+                    )
 
                 response = chain.run({"task": parsed_human_input, "context": context, "languages": languages})
                 live.update(OurMarkdown(response))

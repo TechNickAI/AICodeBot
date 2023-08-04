@@ -3,6 +3,7 @@ from functools import cache
 from langchain.callbacks.base import BaseCallbackHandler
 from rich.console import Console
 from rich.markdown import CodeBlock, Markdown
+from rich.panel import Panel
 from rich.style import Style
 from rich.syntax import Syntax
 
@@ -13,8 +14,9 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
         self.live = live
         self.style = style
 
-    def on_llm_start(self, *args, **kwargs):
-        self.live.update(Markdown("**Thinking...**"))
+    def on_llm_start(self, serialized, *args, **kwargs):
+        message = f'Sending request to *{serialized["kwargs"]["model"]}*...'
+        self.live.update(Panel(OurMarkdown(message)), refresh=True)
 
     def on_llm_new_token(self, token, **kwargs):
         self.buffer.append(token)

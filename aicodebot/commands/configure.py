@@ -16,7 +16,7 @@ def configure(verbose, openai_api_key):
     # --------------- Check for an existing key or set up defaults --------------- #
 
     config_data_defaults = {
-        "version": 1.1,
+        "version": 1.2,
         "openai_api_key": openai_api_key,
         "personality": DEFAULT_PERSONALITY.name,
     }

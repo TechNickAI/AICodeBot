@@ -154,7 +154,7 @@ class LanguageModelManager:
     def get_api_key(self, key_name):
         # Read the api key from either the environment or the config file
         key_name_upper = key_name.upper()
-        api_key = os.getenv(key_name)
+        api_key = os.getenv(key_name_upper)
         if api_key:
             return api_key
         else:
@@ -243,7 +243,7 @@ class LanguageModelManager:
 
         return self.provider, self.model_name
 
-    @functools.lru_cache  # cache so we only make the API call once
+    @functools.cache  # cache so we only make the API call once
     @staticmethod
     def openai_supported_engines():
         """Get a list of the models supported by the OpenAI API key."""
@@ -266,6 +266,51 @@ class LanguageModelManager:
                 return self.DEFAULT_MODEL
         else:
             return self.model_name
+
+    def use_appropriate_sized_model(self, chain, token_size):
+        current_model = self.model_name
+        gpt_4_limit = self.get_model_token_limit("gpt-4") * 0.9
+        gpt_4_32k_limit = self.get_model_token_limit("gpt-4-32k") * 0.9
+        if current_model in ["gpt-4", "gpt-4-32k"]:
+            if token_size > gpt_4_32k_limit:
+                raise ValueError("Token limit exceeded for GPT4, try using less context (files)")
+            elif token_size > gpt_4_limit:
+                if "gpt-4-32k" in LanguageModelManager.openai_supported_engines():
+                    self.model_name = "gpt-4-32k"
+                else:
+                    raise ValueError(
+                        "Your request is too large for gpt-4, and you don't have access to gpt-4-32k.\n"
+                        "Hint: Try using openrouter.ai which has access to lots of models. See the README for details."
+                    )
+            else:
+                self.model_name = "gpt-4"
+
+        elif current_model in ["openai/gpt-4", "openai/gpt-4-32k"]:
+            if token_size > gpt_4_32k_limit:
+                raise ValueError(
+                    "Token limit exceeded for GPT4, try using less context (files)\n"
+                    "Hint: try anthropic/claude-2 (100k token limit)"
+                )
+            elif token_size > gpt_4_limit:
+                self.model_name = "openai/gpt-4-32k"
+            else:
+                self.model_name = "openai/gpt-4"
+
+        elif current_model in ["gpt-3.5-turbo", "gpt-3.5-turbo-16k"]:
+            gpt_3_limit = self.get_model_token_limit("gpt-3.5-turbo") * 0.9
+            gpt_3_16k_limit = self.get_model_token_limit("gpt-3.5-turbo-16k") * 0.9
+            if token_size > gpt_3_16k_limit:
+                raise ValueError("Token limit exceeded for GPT3.5, try using less context (files)")
+            elif token_size > gpt_3_limit:
+                self.model_name = "gp-3.5-turbo-16k"
+            else:
+                self.model_name = "gpt-3.5-turbo"
+
+        if current_model != self.model_name:
+            logger.trace(f"Switching from {current_model} to {self.model_name} to handle the context size.")
+            chain.llm.model_name = self.model_name
+
+        return current_model, self.model_name
 
 
 def token_size(text):

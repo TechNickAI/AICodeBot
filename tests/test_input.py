@@ -1,5 +1,6 @@
 from aicodebot.helpers import create_and_write_file
 from aicodebot.input import Chat
+from pathlib import Path
 from tests.conftest import in_temp_directory
 import pytest
 
@@ -29,7 +30,8 @@ def test_parse_human_input(chat):
     assert chat.parse_human_input(input_data) == chat.CONTINUE
 
 
-def test_parse_human_input_files(chat, tmp_path):
+def test_parse_human_input_files(chat, tmp_path, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     with in_temp_directory(tmp_path):
         create_and_write_file(tmp_path / "file.txt", "text")
 
