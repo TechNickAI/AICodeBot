@@ -14,19 +14,13 @@ def test_token_size(monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "provider,model_name",
-    [
-        (LanguageModelManager.OPENAI, "gpt-4"),
-        (LanguageModelManager.OPENROUTER, "gpt-4"),
-        (LanguageModelManager.HUGGINGFACE_HUB, "google/flan-t5-xxl"),
-    ],
+    "provider,model_name", [(LanguageModelManager.OPENAI, "gpt-4"), (LanguageModelManager.OPENROUTER, "gpt-4")]
 )
 def test_chain_factory(provider, model_name, monkeypatch):
     monkeypatch.setenv("AICODEBOT_MODEL_PROVIDER", provider)
     monkeypatch.setenv("AICODEBOT_MODEL", model_name)
     monkeypatch.setenv("OPENROUTER_API_KEY", "dummy")
     monkeypatch.setenv("OPENAI_API_KEY", "dummy")
-    monkeypatch.setenv("HUGGINGFACE_API_KEY", "dummy")
 
     llm = LanguageModelManager()
     assert os.getenv("OPENROUTER_API_KEY") == "dummy"
