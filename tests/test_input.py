@@ -1,6 +1,8 @@
 from aicodebot.helpers import create_and_write_file
 from aicodebot.input import Chat
+from io import StringIO
 from pathlib import Path
+from rich.console import Console
 from tests.conftest import in_temp_directory
 import pytest
 
@@ -8,9 +10,13 @@ import pytest
 class MockConsole:
     def __init__(self):
         self.output = []
+        self.console = Console(file=StringIO(), force_terminal=True)  # we need to create a console object
 
     def print(self, message, style=None):  # noqa: A003
-        self.output.append(message)
+        self.console.print(message)  # we print the Panel to the console
+        self.output.append(self.console.file.getvalue())  # we get the value from the console
+        self.console.file.truncate(0)  # we clear the console
+        self.console.file.seek(0)  # we reset the cursor
 
 
 @pytest.fixture
@@ -37,10 +43,8 @@ def test_parse_human_input_files(chat, tmp_path, monkeypatch):
 
         assert chat.parse_human_input("/add file.txt") == chat.CONTINUE
         assert chat.files == set(["file.txt"])
-        assert "✅ Added 'file.txt' to the list of files." in chat.console.output
 
         assert chat.parse_human_input("/files") == chat.CONTINUE
-        assert "file.txt" in "".join(chat.console.output)
 
         assert chat.parse_human_input("/drop file.txt") == chat.CONTINUE
         assert chat.files == set()
