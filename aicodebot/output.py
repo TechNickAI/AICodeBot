@@ -46,6 +46,24 @@ class OurCodeBlock(CodeBlock):
 class OurMarkdown(Markdown):
     elements = {**Markdown.elements, "fence": OurCodeBlock, "code_block": OurCodeBlock}
 
+    def pull_code_blocks(self):
+        # Look at the parsed markdown for code blocks, ie:
+        # ```python
+        out = []
+        for token in self.parsed:
+            if token.tag == "code" and token.info != "diff":
+                out.append(token.content)
+        return out
+
+    def pull_diff_blocks(self):
+        # Look at the parsed markdown for code blocks, ie:
+        # ```diff
+        out = []
+        for token in self.parsed:
+            if token.tag == "code" and token.info == "diff":
+                out.append(token.content)
+        return out
+
 
 @cache
 def get_console():

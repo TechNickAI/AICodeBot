@@ -1,11 +1,13 @@
 from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
+from aicodebot.helpers import logger
 from aicodebot.input import Chat, generate_prompt_session
 from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager, token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
 from rich.live import Live
+from rich.panel import Panel
 import click, sys
 
 
@@ -107,7 +109,24 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                     )
 
                 response = chain.run({"task": parsed_human_input, "context": context, "languages": languages})
-                live.update(OurMarkdown(response))
+
+                # One last update with the full response
+                markdown = OurMarkdown(response)
+                live.update(markdown)
+
+                # Check the markdown for anything useful
+                code_blocks = markdown.pull_code_blocks()
+                if code_blocks:
+                    logger.debug(f"Found code blocks: {code_blocks}")
+                    code_block_message = (
+                        f"{len(code_blocks)} code block(s) found, **/copy** to copy to your clipboard."
+                    )
+                    console.print(Panel(OurMarkdown(code_block_message)))
+                    chat.code_blocks = markdown.pull_code_blocks()
+                diff_blocks = markdown.pull_diff_blocks()
+                if diff_blocks:
+                    logger.debug(f"Found diff blocks: {code_blocks}")
+                    chat.diff_blocks = markdown.pull_code_blocks()
 
         except KeyboardInterrupt:
             console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=console.bot_style)

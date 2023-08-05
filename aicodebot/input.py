@@ -5,11 +5,11 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import Completer, Completion
 from prompt_toolkit.history import FileHistory
-import click, humanize, subprocess
+import click, humanize, pyperclip, subprocess
 
 
 class Chat:
-    console = files = None
+    console = files = code_blocks = diff_blocks = None
 
     CONTINUE = 1  # Continue to the next iteration of the while loop
     BREAK = -1  # Break out of the while loop (quit)
@@ -59,8 +59,18 @@ class Chat:
                 self.show_file_context()
                 return self.CONTINUE
 
+            elif cmd == "/copy":
+                if not self.code_blocks:
+                    self.console.print("No code blocks to copy.", style=self.console.error_style)
+                else:
+                    to_copy = "\n".join(self.code_blocks)
+                    pyperclip.copy(to_copy)
+                    self.console.print("✅ Copied the code blocks to the clipboard.")
+                return self.CONTINUE
+
             elif cmd == "/edit":
                 return click.edit()
+
             elif cmd == "/files":
                 self.show_file_context()
                 return self.CONTINUE
@@ -106,7 +116,9 @@ class SidekickCompleter(Completer):
     commands = {
         "/edit": "Use your editor for multi line input",
         "/add": "Add a file to the context for the LM",
+        "/copy": "Copy the code blocks from the response to the clipboard",
         "/drop": "Remove a file from the context for the LM",
+        "/help": "Print this help message",
         "/review": "Do a code review on your [un]staged changes",
         "/commit": "Generate a commit message based on your [un]staged changes",
         "/sh": "Execute a shell command",
