@@ -1,5 +1,5 @@
 from aicodebot.helpers import exec_and_get_output, logger
-from aicodebot.lm import LanguageModelManager
+from aicodebot.lm import token_size
 from pathlib import Path
 from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
 import fnmatch, mimetypes, re, subprocess
@@ -56,13 +56,13 @@ class Coder:
 
         # Add files to the list until we reach the max_tokens limit
         for file in sorted_files:
-            token_length = LanguageModelManager.get_token_length(Path(file).read_text())
-            if token_length > max_file_tokens:
+            tokens = token_size(Path(file).read_text())
+            if tokens > max_file_tokens:
                 continue
 
-            if token_length <= max_tokens:
+            if tokens <= max_tokens:
                 files_to_include.append(file)
-                max_tokens -= token_length
+                max_tokens -= tokens
 
             if max_tokens <= 0:
                 break

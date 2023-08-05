@@ -116,8 +116,8 @@ class Chat:
         table.add_column("File")
         table.add_column("Token Size")
         for file in self.files:
-            token_length = token_size(Path(file).read_text())
-            table.add_row(file, humanize.intcomma(token_length))
+            tokens = token_size(Path(file).read_text())
+            table.add_row(file, humanize.intcomma(tokens))
         self.console.print(table)
 
 

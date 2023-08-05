@@ -1,7 +1,7 @@
 from aicodebot.coder import Coder
 from aicodebot.config import get_local_data_dir, read_config
 from aicodebot.helpers import logger
-from aicodebot.lm import LanguageModelManager
+from aicodebot.lm import token_size
 from aicodebot.output import get_console
 from git import Repo
 from langchain.document_loaders import GitLoader, NotebookLoader
@@ -163,7 +163,7 @@ def store_documents(documents, vector_store_dir):
 
     for i in range(0, len(chunks), batch_size):
         batch = chunks[i : i + batch_size]
-        tokens_in_batch = LanguageModelManager.get_token_length(" ".join([chunk.page_content for chunk in batch]))
+        tokens_in_batch = token_size(" ".join([chunk.page_content for chunk in batch]))
         logger.debug(f"Storing chunk {i} of {len(chunks)} with {tokens_in_batch} tokens")
 
         # If the tokens in the batch would exceed the limit, wait until the next minute
