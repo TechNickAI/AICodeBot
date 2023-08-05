@@ -36,10 +36,10 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         # Determine which files to use for context automagically, with git
         session_data = Session.read()
         if session_data.get("files"):
-            console.print("Using files from the last session for context.")
+            console.print("Using files from the last session for context.", style="dim")
             files = session_data["files"]
         else:
-            console.print("Using recent git commits and current changes for context.")
+            console.print("Using recent git commits and current changes for context.", style="dim")
             files = Coder.auto_file_context(DEFAULT_CONTEXT_TOKENS, max_file_tokens)
 
         context = generate_files_context(files)
@@ -55,7 +55,7 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
     languages = ",".join(Coder.identify_languages(files))
 
     console.print(
-        "Enter a request for your AICodeBot sidekick. Type / to see available commands.\n",
+        "Enter a request for your AICodeBot sidekick. Type /help to see available commands.\n",
         style=console.bot_style,
     )
     our_input_session = generate_prompt_session()

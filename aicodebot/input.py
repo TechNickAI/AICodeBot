@@ -5,6 +5,8 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import Completer, Completion
 from prompt_toolkit.history import FileHistory
+from rich.panel import Panel
+from rich.table import Table
 import click, humanize, pyperclip, subprocess
 
 
@@ -34,7 +36,7 @@ class Chat:
                 try:
                     filenames = human_input.split()[1:]
                 except IndexError:
-                    self.console.print(f"{cmd} requires a file name", style=self.console.error_style)
+                    self.console.print(Panel(f"{cmd} requires a file name", style=self.console.error_style))
                     return self.CONTINUE
 
                 # If the file doesn't exist, or we can't open it, let them know
@@ -44,7 +46,7 @@ class Chat:
                             # Test opening the file
                             with Path(filename).open("r"):
                                 self.files.add(filename)
-                                self.console.print(f"✅ Added '{filename}' to the list of files.")
+                                self.console.print(Panel(f"✅ Added '{filename}' to the list of files."))
                         except OSError as e:
                             self.console.print(
                                 f"Unable to open '{filename}': {e.strerror}", style=self.console.error_style
@@ -54,7 +56,7 @@ class Chat:
                     elif cmd == "/drop":
                         # Drop the file from the list
                         self.files.discard(filename)
-                        self.console.print(f"✅ Dropped '{filename}' from the list of files.")
+                        self.console.print(Panel(f"✅ Dropped '{filename}' from the list of files."))
 
                 self.show_file_context()
                 return self.CONTINUE
@@ -65,7 +67,7 @@ class Chat:
                 else:
                     to_copy = "\n".join(self.code_blocks)
                     pyperclip.copy(to_copy)
-                    self.console.print("✅ Copied the code blocks to the clipboard.")
+                    self.console.print(Panel("✅ Copied the code block(s) to the clipboard."))
                 return self.CONTINUE
 
             elif cmd == "/edit":
@@ -73,6 +75,15 @@ class Chat:
 
             elif cmd == "/files":
                 self.show_file_context()
+                return self.CONTINUE
+
+            elif cmd == "/help":
+                table = Table(show_header=True, header_style="bold magenta")
+                table.add_column("Command")
+                table.add_column("Description")
+                for command, description in SidekickCompleter.commands.items():
+                    table.add_row(command, description)
+                self.console.print(table)
                 return self.CONTINUE
 
             elif cmd == "/sh":
@@ -101,9 +112,13 @@ class Chat:
             return
 
         self.console.print("Files loaded in this session:")
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("File")
+        table.add_column("Token Size")
         for file in self.files:
             token_length = token_size(Path(file).read_text())
-            self.console.print(f"\t{file} ({humanize.intcomma(token_length)} tokens)")
+            table.add_row(file, humanize.intcomma(token_length))
+        self.console.print(table)
 
 
 class SidekickCompleter(Completer):
