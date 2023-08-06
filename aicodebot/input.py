@@ -190,7 +190,5 @@ def generate_prompt_session():
         history=FileHistory(history_file),
         completer=SidekickCompleter(),
         auto_suggest=AutoSuggestFromHistory(),
-        complete_while_typing=True,
-        enable_history_search=True,
         message=[("class:prompt", "🤖 ➤ ")],
     )
