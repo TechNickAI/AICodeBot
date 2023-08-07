@@ -3,7 +3,7 @@ from aicodebot.coder import Coder
 from aicodebot.config import Session
 from aicodebot.helpers import logger
 from aicodebot.input import Chat, generate_prompt_session
-from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager, token_size
+from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, DEFAULT_MEMORY_TOKENS, LanguageModelManager, token_size
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
 from rich.live import Live
@@ -101,7 +101,9 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                     callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
                     chat_history=True,
                 )
-                old_model, new_model = lmm.use_appropriate_sized_model(chain, token_size(context))
+                old_model, new_model = lmm.use_appropriate_sized_model(
+                    chain, token_size(context) + token_size(prompt.template) + DEFAULT_MEMORY_TOKENS
+                )
                 if old_model != new_model:
                     console.print(
                         f"Changing from {old_model} to {new_model} to handle the context size.",
