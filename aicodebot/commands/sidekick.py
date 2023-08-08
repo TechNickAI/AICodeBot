@@ -135,11 +135,9 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                     chat.code_blocks = markdown.pull_code_blocks()
 
                 chat.diff_blocks = markdown.pull_diff_blocks()
-                """ Don't display this since it's experimental
                 if chat.diff_blocks:
                     patch_message = f"{len(chat.diff_blocks)} patches found, **/apply** to apply them."
                     console.print(Panel(OurMarkdown(patch_message)))
-                """
 
         except KeyboardInterrupt:
             console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=console.bot_style)

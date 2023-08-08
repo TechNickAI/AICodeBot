@@ -20,7 +20,7 @@ class Chat:
         self.console = console
         self.files = set(files)
 
-    def parse_human_input(self, human_input):  # noqa: PLR0911
+    def parse_human_input(self, human_input):  # noqa: PLR0911, PLR0915
         human_input = human_input.strip()
 
         if not human_input:
