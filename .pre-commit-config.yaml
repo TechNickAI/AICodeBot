@@ -21,7 +21,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/Lucas-C/pre-commit-hooks
-    rev: v1.5.1
+    rev: v1.5.3
     hooks:
       - id: remove-tabs
 
@@ -41,8 +41,13 @@ repos:
       - id: isort
         args: [--profile=black]
 
+  - repo: https://github.com/Instagram/Fixit
+    rev: v2.0.0.post1
+    hooks:
+      - id: fixit-fix
+
   # Ruff replaces flake8 and pylint and more
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.280
+    rev: v0.0.282
     hooks:
       - id: ruff
