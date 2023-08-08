@@ -42,7 +42,7 @@ def test_parse_human_input_files(chat, tmp_path, monkeypatch):
         create_and_write_file(tmp_path / "file.txt", "text")
 
         assert chat.parse_human_input("/add file.txt") == chat.CONTINUE
-        assert chat.files == set(["file.txt"])
+        assert chat.files == {"file.txt"}
 
         assert chat.parse_human_input("/files") == chat.CONTINUE
 
