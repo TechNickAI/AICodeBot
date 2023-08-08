@@ -2,7 +2,60 @@ from aicodebot.coder import Coder
 from aicodebot.helpers import create_and_write_file
 from pathlib import Path
 from tests.conftest import in_temp_directory
-import os, pytest, tempfile
+import os, pytest, tempfile, textwrap
+
+
+def test_apply_patch(temp_git_repo):
+    # Use in_temp_directory for the test
+    with in_temp_directory(temp_git_repo.working_dir):
+        # Create a file to be added
+        add_file = Path("add_file.txt")
+
+        # Create a file to be modified
+        mod_file = Path("mod_file.txt")
+        mod_file.write_text("AICodeBot is your coding sidekick.\nIt is here to make your coding life easier.")
+
+        # Create a file to be removed
+        remove_file = Path("remove_file.txt")
+        remove_file.write_text("Remember, AICodeBot has got your back!\n")
+
+        # Create patch strings
+        add_patch = textwrap.dedent(
+            """
+            --- /dev/null
+            +++ b/add_file.txt
+            @@ -0,0 +1,1 @@
+            +AICodeBot is here to help!
+            """
+        )
+        assert Coder.apply_patch(add_patch)
+        assert add_file.exists()
+        assert add_file.read_text() == "AICodeBot is here to help!\n"
+
+        # Note the spacing here is critical
+        mod_patch = textwrap.dedent(
+            """
+            --- a/mod_file.txt
+            +++ b/mod_file.txt
+            @@ -1,2 +1,3 @@
+             AICodeBot is your coding sidekick.
+             It is here to make your coding life easier.
+            +It is now even better!
+            """
+        )
+        assert Coder.apply_patch(mod_patch)
+        assert "It is now even better!" in mod_file.read_text()
+
+        rem_patch = textwrap.dedent(
+            """
+            --- a/remove_file.txt
+            +++ /dev/null
+            @@ -1 +0,0 @@
+            -Remember, AICodeBot has got your back!
+            """
+        )
+        assert Coder.apply_patch(rem_patch)
+        assert not remove_file.exists()
 
 
 def test_generate_directory_structure(tmp_path):

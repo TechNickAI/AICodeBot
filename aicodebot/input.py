@@ -61,6 +61,18 @@ class Chat:
                 self.show_file_context()
                 return self.CONTINUE
 
+            elif cmd == "/apply":
+                if not self.diff_blocks:
+                    self.console.print("No diff blocks to apply.", style=self.console.error_style)
+                else:
+                    count = 0
+                    for diff_block in self.diff_blocks:
+                        # Apply the diff with git apply
+                        count += 1
+                        if Coder.apply_patch(diff_block):
+                            self.console.print(Panel(f"✅ change {count} applied."))
+                return self.CONTINUE
+
             elif cmd == "/copy":
                 if not self.code_blocks:
                     self.console.print("No code blocks to copy.", style=self.console.error_style)
@@ -129,11 +141,12 @@ class SidekickCompleter(Completer):
     files = []  # List of files that we have loaded in the current context
     _project_files = None
     commands = {
+        "/help": "Print this help message",
         "/edit": "Use your editor for multi line input",
         "/add": "Add a file to the context for the LM",
-        "/copy": "Copy the code blocks from the response to the clipboard",
         "/drop": "Remove a file from the context for the LM",
-        "/help": "Print this help message",
+        "/apply": "Apply (patch) the recommended diff blocks to the files",
+        "/copy": "Copy the code blocks from the response to the clipboard",
         "/review": "Do a code review on your [un]staged changes",
         "/commit": "Generate a commit message based on your [un]staged changes",
         "/sh": "Execute a shell command",

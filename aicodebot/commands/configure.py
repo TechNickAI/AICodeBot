@@ -95,4 +95,4 @@ def configure(verbose, openai_api_key):
     )
 
     write_config_file(config_data)
-    console.print("✅ Configuration complete, you're ready to run AICoeBot!\n")
+    console.print("✅ Configuration complete, you're ready to run 🤖 AICoedBot!\n")

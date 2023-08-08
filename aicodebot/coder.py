@@ -13,6 +13,33 @@ class Coder:
     UNKNOWN_FILE_TYPE = "unknown"
 
     @staticmethod
+    def apply_patch(patch_string):
+        try:
+            result = subprocess.run(
+                [
+                    "git",
+                    "apply",
+                    "--verbose",
+                    "--inaccurate-eof",
+                    "--whitespace",
+                    "fix",
+                    "--recount",
+                ],
+                input=patch_string,
+                text=True,
+                check=True,
+                capture_output=True,
+            )
+            logger.debug(f"git apply output {result.stdout}")
+        except subprocess.CalledProcessError as e:
+            logger.error("Failed to apply patch:")
+            print(patch_string)  # noqa: T201
+            logger.error(e.stderr)
+            return False
+        else:
+            return True
+
+    @staticmethod
     def auto_file_context(max_tokens, max_file_tokens):
         """Automatically generate a file context based on what we think the user is working on"""
         files_to_include = []
