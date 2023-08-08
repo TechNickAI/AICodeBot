@@ -127,7 +127,12 @@ class LanguageModelManager:
         """Initializes a memory object with the specified parameters."""
         if not self._memory:  # Re-use the same memory object
             self._memory = ConversationTokenBufferMemory(
-                memory_key=memory_key, input_key=input_key, llm=llm, max_token_limit=token_limit
+                memory_key=memory_key,
+                input_key=input_key,
+                llm=llm,
+                max_token_limit=token_limit,
+                human_prefix="Software Engineer",
+                ai_prefix="AICodeBot",
             )
         return self._memory
 
