@@ -4,7 +4,7 @@ from io import StringIO
 from pathlib import Path
 from rich.console import Console
 from tests.conftest import in_temp_directory
-import pytest
+import pytest, textwrap
 
 
 class MockConsole:
@@ -54,5 +54,35 @@ def test_parse_human_input_commands(chat):
     # Test /sh command
     assert chat.parse_human_input("/sh ls") == chat.CONTINUE
 
+    # Test /help command
+    assert chat.parse_human_input("/help") == chat.CONTINUE
+
     # Test /quit command
     assert chat.parse_human_input("/quit") == chat.BREAK
+
+
+def test_apply_subcommand(chat, temp_git_repo):
+    with in_temp_directory(temp_git_repo.working_dir):
+        # Create a file to be modified
+        mod_file = Path("mod_file.txt")
+        mod_file.write_text("AICodeBot is your coding sidekick.\nIt is here to make your coding life easier.")
+
+        # Create a patch to modify the file
+        mod_patch = textwrap.dedent(
+            """
+            --- a/mod_file.txt
+            +++ b/mod_file.txt
+            @@ -1,2 +1,3 @@
+             AICodeBot is your coding sidekick.
+             It is here to make your coding life easier.
+            +It is now even better!
+            """
+        )
+        # Add the patch to the chat (simulating it coming in from the LM response)
+        chat.diff_blocks = [mod_patch]
+
+        # Apply the patch using the /apply command
+        assert chat.parse_human_input("/apply") == chat.CONTINUE
+
+        # Check if the file was properly modified
+        assert "It is now even better!" in mod_file.read_text()
