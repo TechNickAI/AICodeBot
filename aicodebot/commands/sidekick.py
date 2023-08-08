@@ -11,7 +11,7 @@ from rich.panel import Panel
 import click, sys
 
 
-@click.command
+@click.command()
 @click.option("-r", "--request", help="What to ask your sidekick to do")
 @click.option("-n", "--no-files", is_flag=True, help="Don't automatically load any files for context")
 @click.option("-m", "--max-file-tokens", type=int, default=10_000, help="Don't load files larger than this")
@@ -142,7 +142,7 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
             break
 
 
-@click.command
+@click.command()
 @click.option("-l", "--learned-repos", multiple=True, help="The name of the repo to use for learned information")
 def sidekick_agent(learned_repos):
     """

@@ -14,7 +14,7 @@ import click, humanize, time
 DEFAULT_EXCLUDE = [".csv", ".enex", ".json", ".jsonl"]
 
 
-@click.command
+@click.command()
 @click.option("-v", "--verbose", count=True)
 @click.option("-r", "--repo-url", help="The URL of the repository to learn from")
 def learn(repo_url, verbose):

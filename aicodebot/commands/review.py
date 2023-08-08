@@ -7,7 +7,7 @@ from rich.live import Live
 import click, json, sys
 
 
-@click.command
+@click.command()
 @click.option("-c", "--commit", help="The commit hash to review (otherwise look at [un]staged changes).")
 @click.option("--output-format", default="text", type=click.Choice(["text", "json"], case_sensitive=False))
 @click.option("-t", "--response-token-size", type=int, default=DEFAULT_RESPONSE_TOKENS * 2)
