@@ -21,6 +21,7 @@ class Coder:
                     "apply",
                     "--verbose",
                     "--recount",
+                    "--inaccurate-eof",
                 ],
                 input=patch_string.encode("utf-8"),
                 check=True,
