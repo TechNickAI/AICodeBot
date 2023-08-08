@@ -26,7 +26,9 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         console.print("🛑 This command must be run from within a git repository.", style=console.error_style)
         sys.exit(1)
 
-    console.print("This is an experimental feature. We love bug reports 😉", style=console.warning_style)
+    console.print(
+        Panel(OurMarkdown("This is an *experimental* feature. We love bug reports 😉", style=console.warning_style))
+    )
 
     # ----------------- Determine which files to use for context ----------------- #
 
@@ -101,6 +103,8 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                     callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
                     chat_history=True,
                 )
+
+                # Check if we need to change the model to handle the context size
                 old_model, new_model = lmm.use_appropriate_sized_model(
                     chain, token_size(context) + token_size(prompt.template) + DEFAULT_MEMORY_TOKENS
                 )
@@ -110,13 +114,16 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
                         style=console.warning_style,
                     )
 
-                response = chain.run({"task": parsed_human_input, "context": context, "languages": languages})
+                chat.raw_response = chain.run(
+                    {"task": parsed_human_input, "context": context, "languages": languages}
+                )
 
-                # One last update with the full response
-                markdown = OurMarkdown(response)
+                # One last "live" update with the full response
+                markdown = OurMarkdown(chat.raw_response)
                 live.update(markdown)
 
-                # Check the markdown for anything useful
+                # ------------------------- Post process the markdown ------------------------ #
+
                 code_blocks = markdown.pull_code_blocks()
                 if code_blocks:
                     logger.debug(f"Found code blocks: {code_blocks}")

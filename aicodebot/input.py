@@ -11,7 +11,7 @@ import click, humanize, pyperclip, subprocess
 
 
 class Chat:
-    console = files = code_blocks = diff_blocks = None
+    console = files = code_blocks = diff_blocks = raw_response = None
 
     CONTINUE = 1  # Continue to the next iteration of the while loop
     BREAK = -1  # Break out of the while loop (quit)
@@ -107,6 +107,11 @@ class Chat:
 
                 # Execute the shell command and let the output go directly to the console
                 subprocess.run(shell_command, shell=True)  # noqa: S602
+                return self.CONTINUE
+
+            elif cmd == "/raw":
+                # Print the raw response from the LM without any formatting
+                print(self.raw_response)  # noqa: T201
                 return self.CONTINUE
 
             elif cmd == "/quit":

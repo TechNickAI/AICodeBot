@@ -24,7 +24,7 @@ class SidekickAgent(StructuredChatAgent):
     """Our agent that will be used to run the sidekick command
 
     It implements the following langchain features:
-    [ ] Memory for chat history
+    [X] Memory for chat history
     [X] Agentic actions (planned multi-step actions to achieve a goal)
     * Tools to gain additional information
         * Vector store retrieval
@@ -41,7 +41,7 @@ class SidekickAgent(StructuredChatAgent):
         [ ] Interact with the github api
     [ ] Displaying intermediate steps
     [ ] Handle parsing errors
-    [ ] Streamed output
+    [X] Streamed output
     """
 
     @classmethod
