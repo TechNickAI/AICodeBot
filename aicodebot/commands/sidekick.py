@@ -79,16 +79,17 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         # Update the context for the new list of files
         context = generate_files_context(chat.files)
         languages = ",".join(Coder.identify_languages(chat.files))
-        if our_input_session.completer.files != chat.files:
-            our_input_session.completer.files = chat.files
-            session_data = Session.read()
-            session_data["files"] = list(chat.files)
-            Session.write(session_data)
+        our_input_session.completer.files = chat.files
+
+        # Save the files for the next session
+        session_data = Session.read()
+        session_data["files"] = list(chat.files)
+        Session.write(session_data)
 
         if parsed_human_input == chat.CONTINUE:
             continue
 
-        # If we got this far, it's a string that we are going to pass to the LLM
+        # If we got this far, it's a string that we are going to pass to the LM
 
         # --------------- Process the input and stream it to the human --------------- #
         if parsed_human_input != human_input:
