@@ -15,12 +15,12 @@ def debug(ctx, command):
 
     # Run the command and capture its output
     command_str = " ".join(command)
-    console.print(f"Executing the command:\n{command_str}")
+    console.print(f"Executing the command:\n{command_str}", highlight=False)
     process = subprocess.run(command_str, shell=True, capture_output=True, text=True)  # noqa: S602
 
     # Print the output of the command
     output = f"Standard Output:\n{process.stdout}\nStandard Error:\n{process.stderr}"
-    console.print(output)
+    console.print(output, highlight=False)
 
     # If it succeeded, exit
     if process.returncode == 0:
