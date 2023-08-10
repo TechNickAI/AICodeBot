@@ -342,13 +342,9 @@ def test_rebuild_patch_coder(tmp_path):
              class Coder
             """
         ).lstrip()
-        print("Bad patch:")
-        print(bad_patch)
 
         rebuilt_patch = Coder.rebuild_patch(bad_patch)
 
-        print("Rebuilt patch:")
-        print(rebuilt_patch)
         # Apply the rebuilt patch
         assert Coder.apply_patch(rebuilt_patch)
 

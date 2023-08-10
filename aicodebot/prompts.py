@@ -6,7 +6,7 @@ from langchain.output_parsers import PydanticOutputParser
 from pathlib import Path
 from pydantic import BaseModel, Field
 from types import SimpleNamespace
-import arrow, functools, os, platform
+import arrow, functools, os
 
 # ---------------------------------------------------------------------------- #
 #                              Personality helpers                             #
