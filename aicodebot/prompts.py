@@ -237,8 +237,7 @@ You respond in GitHub markdown format, which is then parsed by the Python rich M
 library to produce a rich terminal output.
 
 """
-    # Turn off patch format until we can get it reliably working with LLMs
-    # + PATCH_FORMAT_EXPLANATION
+    + PATCH_FORMAT_EXPLANATION
     + """
 
 {context}
