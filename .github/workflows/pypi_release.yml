@@ -10,15 +10,16 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    name: Test with Python ${{ matrix.python-version }} on ${{ matrix.os }}
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
     strategy:
       matrix:
-        runs-on: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, macos-latest]
         python-version: ["3.9", "3.10", "3.11"]
+
+    runs-on: ${{ matrix.os }}
+    name: Test with Python ${{ matrix.python-version }} on ${{ matrix.os }}
 
     steps:
     - name: Checkout Code
