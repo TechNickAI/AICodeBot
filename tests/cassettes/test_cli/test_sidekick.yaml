@@ -51,25 +51,25 @@ interactions:
       [File] setup.py\n  - [File] .gitignore\n  - [File] CONTRIBUTING.md\n  - [Directory]
       .github\n    - [Directory] workflows\n      - [File] linter.yml\n      - [File]
       aicodebot.yml\n      - [File] pypi_release.yml\n      - [File] build.yml\n    -
-      [File] dependabot.yml\n  - [Directory] build\n    - [Directory] bdist.macosx-13-arm64\n    -
-      [Directory] lib\n      - [Directory] aicodebot\n        - [File] config.py\n        -
-      [File] __init__.py\n        - [File] coder.py\n        - [File] prompts.py\n        -
-      [File] cli.py\n        - [File] learn.py\n        - [File] helpers.py\n  - [Directory]
-      assets\n    - [File] robot.png\n  - [Directory] aicodebot\n    - [File] patch.py\n    -
-      [File] config.py\n    - [File] __init__.py\n    - [File] coder.py\n    - [File]
-      prompts.py\n    - [File] agents.py\n    - [File] cli.py\n    - [File] input.py\n    -
-      [File] lm.py\n    - [Directory] commands\n      - [File] configure.py\n      -
-      [File] alignment.py\n      - [File] commit.py\n      - [File] __init__.py\n      -
-      [File] review.py\n      - [File] sidekick.py\n      - [File] debug.py\n      -
-      [File] learn.py\n    - [File] helpers.py\n    - [File] output.py\nHere are the
-      relevant files we are working with in this session, with line numbers:\n---
-      START OF FILE: .gitignore unknown file, modified a month ago ---\n1: *.pyc\n2:
-      *.swp\n3: .DS_Store\n4: .env\n5: .pytest_cache\n6: .vscode\n7: __pycache__\n8:
-      aicodebot.egg-info/\n9: build/\n10: dist/\n11: \n--- END OF FILE: .gitignore
-      ---\n\n\n\nConversation with the human software engineer:\n\nSoftware Engineer:
-      What is 3 + 2? Just give me the answer, nothing else. Use a number, not text\nAICodeBot:\n"}],
-      "model": "gpt-4", "max_tokens": null, "stream": true, "n": 1, "temperature":
-      0.05}'
+      [File] dependabot.yml\n  - [File] test.txt\n  - [Directory] build\n    - [Directory]
+      bdist.macosx-13-arm64\n    - [Directory] lib\n      - [Directory] aicodebot\n        -
+      [File] config.py\n        - [File] __init__.py\n        - [File] coder.py\n        -
+      [File] prompts.py\n        - [File] cli.py\n        - [File] learn.py\n        -
+      [File] helpers.py\n  - [Directory] assets\n    - [File] robot.png\n  - [Directory]
+      aicodebot\n    - [File] patch.py\n    - [File] config.py\n    - [File] __init__.py\n    -
+      [File] coder.py\n    - [File] prompts.py\n    - [File] agents.py\n    - [File]
+      cli.py\n    - [File] input.py\n    - [File] lm.py\n    - [Directory] commands\n      -
+      [File] configure.py\n      - [File] alignment.py\n      - [File] commit.py\n      -
+      [File] __init__.py\n      - [File] review.py\n      - [File] sidekick.py\n      -
+      [File] debug.py\n      - [File] learn.py\n    - [File] helpers.py\n    - [File]
+      output.py\nHere are the relevant files we are working with in this session,
+      with line numbers:\n--- START OF FILE: .gitignore unknown file, modified a month
+      ago ---\n1: *.pyc\n2: *.swp\n3: .DS_Store\n4: .env\n5: .pytest_cache\n6: .vscode\n7:
+      __pycache__\n8: aicodebot.egg-info/\n9: build/\n10: dist/\n11: \n--- END OF
+      FILE: .gitignore ---\n\n\n\nConversation with the human software engineer:\n\nSoftware
+      Engineer: What is 3 + 2? Just give me the answer, nothing else. Use a number,
+      not text\nAICodeBot:\n"}], "model": "gpt-4", "max_tokens": null, "stream": true,
+      "n": 1, "temperature": 0.05}'
     headers:
       Accept:
       - '*/*'
@@ -78,7 +78,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '5669'
+      - '5690'
       Content-Type:
       - application/json
       User-Agent:
@@ -92,13 +92,13 @@ interactions:
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
-      string: 'data: {"id":"chatcmpl-7n9efFbzXgH52hhwn0Csyccsq6vXA","object":"chat.completion.chunk","created":1691949541,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+      string: 'data: {"id":"chatcmpl-7nA2Brzq5M08d92KeCG4vzCj3mi4d","object":"chat.completion.chunk","created":1691950999,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-7n9efFbzXgH52hhwn0Csyccsq6vXA","object":"chat.completion.chunk","created":1691949541,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"content":"5"},"finish_reason":null}]}
+        data: {"id":"chatcmpl-7nA2Brzq5M08d92KeCG4vzCj3mi4d","object":"chat.completion.chunk","created":1691950999,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"content":"5"},"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-7n9efFbzXgH52hhwn0Csyccsq6vXA","object":"chat.completion.chunk","created":1691949541,"model":"gpt-4-0613","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+        data: {"id":"chatcmpl-7nA2Brzq5M08d92KeCG4vzCj3mi4d","object":"chat.completion.chunk","created":1691950999,"model":"gpt-4-0613","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
 
 
         data: [DONE]
@@ -109,7 +109,7 @@ interactions:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 7f62d97669c00420-MAD
+      - 7f62fd13fea42160-MAD
       Cache-Control:
       - no-cache, must-revalidate
       Connection:
@@ -117,7 +117,7 @@ interactions:
       Content-Type:
       - text/event-stream
       Date:
-      - Sun, 13 Aug 2023 17:59:02 GMT
+      - Sun, 13 Aug 2023 18:23:20 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -127,7 +127,7 @@ interactions:
       alt-svc:
       - h3=":443"; ma=86400
       openai-organization:
-      - user-5lnvpalii97slx3wvwmlvuvd
+      - user-ajb4nhk52gcguoemw0t5dq45
       openai-processing-ms:
       - '12'
       openai-version:
@@ -141,13 +141,13 @@ interactions:
       x-ratelimit-remaining-requests:
       - '199'
       x-ratelimit-remaining-tokens:
-      - '8644'
+      - '8412'
       x-ratelimit-reset-requests:
       - 300ms
       x-ratelimit-reset-tokens:
-      - 8.136s
+      - 9.523s
       x-request-id:
-      - 9a03cb1f1eddb46e8113ad7ef0213770
+      - 606f4e4bb81b3296f67826598df593b4
     status:
       code: 200
       message: OK

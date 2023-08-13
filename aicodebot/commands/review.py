@@ -39,7 +39,9 @@ def review(commit, output_format, response_token_size, files):
     lmm = LanguageModelManager()
 
     if output_format == "json":
-        chain = lmm.chain_factory(prompt=prompt, response_token_size=response_token_size)
+        # We use streaming=True here so that VCR properly records the response instead of gzip
+        # It doesn't make a difference
+        chain = lmm.chain_factory(prompt=prompt, response_token_size=response_token_size, streaming=True)
         response = chain.run({"diff_context": diff_context, "languages": languages})
 
         parsed_response = prompt.output_parser.parse(response)
