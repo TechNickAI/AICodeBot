@@ -248,17 +248,6 @@ class LanguageModelManager:
 
         return self.provider, self.model_name
 
-    @functools.lru_cache(maxsize=1)
-    @staticmethod
-    def openai_supported_engines():
-        """Get a list of the models supported by the OpenAI API key."""
-        config = read_config()
-        openai.api_key = config["openai_api_key"]
-        engines = engine.Engine.list()
-        out = [engine.id for engine in engines.data]
-        logger.trace(f"OpenAI supported engines: {out}")
-        return out
-
     @property
     def tiktoken_model_name(self):
         if "/" in self.model_name:
@@ -280,7 +269,7 @@ class LanguageModelManager:
             if token_size > gpt_4_32k_limit:
                 raise ValueError("Token limit exceeded for GPT4, try using less context (files)")
             elif token_size > gpt_4_limit:
-                if "gpt-4-32k" in LanguageModelManager.openai_supported_engines():
+                if "gpt-4-32k" in openai_supported_engines():
                     self.model_name = "gpt-4-32k"
                 else:
                     raise ValueError(
@@ -321,3 +310,16 @@ class LanguageModelManager:
 def token_size(text):
     # Shortcut
     return LanguageModelManager().get_token_size(text)
+
+
+# This is outside the class because functools.lru_cache doesn't work with class methods
+# in Python <= 3.9
+@functools.lru_cache(maxsize=1)
+def openai_supported_engines():
+    """Get a list of the models supported by the OpenAI API key."""
+    config = read_config()
+    openai.api_key = config["openai_api_key"]
+    engines = engine.Engine.list()
+    out = [engine.id for engine in engines.data]
+    logger.trace(f"OpenAI supported engines: {out}")
+    return out
