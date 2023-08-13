@@ -12,11 +12,12 @@ import click, sys
 
 
 @click.command()
+@click.option("-a", "--apply", is_flag=True, help="Automatically apply changes")
 @click.option("-r", "--request", help="What to ask your sidekick to do")
 @click.option("-n", "--no-files", is_flag=True, help="Don't automatically load any files for context")
 @click.option("-m", "--max-file-tokens", type=int, default=10_000, help="Don't load files larger than this")
 @click.argument("files", nargs=-1, type=click.Path(exists=True, readable=True))
-def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
+def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
     """
     Coding help from your AI sidekick
     FILES: List of files to be used as context for the session
@@ -61,7 +62,6 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
         style=console.bot_style,
     )
     our_input_session = generate_prompt_session()
-    our_input_session.completer.files = files
 
     lmm = LanguageModelManager()
     prompt = get_prompt("sidekick")
@@ -77,13 +77,13 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
             break
 
         # Update the context for the new list of files
-        context = generate_files_context(chat.files)
-        languages = ",".join(Coder.identify_languages(chat.files))
-        our_input_session.completer.files = chat.files
+        context = generate_files_context(chat.file_context)
+        languages = ",".join(Coder.identify_languages(chat.file_context))
+        our_input_session.completer.file_context = chat.file_context
 
         # Save the files for the next session
         session_data = Session.read()
-        session_data["files"] = list(chat.files)
+        session_data["files"] = list(chat.file_context)
         Session.write(session_data)
 
         if parsed_human_input == chat.CONTINUE:
@@ -138,8 +138,11 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
 
                 chat.diff_blocks = markdown.pull_diff_blocks()
                 if chat.diff_blocks:
-                    patch_message = f"{len(chat.diff_blocks)} patches found, **/apply** to apply them."
-                    console.print(Panel(OurMarkdown(patch_message)))
+                    if apply:
+                        chat.apply()
+                    else:
+                        patch_message = f"{len(chat.diff_blocks)} patches found, **/apply** to apply them."
+                        console.print(Panel(OurMarkdown(patch_message)))
 
         except KeyboardInterrupt:
             console.print("\n\nOk, I'll stop talking. Hit Ctrl-C again to quit.", style=console.bot_style)
