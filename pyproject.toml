@@ -86,5 +86,9 @@ target-version = "py311"
 # especially in the editor (removing variables we haven't used yet
 unfixable = ["F401", "F841"]
 
+[tool.ruff.per-file-ignores]
+# Allow print statements in tests
+"test_*.py" = ["T201"]
+
 [tool.semantic_release]
 version_variable = "aicodebot:version"
