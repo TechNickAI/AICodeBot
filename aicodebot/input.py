@@ -188,6 +188,7 @@ class SidekickCompleter(Completer):
         "commit": "Generate a commit message based on your [un]staged changes",
         "sh": "Execute a shell command",
         "files": "Show the list of files currently loaded in the context",
+        "raw": "Print the raw response from the LM",
         "quit": "👋 Say Goodbye!",
     }
 
