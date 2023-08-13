@@ -25,7 +25,15 @@ class Chat:
         """Parse the human input and handle any special commands."""
         human_input = human_input.strip()
 
-        if not human_input:
+        if not human_input or len(human_input) < 2:
+            return self.CONTINUE
+
+        if human_input.lower()[-2:] == r"\e":
+            # If the text ends with \e then we want to edit it
+            return click.edit(human_input[:-2])
+
+        if human_input.lower()[-2:] == r"\c":
+            # If the text ends with \e then we want to clear
             return self.CONTINUE
 
         if human_input.startswith("/"):
@@ -118,10 +126,6 @@ class Chat:
 
             elif cmd == "/quit":
                 return self.BREAK
-
-        if human_input.lower()[-2:] == r"\e":
-            # If the text ends wit then we want to edit it
-            return click.edit(human_input[:-2])
 
         # No magic found, pass to the LM
         return human_input
