@@ -1,5 +1,6 @@
 from aicodebot.coder import Coder
 from aicodebot.lm import token_size
+from aicodebot.patch import Patch
 from pathlib import Path
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -70,7 +71,7 @@ class Chat:
                     for diff_block in self.diff_blocks:
                         # Apply the diff with git apply
                         count += 1
-                        if Coder.apply_patch(diff_block):
+                        if Patch.apply_patch(diff_block):
                             self.console.print(Panel(f"✅ change {count} applied."))
                 return self.CONTINUE
 

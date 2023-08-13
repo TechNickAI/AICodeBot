@@ -97,7 +97,9 @@ def sidekick(request, no_files, max_file_tokens, files):  # noqa: PLR0915
             # have a record of what they asked for on their terminal
             console.print(parsed_human_input)
         try:
-            with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
+            with Live(
+                OurMarkdown(f"Sending task to {lmm.model_name} via {lmm.provider}"), auto_refresh=False
+            ) as live:
                 chain = lmm.chain_factory(
                     prompt=prompt,
                     streaming=True,
