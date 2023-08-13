@@ -18,8 +18,8 @@ jobs:
     strategy:
       matrix:
         # Python 3.9 build fail via GitHub action, so we're skipping it for now
-        # python-version: ["3.9", "3.10", "3.11"]
-        python-version: ["3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
+        # python-version: ["3.10", "3.11"]
 
     steps:
     - name: Checkout Code
