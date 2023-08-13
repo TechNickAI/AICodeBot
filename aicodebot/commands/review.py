@@ -40,8 +40,7 @@ def review(commit, output_format, response_token_size, files):
 
     if output_format == "json":
         chain = lmm.chain_factory(prompt=prompt, response_token_size=response_token_size)
-        with console.status("Examining the diff and generating the review", spinner=console.DEFAULT_SPINNER):
-            response = chain.run({"diff_context": diff_context, "languages": languages})
+        response = chain.run({"diff_context": diff_context, "languages": languages})
 
         parsed_response = prompt.output_parser.parse(response)
         data = {
