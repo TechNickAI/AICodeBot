@@ -248,7 +248,7 @@ class LanguageModelManager:
 
         return self.provider, self.model_name
 
-    @functools.cache  # cache so we only make the API call once
+    @functools.lru_cache(maxsize=1)
     @staticmethod
     def openai_supported_engines():
         """Get a list of the models supported by the OpenAI API key."""
