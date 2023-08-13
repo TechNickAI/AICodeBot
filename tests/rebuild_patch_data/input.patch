@@ -1,0 +1,12 @@
+diff --git a/input.py b/input.py
+--- a/input.py
++++ b/input.py
+@@ -1,7 +1,7 @@
+ from aicodebot.coder import Coder
+ from aicodebot.commands import commit, review
+-from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, token_size
++from aicodebot.lm import token_size
+ from aicodebot.patch import Patch
+ from pathlib import Path
+ from prompt_toolkit import PromptSession
+ from prompt_toolkit.auto_suggest import AutoSuggestFromHistory

@@ -67,7 +67,7 @@ def test_apply_subcommand(chat, temp_git_repo):
     with in_temp_directory(temp_git_repo.working_dir):
         # Create a file to be modified
         mod_file = Path("mod_file.txt")
-        mod_file.write_text("AICodeBot is your coding sidekick.\nIt is here to make your coding life easier.")
+        mod_file.write_text("AICodeBot is your coding sidekick.\nIt is here to make your coding life easier.\n")
 
         # Create a patch to modify the file
         mod_patch = textwrap.dedent(
@@ -79,7 +79,7 @@ def test_apply_subcommand(chat, temp_git_repo):
              It is here to make your coding life easier.
             +It is now even better!
             """
-        )
+        ).lstrip()
         # Add the patch to the chat (simulating it coming in from the LM response)
         chat.diff_blocks = [mod_patch]
 

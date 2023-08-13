@@ -200,10 +200,25 @@ write clean, maintainable code. You are a champion for code quality.
 
 PATCH_FORMAT_EXPLANATION = """
 To suggest a code change to the files in the local git repo, we use a unified diff format.
+The diff context is the output of the `git diff` command. It shows the changes that have been made.
+Lines starting with "-" are being removed. Lines starting with "+" are being added.
+Lines starting with " " (space) are unchanged. The file names are shown for context.
+
+ A line of code that is unchanged, that is being passed for context (starts with a space)
+ A second line of code that is unchanged, that is being passed for context (starts with a space)
+-A line of code that is being removed
++A line of code that is being added
+
+Before laying out the patch, write up a description of the change you want to make, to explain
+what you want to do.
 
 === Example ===
-Software Engineer: I want to add helpful header comments to the functions in file x.py
-AICodeBot: Ok, I've added helpful header comments to the functions in file x.py.
+Software Engineer: Fix the spelling mistake in x.py
+AICodeBot: Ok, I'll fix the spelling mistake in x.py
+
+Here's the change I am making:
+1. Remove the line "# Line with seplling mistake"
+2. Add the replacement line "# Line with spelling fixed"
 
 ```diff
 diff --git a/x.py b/x.py
@@ -212,15 +227,11 @@ diff --git a/x.py b/x.py
 @@ -1,3 +1,4 @@
 
 def foo():
-+    # New helpful header comment
+-    # Line with seplling mistake
++    # Line with spelling fixed
     pass
 ```
 === End Example ===
-
-In the above example, the engineer asked to add helpful header comments to the functions in file x.py.
-It was starting at line 1, and there were 3 lines of code in the original file. The changes spanned
-4 lines in the new file, so the chunk header was @@ -1,3 +1,4 @@. It's important to get the numbers
-in the chunk header correct, so that patch can be applied cleanly with git apply.
 """
 
 SIDEKICK_TEMPLATE = (

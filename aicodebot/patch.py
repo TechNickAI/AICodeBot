@@ -17,7 +17,6 @@ class Patch:
                     "apply",
                     "--verbose",
                     "--recount",
-                    "--inaccurate-eof",
                 ],
                 input=patch_string.encode("utf-8"),
                 check=True,
@@ -78,16 +77,16 @@ class Patch:
         # ------------------------- Parse the incoming patch ------------------------- #
         parsed_lines = []
         chunk_header = None
-        for line in patch_string.lstrip().splitlines():
+        for line in patch_string.splitlines():
             if chunk_header and not line.startswith(("+", "-", " ")):
                 # Sometimes the LM will add a context line without a space
                 # If we see that, we'll assume it's a context line
                 line = " " + line  # noqa: PLW2901
 
             parsed_line = Patch.parse_line(line)
+            if parsed_line.type == "chunk_header":
+                chunk_header = parsed_line.parsed
             parsed_lines.append(parsed_line)
-            if parsed_lines[-1].type == "chunk_header":
-                chunk_header = parsed_lines[-1].parsed
 
         # Check for critical fields
         source_file_line = next(line for line in parsed_lines if line.type == "source_file")
@@ -104,7 +103,7 @@ class Patch:
 
         start1 = chunk_header.start1
         first_change_line = next(line for line in parsed_lines if line.type in ("addition", "subtraction"))
-        lines_of_context = 3
+        lines_of_context = 1
 
         # ------------------------- Rebuild the context lines ------------------------ #
         # Get the correct start line from the first context line, by looking at the source file
@@ -118,6 +117,7 @@ class Patch:
             for i in range(start1 - 1, len(source_file_contents)):
                 if source_file_contents[i] == first_change_line.parsed:
                     first_change_line_number = i + 1
+                    start1 = first_change_line_number - lines_of_context
                     break
             else:
                 raise ValueError(f"Could not find first change line in source file: {first_change_line.parsed}")

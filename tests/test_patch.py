@@ -1,8 +1,7 @@
-from aicodebot.helpers import create_and_write_file
 from aicodebot.patch import Patch
 from pathlib import Path
 from tests.conftest import in_temp_directory
-import textwrap
+import pytest, shutil, textwrap
 
 
 def test_apply_patch(temp_git_repo):
@@ -13,7 +12,7 @@ def test_apply_patch(temp_git_repo):
 
         # Create a file to be modified
         mod_file = Path("mod_file.txt")
-        mod_file.write_text("AICodeBot is your coding sidekick.\nIt is here to make your coding life easier.")
+        mod_file.write_text("AICodeBot is your coding sidekick.\nIt is here to make your coding life easier.\n")
 
         # Create a file to be removed
         remove_file = Path("remove_file.txt")
@@ -58,118 +57,32 @@ def test_apply_patch(temp_git_repo):
         assert not remove_file.exists()
 
 
-def test_rebuild_patch(tmp_path):
+@pytest.mark.parametrize(
+    "test_name, expected_chunk_header",
+    [
+        ("prompts", "@@ -6,5 +6,5 @@"),
+        ("coder", "@@ -5,3 +5,3 @@"),
+        ("input", "@@ -2,3 +2,3 @@"),
+    ],
+)
+def test_rebuild_patch_parameterized(tmp_path, test_name, expected_chunk_header):
+    test_files_dir = Path("tests/rebuild_patch_data")
+    shutil.copy(test_files_dir / f"{test_name}.py", tmp_path)
+    bad_patch = Path(test_files_dir / f"{test_name}.patch").read_text()
+    expected_result = Path(test_files_dir / f"{test_name}_expected.py").read_text()
+
     # Use in_temp_directory for the test
     with in_temp_directory(tmp_path):
-        # Set up the original file
-        Path(tmp_path / "aicodebot").mkdir()
-        create_and_write_file(
-            "aicodebot/prompts.py",
-            textwrap.dedent(
-                """
-                from aicodebot.coder import Coder
-                from aicodebot.config import read_config
-                from aicodebot.helpers import logger
-                from langchain import PromptTemplate
-                from langchain.output_parsers import PydanticOutputParser
-                from pathlib import Path
-                from pydantic import BaseModel, Field
-                from types import SimpleNamespace
-                import arrow, functools, os, platform
-
-
-                # Comment
-                """
-            ),
-        )
-        prompts_file = Path("aicodebot/prompts.py").read_text()
-        assert "platform" in prompts_file
-
-        # A few problems with this patch:
-        # 1. The chunk header is wrong (wrong line in the file and wrong number of lines)
-        # 2. No " " before the unchanged lines
-        # 3. Duplicated added/removed lines (that should just be unchanged)
-        # The original goal of the patch was to remove the "platform" import
-        bad_patch = textwrap.dedent(
-            """
-            diff --git a/aicodebot/prompts.py b/aicodebot/prompts.py
-            --- a/aicodebot/prompts.py
-            +++ b/aicodebot/prompts.py
-            @@ -6,7 +6,7 @@
-            from langchain import PromptTemplate
-            from langchain.output_parsers import PydanticOutputParser
-            from pathlib import Path
-            -from pydantic import BaseModel, Field
-            -from types import SimpleNamespace
-            -import arrow, functools, os, platform
-            +from pydantic import BaseModel, Field
-            +from types import SimpleNamespace
-            +import arrow, functools, os
-
-            """
-        )
-
-        print("Bad patch:\n", bad_patch)
+        print(f"Bad patch:\n{bad_patch}")
         rebuilt_patch = Patch.rebuild_patch(bad_patch)
-        print("Rebuilt patch:\n", rebuilt_patch)
+        print(f"Rebuilt patch:\n{rebuilt_patch}")
+
+        assert expected_chunk_header in rebuilt_patch
 
         # Apply the rebuilt patch
         assert Patch.apply_patch(rebuilt_patch) is True
 
-        assert "platform" not in Path("aicodebot/prompts.py").read_text()
-
-
-def test_rebuild_patch_coder(tmp_path):
-    # Use in_temp_directory for the test
-    with in_temp_directory(tmp_path):
-        # Set up the original file
-        file = "aicodebot/coder.py"
-        Path(tmp_path / "aicodebot").mkdir()
-        create_and_write_file(
-            file,
-            textwrap.dedent(
-                """
-                from aicodebot.helpers import exec_and_get_output, logger
-                from aicodebot.lm import token_size
-                from pathlib import Path
-                from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
-                from types import SimpleNamespace
-                import fnmatch, mimetypes, re, subprocess, unidiff
-
-
-                class Coder:
-                """
-            ).lstrip(),
-        )
-        assert "unidiff" in Path(file).read_text()
-
-        # A few problems with this patch:
-        # 1. The chunk header is wrong (wrong line in the file and wrong number of lines)
-        # 2. No " " before the unchanged lines
-        # 3. Duplicated added/removed lines (that should just be unchanged)
-        # The original goal of the patch was to remove the "platform" import
-        bad_patch = textwrap.dedent(
-            """
-            diff --git a/aicodebot/coder.py b/aicodebot/coder.py
-            --- a/aicodebot/coder.py
-            +++ b/aicodebot/coder.py
-            @@ -3,7 +3,7 @@
-             from pathlib import Path
-             from pygments.lexers import ClassNotFound, get_lexer_for_mimetype, guess_lexer_for_filename
-             from types import SimpleNamespace
-            -import fnmatch, mimetypes, re, subprocess, unidiff
-            +import fnmatch, mimetypes, re, subprocess
-
-
-             class Coder
-            """
-        ).lstrip()
-
-        print("Bad patch:\n", bad_patch)
-        rebuilt_patch = Patch.rebuild_patch(bad_patch)
-        print("Rebuilt patch:\n", rebuilt_patch)
-
-        # Apply the rebuilt patch
-        assert Patch.apply_patch(rebuilt_patch) is True
-
-        assert "unidiff" not in Path(file).read_text()
+        patched_contents = Path(f"{test_name}.py").read_text()
+        print(f"Patched contents:\n{patched_contents}")
+        print(f"Expected result:\n{expected_result}")
+        assert patched_contents == expected_result

@@ -1,0 +1,13 @@
+diff --git a/prompts.py b/prompts.py
+--- a/prompts.py
++++ b/prompts.py
+@@ -6,7 +6,7 @@
+from langchain import PromptTemplate
+from langchain.output_parsers import PydanticOutputParser
+from pathlib import Path
+-from pydantic import BaseModel, Field
+-from types import SimpleNamespace
+-import arrow, functools, os, platform
++from pydantic import BaseModel, Field
++from types import SimpleNamespace
++import arrow, functools, os
