@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [ubuntu-latest, macos-latest]
     name: Test with Python ${{ matrix.python-version }}
     env:
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -46,7 +46,8 @@ jobs:
         # Python 3.9 testing fails because of an issue with vcrpy
         # https://github.com/kevin1024/vcrpy/issues/688
         if [[ "${{ matrix.python-version }}" == "3.9" ]]; then
-          echo "Skipping tests for Python 3.9"
+          echo "Skipping tests for Python 3.9, running alignment instead"
+          aicodebot configure
           aicodebot alignment
         else
           pytest --record-mode=new_episodes
