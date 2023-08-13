@@ -66,9 +66,9 @@ class OurMarkdown(Markdown):
 
 
 @cache
-def get_console():
+def get_console(*args, **kwargs):
     """Get a console object, with cache so that we reuse the same console object."""
-    console = Console()
+    console = Console(*args, **kwargs)
     console.DEFAULT_SPINNER = "point"
     console.bot_style = Style(color="#30D5C8")
     console.error_style = Style(color="#FF0000")

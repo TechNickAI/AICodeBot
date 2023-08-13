@@ -1,4 +1,5 @@
 from aicodebot.coder import Coder
+from aicodebot.commands import commit, review
 from aicodebot.lm import token_size
 from aicodebot.patch import Patch
 from pathlib import Path
@@ -12,14 +13,14 @@ import click, humanize, pyperclip, subprocess
 
 
 class Chat:
-    console = files = code_blocks = diff_blocks = raw_response = None
+    console = file_context = code_blocks = diff_blocks = raw_response = None
 
     CONTINUE = 1  # Continue to the next iteration of the while loop
     BREAK = -1  # Break out of the while loop (quit)
 
-    def __init__(self, console, files):
+    def __init__(self, console, file_context):
         self.console = console
-        self.files = set(files)
+        self.file_context = set(file_context)
 
     def parse_human_input(self, human_input):  # noqa: PLR0911, PLR0915
         """Parse the human input and handle any special commands."""
@@ -37,111 +38,136 @@ class Chat:
             return self.CONTINUE
 
         if human_input.startswith("/"):
-            cmd = human_input.lower().split()[0]
+            cmd = human_input.lower().split()[0][1:]
 
-            # ------------------------------ Handle commands ----------------------------- #
-            if cmd in ["/add", "/drop"]:
-                # Get the filename
-                # If they didn't specify a file, then ignore
-                try:
-                    filenames = human_input.split()[1:]
-                except IndexError:
-                    self.console.print(Panel(f"{cmd} requires a file name", style=self.console.error_style))
-                    return self.CONTINUE
-
-                # If the file doesn't exist, or we can't open it, let them know
-                for filename in filenames:
-                    if cmd == "/add":
-                        try:
-                            # Test opening the file
-                            with Path(filename).open("r"):
-                                self.files.add(filename)
-                                self.console.print(Panel(f"✅ Added '{filename}' to the list of files."))
-                        except OSError as e:
-                            self.console.print(
-                                f"Unable to open '{filename}': {e.strerror}", style=self.console.error_style
-                            )
-                            return self.CONTINUE
-
-                    elif cmd == "/drop":
-                        # Drop the file from the list
-                        self.files.discard(filename)
-                        self.console.print(Panel(f"✅ Dropped '{filename}' from the list of files."))
-
-                self.show_file_context()
+            if cmd in SidekickCompleter.commands and hasattr(self, cmd):
+                return getattr(self, cmd)(human_input)
+            else:
+                self.console.print(Panel(f"Unknown command '{cmd}'", style=self.console.error_style))
                 return self.CONTINUE
-
-            elif cmd == "/apply":
-                if not self.diff_blocks:
-                    self.console.print("No diff blocks to apply.", style=self.console.error_style)
-                else:
-                    count = 0
-                    for diff_block in self.diff_blocks:
-                        # Apply the diff with git apply
-                        count += 1
-                        if Patch.apply_patch(diff_block):
-                            self.console.print(Panel(f"✅ change {count} applied."))
-                return self.CONTINUE
-
-            elif cmd == "/copy":
-                if not self.code_blocks:
-                    self.console.print("No code blocks to copy.", style=self.console.error_style)
-                else:
-                    to_copy = "\n".join(self.code_blocks)
-                    pyperclip.copy(to_copy)
-                    self.console.print(Panel("✅ Copied the code block(s) to the clipboard."))
-                return self.CONTINUE
-
-            elif cmd == "/edit":
-                return click.edit()
-
-            elif cmd == "/files":
-                self.show_file_context()
-                return self.CONTINUE
-
-            elif cmd == "/help":
-                table = Table(show_header=True, header_style="bold magenta")
-                table.add_column("Command")
-                table.add_column("Description")
-                for command, description in SidekickCompleter.commands.items():
-                    table.add_row(command, description)
-                self.console.print(table)
-                return self.CONTINUE
-
-            elif cmd == "/sh":
-                # Strip off the /sh and any leading/trailing whitespace
-                shell_command = human_input[3:].strip()
-
-                if not shell_command:
-                    return self.CONTINUE
-
-                # Execute the shell command and let the output go directly to the console
-                subprocess.run(shell_command, shell=True)  # noqa: S602
-                return self.CONTINUE
-
-            elif cmd == "/raw":
-                # Print the raw response from the LM without any formatting
-                print(self.raw_response)  # noqa: T201
-                return self.CONTINUE
-
-            elif cmd == "/quit":
-                return self.BREAK
 
         # No magic found, pass to the LM
         return human_input
 
     def show_file_context(self):
-        if not self.files:
+        if not self.file_context:
             return
 
         self.console.print("Files loaded in this session:")
         table = Table(show_header=True, header_style="bold magenta")
         table.add_column("File")
         table.add_column("Token Size")
-        for file in self.files:
+        for file in self.file_context:
             tokens = token_size(Path(file).read_text())
             table.add_row(file, humanize.intcomma(tokens))
         self.console.print(table)
+
+    # ----------------------- Sidekick / commands ----------------------- #
+
+    def add(self, human_input):
+        # Get the filenames
+        # If they didn't specify a file, then ignore
+        try:
+            filenames = human_input.split()[1:]
+        except IndexError:
+            self.console.print(Panel("/add requires a file name", style=self.console.error_style))
+            return self.CONTINUE
+
+        # If the file doesn't exist, or we can't open it, let them know
+        for filename in filenames:
+            try:
+                # Test opening the file
+                with Path(filename).open("r"):
+                    self.file_context.add(filename)
+                    self.console.print(Panel(f"✅ Added '{filename}' to the list of files."))
+            except OSError as e:
+                self.console.print(f"Unable to open '{filename}': {e.strerror}", style=self.console.error_style)
+                return self.CONTINUE
+
+        return self.files()
+
+    def apply(self, human_input=None):
+        if not self.diff_blocks:
+            self.console.print("No diff blocks to apply.", style=self.console.error_style)
+        else:
+            count = 0
+            for diff_block in self.diff_blocks:
+                # Apply the diff with git apply
+                count += 1
+                if Patch.apply_patch(diff_block):
+                    self.console.print(Panel(f"✅ change {count} applied."))
+        return self.CONTINUE
+
+    def commit(self, human_input):
+        # Run the commit command from the cli
+        ctx = click.get_current_context()
+        ctx.invoke(commit)
+        return self.CONTINUE
+
+    def copy(self, human_input):
+        if not self.code_blocks:
+            self.console.print("No code blocks to copy.", style=self.console.error_style)
+        else:
+            pyperclip.copy(self.code_blocks)
+            self.console.print(Panel("✅ Copied code blocks to clipboard."))
+        return self.CONTINUE
+
+    def drop(self, human_input):
+        # Get the filenames
+        # If they didn't specify a file, then ignore
+        try:
+            filenames = human_input.split()[1:]
+        except IndexError:
+            self.console.print(Panel("/drop requires a file name", style=self.console.error_style))
+            return self.CONTINUE
+
+        for filename in filenames:
+            # Drop the file from the list
+            self.file_context.discard(filename)
+            self.console.print(Panel(f"✅ Dropped '{filename}' from the list of files."))
+
+        return self.files()
+
+    def edit(self, human_input=None):
+        return click.edit()
+
+    def files(self, human_input=None):
+        self.show_file_context()
+        return self.CONTINUE
+
+    def review(self, human_input):
+        # Run the review command from the cli
+        ctx = click.get_current_context()
+        ctx.invoke(review)
+        return self.CONTINUE
+
+    def sh(self, human_input):
+        # Strip off the /sh and any leading/trailing whitespace
+        shell_command = human_input[3:].strip()
+
+        if not shell_command:
+            return self.CONTINUE
+
+        # Execute the shell command and let the output go directly to the console
+        subprocess.run(shell_command, shell=True)  # noqa: S602
+        return self.CONTINUE
+
+    def help(self, human_input=None):  # noqa: A003
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Command")
+        table.add_column("Description")
+        for command, description in SidekickCompleter.commands.items():
+            table.add_row(f"/{command}", description)
+        self.console.print(table)
+        return self.CONTINUE
+
+    def raw(self, human_input=None):
+        # Print the raw response from the LM without any formatting
+        print(self.raw_response)  # noqa: T201
+        return self.CONTINUE
+
+    def quit(self, human_input=None):  # noqa: A003
+        return self.BREAK
 
 
 class SidekickCompleter(Completer):
@@ -149,20 +175,20 @@ class SidekickCompleter(Completer):
     Handles the autocomplete for the sidekick commands and file names.
     """
 
-    files = []  # List of files that we have loaded in the current context
     _project_files = None
+    file_context = []
     commands = {
-        "/help": "Print this help message",
-        "/edit": "Use your editor for multi line input",
-        "/add": "Add a file to the context for the LM",
-        "/drop": "Remove a file from the context for the LM",
-        "/apply": "Apply (patch) the recommended diff blocks to the files",
-        "/copy": "Copy the code blocks from the response to the clipboard",
-        "/review": "Do a code review on your [un]staged changes",
-        "/commit": "Generate a commit message based on your [un]staged changes",
-        "/sh": "Execute a shell command",
-        "/files": "Show the list of files currently loaded in the context",
-        "/quit": "👋 Say Goodbye!",
+        "help": "Print this help message",
+        "edit": "Use your editor for multi line input",
+        "add": "Add a file to the context for the LM",
+        "drop": "Remove a file from the context for the LM",
+        "apply": "Apply (patch) the recommended diff blocks to the files",
+        "copy": "Copy the code blocks from the response to the clipboard",
+        "review": "Do a code review on your [un]staged changes",
+        "commit": "Generate a commit message based on your [un]staged changes",
+        "sh": "Execute a shell command",
+        "files": "Show the list of files currently loaded in the context",
+        "quit": "👋 Say Goodbye!",
     }
 
     @property
@@ -184,8 +210,9 @@ class SidekickCompleter(Completer):
 
         # If the text starts with a slash, it's a command
         if text.startswith("/"):
+            cmd = text.lstrip("/")
             for command, description in self.commands.items():
-                if command.startswith(text):
+                if command.startswith(cmd):
                     yield Completion(command, start_position=-len(text), display_meta=description)
 
         if text.startswith("/add "):
@@ -197,7 +224,7 @@ class SidekickCompleter(Completer):
 
         elif text.startswith("/drop "):
             # For /drop, use the current context files for autocomplete
-            for file in self.files:
+            for file in self.file_context:
                 if file.startswith(text.split()[-1]):
                     yield Completion(file, start_position=-len(text.split()[-1]))
 
