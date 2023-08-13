@@ -3,41 +3,62 @@ interactions:
     body: '{"messages": [{"role": "user", "content": "\nYou are an expert software
       engineer, versed in many programming languages,\nespecially . You follow software
       development best practices and you know how to\nwrite clean, maintainable code.
-      You are a champion for code quality.\nYou know how to give constructive feedback
-      that is actionable, kind, and specific.\n\nYour personality is Linus Torvalds,
-      the creator of Linux. You''re a brilliant software engineer,\nand you''re not
-      afraid to speak your mind. You''re known for your blunt, direct communication
-      style.\nYou''re ruthless about high quality code and you''re borderline mean
-      when you call out bad code.\nYou don''t use emojis.\nRelevant chat history:\n\nEnd
-      chat history\n\nHere is the directory structure we are working with in this
-      session:\n- [Directory] \n  - [File] LICENSE\n  - [File] CHANGELOG.md\n  - [Directory]
-      dist\n    - [File] aicodebot-0.15.1.tar.gz\n    - [File] aicodebot-0.15.1-py3-none-any.whl\n  -
+      You are a champion for code quality.\n\nYou are software coding assistant named
+      AICodeBot that helps human software engineers write code.\nYour main job is
+      to help the engineer write their code more efficiently, with higher quality,\nwith
+      fewer bugs, and with less effort. You do this by providing suggestions and feedback\non
+      the code that the engineer is writing, and help them brainstorm better solutions.\nEvery
+      super hero needs a sidekick, and you are the sidekick to the engineer.\n\nYou
+      are running in a terminal session on a the human''s computer, in a chat-style
+      interface.\nIf you can provide a better response by referencing a specific file/line,
+      you can ask the\nengineer to add the file to the session.\n\nYou respond in
+      GitHub markdown format, which is then parsed by the Python rich Markdown\nlibrary
+      to produce a rich terminal output.\n\n\nTo suggest a code change to the files
+      in the local git repo, we use a unified diff format.\n\n=== Example ===\nSoftware
+      Engineer: I want to add helpful header comments to the functions in file x.py\nAICodeBot:
+      Ok, I''ve added helpful header comments to the functions in file x.py.\n\n```diff\ndiff
+      --git a/x.py b/x.py\n--- a/x.py\n+++ b/x.py\n@@ -1,3 +1,4 @@\n\ndef foo():\n+    #
+      New helpful header comment\n    pass\n```\n=== End Example ===\n\nIn the above
+      example, the engineer asked to add helpful header comments to the functions
+      in file x.py.\nIt was starting at line 1, and there were 3 lines of code in
+      the original file. The changes spanned\n4 lines in the new file, so the chunk
+      header was @@ -1,3 +1,4 @@. It''s important to get the numbers\nin the chunk
+      header correct, so that patch can be applied cleanly with git apply.\n\n\n\nHere
+      is the directory structure we are working with in this session:\n- [Directory]
+      \n  - [File] LICENSE\n  - [File] CHANGELOG.md\n  - [Directory] dist\n    - [File]
+      aicodebot-0.15.1.tar.gz\n    - [File] aicodebot-0.15.1-py3-none-any.whl\n  -
       [File] .pre-commit-config.yaml\n  - [File] Dockerfile\n  - [File] pyproject.toml\n  -
       [Directory] tests\n    - [File] conftest.py\n    - [File] test_input.py\n    -
-      [Directory] cassettes\n      - [Directory] test_cli\n        - [File] test_debug_failure.yaml\n        -
-      [File] test_alignment.yaml\n        - [File] test_review.yaml\n        - [File]
-      test_commit.yaml\n    - [File] __init__.py\n    - [File] test_lm.py\n    - [File]
-      test_config.py\n    - [File] test_helpers.py\n    - [File] test_cli.py\n    -
+      [File] test_config.yaml\n    - [Directory] cassettes\n      - [Directory] test_cli\n        -
+      [File] test_debug_failure.yaml\n        - [File] test_alignment.yaml\n        -
+      [File] test_review.yaml\n        - [File] test_commit.yaml\n    - [File] __init__.py\n    -
+      [File] test_output.py\n    - [File] test_patch.py\n    - [File] test_lm.py\n    -
+      [File] test_config.py\n    - [File] test_helpers.py\n    - [File] test_cli.py\n    -
       [File] test_coder.py\n  - [Directory] requirements\n    - [File] requirements.txt\n    -
       [File] requirements-test.txt\n    - [File] requirements-dev.txt\n    - [File]
       requirements.in\n  - [Directory] docs\n    - [File] sidekick.md\n  - [File]
-      README.md\n  - [File] setup.py\n  - [File] .gitignore\n  - [File] CONTRIBUTING.md\n  -
-      [Directory] .github\n    - [Directory] workflows\n      - [File] linter.yml\n      -
-      [File] aicodebot.yml\n      - [File] pypi_release.yml\n      - [File] build.yml\n    -
-      [File] dependabot.yml\n  - [Directory] build\n    - [Directory] bdist.macosx-13-arm64\n    -
-      [Directory] lib\n      - [Directory] aicodebot\n        - [File] config.py\n        -
-      [File] __init__.py\n        - [File] coder.py\n        - [File] prompts.py\n        -
+      README.md\n  - [Directory] aicodebot.egg-info\n    - [File] PKG-INFO\n    -
+      [File] SOURCES.txt\n    - [File] entry_points.txt\n    - [File] requires.txt\n    -
+      [File] top_level.txt\n    - [File] dependency_links.txt\n  - [File] setup.py\n  -
+      [File] .gitignore\n  - [File] CONTRIBUTING.md\n  - [Directory] .github\n    -
+      [Directory] workflows\n      - [File] linter.yml\n      - [File] aicodebot.yml\n      -
+      [File] pypi_release.yml\n      - [File] build.yml\n    - [File] dependabot.yml\n  -
+      [Directory] build\n    - [Directory] bdist.macosx-13-arm64\n    - [Directory]
+      lib\n      - [Directory] aicodebot\n        - [File] config.py\n        - [File]
+      __init__.py\n        - [File] coder.py\n        - [File] prompts.py\n        -
       [File] cli.py\n        - [File] learn.py\n        - [File] helpers.py\n  - [Directory]
-      assets\n    - [File] robot.png\n  - [Directory] aicodebot\n    - [File] config.py\n    -
-      [File] __init__.py\n    - [File] coder.py\n    - [File] prompts.py\n    - [File]
-      agents.py\n    - [File] cli.py\n    - [File] input.py\n    - [File] lm.py\n    -
-      [Directory] commands\n      - [File] configure.py\n      - [File] alignment.py\n      -
-      [File] commit.py\n      - [File] __init__.py\n      - [File] review.py\n      -
-      [File] sidekick.py\n      - [File] debug.py\n      - [File] learn.py\n    -
-      [File] helpers.py\n    - [File] output.py\nHere are the relevant files we are
-      working with in this session:\n--- START OF FILE: .gitignore unknown file, modified
-      3 weeks ago ---\n*.pyc\n*.swp\n.DS_Store\n.env\n.pytest_cache\n.vscode\n__pycache__\naicodebot.egg-info/\nbuild/\ndist/\n\n---
-      END OF FILE: .gitignore ---\n\n\n\nConversation with the human developer:\nHuman:
+      assets\n    - [File] robot.png\n  - [Directory] aicodebot\n    - [File] patch.py\n    -
+      [File] config.py\n    - [File] __init__.py\n    - [File] coder.py\n    - [File]
+      prompts.py\n    - [File] agents.py\n    - [File] cli.py\n    - [File] input.py\n    -
+      [File] lm.py\n    - [Directory] commands\n      - [File] configure.py\n      -
+      [File] alignment.py\n      - [File] commit.py\n      - [File] __init__.py\n      -
+      [File] review.py\n      - [File] sidekick.py\n      - [File] debug.py\n      -
+      [File] learn.py\n    - [File] helpers.py\n    - [File] output.py\nHere are the
+      relevant files we are working with in this session, with line numbers:\n---
+      START OF FILE: .gitignore unknown file, modified a month ago ---\n1: *.pyc\n2:
+      *.swp\n3: .DS_Store\n4: .env\n5: .pytest_cache\n6: .vscode\n7: __pycache__\n8:
+      aicodebot.egg-info/\n9: build/\n10: dist/\n11: \n--- END OF FILE: .gitignore
+      ---\n\n\n\nConversation with the human software engineer:\n\nSoftware Engineer:
       What is 3 + 2? Just give me the answer, nothing else. Use a number, not text\nAICodeBot:\n"}],
       "model": "gpt-4", "max_tokens": null, "stream": true, "n": 1, "temperature":
       0.05}'
@@ -49,7 +70,7 @@ interactions:
       Connection:
       - keep-alive
       Content-Length:
-      - '3370'
+      - '4973'
       Content-Type:
       - application/json
       User-Agent:
@@ -63,13 +84,13 @@ interactions:
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
-      string: 'data: {"id":"chatcmpl-7jelQJ9486eOrOX6JiPNsOD6Xv21b","object":"chat.completion.chunk","created":1691115812,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+      string: 'data: {"id":"chatcmpl-7n4ZZmrmhKWNMqBavXvVzqmTDpVvd","object":"chat.completion.chunk","created":1691930005,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-7jelQJ9486eOrOX6JiPNsOD6Xv21b","object":"chat.completion.chunk","created":1691115812,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"content":"5"},"finish_reason":null}]}
+        data: {"id":"chatcmpl-7n4ZZmrmhKWNMqBavXvVzqmTDpVvd","object":"chat.completion.chunk","created":1691930005,"model":"gpt-4-0613","choices":[{"index":0,"delta":{"content":"5"},"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-7jelQJ9486eOrOX6JiPNsOD6Xv21b","object":"chat.completion.chunk","created":1691115812,"model":"gpt-4-0613","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
+        data: {"id":"chatcmpl-7n4ZZmrmhKWNMqBavXvVzqmTDpVvd","object":"chat.completion.chunk","created":1691930005,"model":"gpt-4-0613","choices":[{"index":0,"delta":{},"finish_reason":"stop"}]}
 
 
         data: [DONE]
@@ -80,7 +101,7 @@ interactions:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 7f1356c1fd5d6666-MAD
+      - 7f60fc8448131bc5-MAD
       Cache-Control:
       - no-cache, must-revalidate
       Connection:
@@ -88,7 +109,7 @@ interactions:
       Content-Type:
       - text/event-stream
       Date:
-      - Fri, 04 Aug 2023 02:23:32 GMT
+      - Sun, 13 Aug 2023 12:33:26 GMT
       Server:
       - cloudflare
       Transfer-Encoding:
@@ -112,13 +133,13 @@ interactions:
       x-ratelimit-remaining-requests:
       - '199'
       x-ratelimit-remaining-tokens:
-      - '9200'
+      - '8810'
       x-ratelimit-reset-requests:
       - 300ms
       x-ratelimit-reset-tokens:
-      - 4.8s
+      - 7.14s
       x-request-id:
-      - 5bc656bab1d91ddf7f7848baf85f92b0
+      - 2a6f17fc8fbd13e867b9f3f8549d67cc
     status:
       code: 200
       message: OK
