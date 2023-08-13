@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import arrow, functools, os
 
 # ---------------------------------------------------------------------------- #
-#                              Personality helpers                             #
+#                              Personalities                                   #
 # ---------------------------------------------------------------------------- #
 
 NO_EMOJIS = "You don't use emojis."
@@ -174,7 +174,7 @@ def get_personality_prompt():
 DIFF_CONTEXT_EXPLANATION = """
 The diff context is the output of the `git diff` command. It shows the changes that have been made.
 Lines starting with "-" are being removed. Lines starting with "+" are being added.
-Lines starting with space are unchanged. The file names are shown for context.
+Lines starting with " " (space) are unchanged. The file names are shown for context.
 
 === Example diff ===
  A line of code that is unchanged, that is being passed for context
@@ -182,6 +182,9 @@ Lines starting with space are unchanged. The file names are shown for context.
 -A line of code that is being removed
 +A line of code that is being added
 === End Example diff ===
+
+Understand that when a line is replaced, it will show up as a line being removed and a line being added.
+Don't comment on lines that only removed, as they are no longer in the file.
 """
 
 EXPERT_SOFTWARE_ENGINEER = """
@@ -392,7 +395,8 @@ REVIEW_TEMPLATE = (
 
     In short, unless you find something notable, it's better to just say LGTM (looks good to me)!
 
-    IMPORTANT: The main focus is to tell the software engineer how to make the code better.
+    IMPORTANT: The main focus is to tell the software engineer how to make the code better, and
+    to catch issues that may be a problem as the code is used in production.
 
     In addition to review, also provide a review_status.
 
