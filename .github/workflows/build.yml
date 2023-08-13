@@ -19,7 +19,7 @@ jobs:
 
   pytest-in-venv:
     name: Python tests
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
