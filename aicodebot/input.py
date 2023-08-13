@@ -21,6 +21,7 @@ class Chat:
         self.files = set(files)
 
     def parse_human_input(self, human_input):  # noqa: PLR0911, PLR0915
+        """Parse the human input and handle any special commands."""
         human_input = human_input.strip()
 
         if not human_input:
@@ -172,6 +173,7 @@ class SidekickCompleter(Completer):
         return self._project_files
 
     def get_completions(self, document, complete_event):
+        """yield prompt_toolkit Completion objects for the current input"""
         # Get the text before the cursor
         text = document.text_before_cursor
 

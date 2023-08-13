@@ -257,6 +257,8 @@ def test_rebuild_patch(tmp_path):
                 from types import SimpleNamespace
                 import arrow, functools, os, platform
 
+
+                # Comment
                 """
             ),
         )
@@ -287,17 +289,17 @@ def test_rebuild_patch(tmp_path):
             """
         )
 
+        print("Bad patch:\n", bad_patch)
         rebuilt_patch = Coder.rebuild_patch(bad_patch)
+        print("Rebuilt patch:\n", rebuilt_patch)
 
         # Apply the rebuilt patch
-        assert Coder.apply_patch(rebuilt_patch)
+        assert Coder.apply_patch(rebuilt_patch) is True
 
         assert "platform" not in Path("aicodebot/prompts.py").read_text()
 
 
 def test_rebuild_patch_coder(tmp_path):
-    return  # This test fails, checking it in for future use case
-
     # Use in_temp_directory for the test
     with in_temp_directory(tmp_path):
         # Set up the original file
@@ -343,9 +345,11 @@ def test_rebuild_patch_coder(tmp_path):
             """
         ).lstrip()
 
+        print("Bad patch:\n", bad_patch)
         rebuilt_patch = Coder.rebuild_patch(bad_patch)
+        print("Rebuilt patch:\n", rebuilt_patch)
 
         # Apply the rebuilt patch
-        assert Coder.apply_patch(rebuilt_patch)
+        assert Coder.apply_patch(rebuilt_patch) is True
 
         assert "unidiff" not in Path(file).read_text()
