@@ -22,7 +22,7 @@ We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time
 | Explaining code | ✅ |
 | Writing tests | ✅ |
 | Integration with GitHub | ✅ |
-| Modifying local files | In Progress |
+| Modifying local files | Limited support |
 | Searching the internet for answers | In Progress |
 | Reading library documentation | In Progress |
 | Coding with a large number of files |  As LLMs improve |
