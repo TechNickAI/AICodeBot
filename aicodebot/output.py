@@ -36,6 +36,10 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
         self.buffer = []
         self.live.stop()
 
+    def on_retry(self, error, **kwargs):
+        console = get_console()
+        console.print(f"Error communicating with the Language Model API: {error}", style=console.error_style)
+
 
 class OurCodeBlock(CodeBlock):
     """Ovewrite the default CodeBlock, which puts a leading space in front of the code,
