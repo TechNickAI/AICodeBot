@@ -28,12 +28,12 @@ def test_chain_factory(provider, model_name, monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "dummy")
     monkeypatch.setenv("OPENAI_API_KEY", "dummy")
 
-    llm = LanguageModelManager()
+    lmm = LanguageModelManager()
     assert os.getenv("OPENROUTER_API_KEY") == "dummy"
-    assert llm.get_api_key("OPENROUTER_API_KEY") == "dummy"
+    assert lmm.get_api_key("OPENROUTER_API_KEY") == "dummy"
 
     prompt = get_prompt("alignment")
-    chain = llm.chain_factory(prompt)
+    chain = lmm.chain_factory(prompt)
     if hasattr(chain.llm, "model_name"):
         # OpenAI compatible
         assert chain.llm.model_name == model_name

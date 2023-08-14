@@ -32,13 +32,13 @@ class SidekickAgent(StructuredChatAgent):
         * Vector store retrieval
         [x] Read local files
         [ ] Git interaction
-        [ ] Execute shell commands
+        [] Execute shell commands
         [ ] Browse the web
         * Interact with apis
             [ ] Github
             [ ] Sentry/Honeybadger
     * Tools to make changes
-        [ ] Patch local files
+        [] Patch local files
         [ ] Shell commands
         [ ] Interact with the github api
     [ ] Displaying intermediate steps

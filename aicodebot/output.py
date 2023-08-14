@@ -31,7 +31,7 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
         self.live.stop()
 
     def on_llm_error(self, error, **kwargs):
-        """Run when LLM errors."""
+        """Run when LM errors."""
         logger.exception(error)
         self.buffer = []
         self.live.stop()
