@@ -1,3 +1,4 @@
+from aicodebot import AICODEBOT
 from aicodebot.config import get_config_file, read_config
 from aicodebot.helpers import create_and_write_file
 from aicodebot.output import get_console
@@ -58,7 +59,7 @@ def configure(verbose, openai_api_key):
 
     if config_data["openai_api_key"] is None:
         console.print(
-            "You need an OpenAI API Key for AICodeBot. You can get one on the OpenAI website.",
+            f"You need an OpenAI API Key for {AICODEBOT}. You can get one on the OpenAI website.",
             style=console.bot_style,
         )
         openai_api_key_url = "https://platform.openai.com/account/api-keys"
@@ -95,4 +96,4 @@ def configure(verbose, openai_api_key):
     )
 
     write_config_file(config_data)
-    console.print("✅ Configuration complete, you're ready to run 🤖 AICoedBot!\n")
+    console.print(f"✅ Configuration complete, you're ready to run {AICODEBOT}!\n")

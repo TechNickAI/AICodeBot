@@ -1,3 +1,4 @@
+from aicodebot import AICODEBOT_NO_EMOJI
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
 from langchain import HuggingFaceHub
@@ -132,7 +133,7 @@ class LanguageModelManager:
                 llm=llm,
                 max_token_limit=token_limit,
                 human_prefix="Software Engineer",
-                ai_prefix="AICodeBot",
+                ai_prefix=AICODEBOT_NO_EMOJI,
             )
         return self._memory
 
@@ -185,7 +186,7 @@ class LanguageModelManager:
 
         # Set the API base to the Open Router API, and set special headers that are required
         api_base = "https://openrouter.ai/api/v1"
-        headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": "AICodeBot"}
+        headers = {"HTTP-Referer": "https://aicodebot.dev", "X-Title": AICODEBOT_NO_EMOJI}
 
         return ChatOpenAI(
             openai_api_key=api_key,

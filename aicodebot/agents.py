@@ -1,3 +1,4 @@
+from aicodebot import AICODEBOT_NO_EMOJI
 from aicodebot.commands.learn import load_learned_repo
 from aicodebot.lm import LanguageModelManager
 from aicodebot.prompts import get_personality_prompt
@@ -6,8 +7,9 @@ from langchain.agents.agent_toolkits import FileManagementToolkit
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.chains import RetrievalQA
 
-SIDEKICK_AGENT_PREFIX = """
-You are an AI coding assistant that helps developers write code. You are working in a local repo.
+SIDEKICK_AGENT_PREFIX = f"""
+You are an AI coding assistant named {AICODEBOT_NO_EMOJI} that helps developers write code.
+You are working in a local github repository with access to local files.
 Respond to the human as helpfully and accurately as possible.
 For the Final Answer, respond in markdown format.
 You have access to the following tools:

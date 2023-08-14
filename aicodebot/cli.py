@@ -1,4 +1,4 @@
-from aicodebot import version as aicodebot_version
+from aicodebot import AICODEBOT, version as aicodebot_version
 from aicodebot.commands import alignment, commit, configure, debug, learn, review, sidekick, sidekick_agent
 from aicodebot.config import read_config
 from aicodebot.output import get_console
@@ -19,7 +19,7 @@ def cli(ctx, debug_output):
     ctx.obj["config"] = existing_config = read_config()
     if not existing_config:
         if ctx.invoked_subcommand != "configure":
-            console.print("Welcome to AICodeBot 🤖. Let's set up your config file.\n", style=console.bot_style)
+            console.print(f"Welcome to {AICODEBOT}. Let's set up your config file.\n", style=console.bot_style)
             configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
             sys.exit(0)
     else:

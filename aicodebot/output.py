@@ -9,16 +9,20 @@ from rich.syntax import Syntax
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):
+    """Our specialized output handler that does streaming, and prints out rich.Markdown, with a few other goodies"""
+
     def __init__(self, live, style):
         self.buffer = []
         self.live = live
         self.style = style
 
     def on_llm_start(self, serialized, *args, **kwargs):
+        """Initially print a message that we are sending to the LM"""
         message = f'Sending request to *{serialized["kwargs"]["model"]}*...'
         self.live.update(Panel(OurMarkdown(message)), refresh=True)
 
     def on_llm_new_token(self, token, **kwargs):
+        """Print out Markdown when we get a new token, using rich.live so it updates the whole terminal"""
         self.buffer.append(token)
         self.live.update(OurMarkdown("".join(self.buffer), style=self.style), refresh=True)
 
@@ -34,21 +38,25 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
 
 
 class OurCodeBlock(CodeBlock):
-    # The default Code block puts a leading space in front of the code, which is annoying for copying/pasting code
+    """Ovewrite the default CodeBlock, which puts a leading space in front of the code,
+    which is annoying for copying/pasting code"""
 
     def __rich_console__(self, console, options):
         code = str(self.text)
-        # Set the padding to 0
+        # Set the padding to 0 (default is 1)
         syntax = Syntax(code, self.lexer_name, theme=self.theme, word_wrap=True, padding=0)
         yield syntax
 
 
 class OurMarkdown(Markdown):
+    """Extend the default elements to include OurCodeBlock for processing code blocks in markdown"""
+
     elements = {**Markdown.elements, "fence": OurCodeBlock, "code_block": OurCodeBlock}
 
     def pull_code_blocks(self):
         # Look at the parsed markdown for code blocks, ie:
         # ```python
+        # Used for /copy in sidekick (copy to clipboard)
         out = []
         for token in self.parsed:
             if token.tag == "code" and token.info != "diff":
@@ -58,6 +66,7 @@ class OurMarkdown(Markdown):
     def pull_diff_blocks(self):
         # Look at the parsed markdown for code blocks, ie:
         # ```diff
+        # Used for /apply in sidekick (apply the patch with Patch.apply)
         out = []
         for token in self.parsed:
             if token.tag == "code" and token.info == "diff":

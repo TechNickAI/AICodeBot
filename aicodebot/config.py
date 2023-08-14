@@ -38,6 +38,8 @@ def read_config():
 
 
 class Session:
+    """Read and write local session data"""
+
     @classmethod
     def get_config_file(cls):
         return Path(os.getenv("AICODEBOT_SESSION_FILE", str(get_local_data_dir() / "session.yaml")))

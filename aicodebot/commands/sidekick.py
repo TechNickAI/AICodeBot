@@ -1,3 +1,4 @@
+from aicodebot import AICODEBOT
 from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
@@ -19,7 +20,7 @@ import click, sys
 @click.argument("files", nargs=-1, type=click.Path(exists=True, readable=True))
 def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
     """
-    Coding help from your AI sidekick
+    Coding help from your AI sidekick coding assistant
     FILES: List of files to be used as context for the session
     """
     console = get_console()
@@ -58,7 +59,7 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
     languages = ",".join(Coder.identify_languages(files))
 
     console.print(
-        "Enter a request for your AICodeBot sidekick. Type /help to see available commands.\n",
+        f"Enter a request for your {AICODEBOT} sidekick. Type /help to see available commands.\n",
         style=console.bot_style,
     )
     our_input_session = generate_prompt_session()
@@ -170,7 +171,7 @@ def sidekick_agent(learned_repos):
     our_input_session = generate_prompt_session()
     our_input_session.completer = None
 
-    console.print("Enter a request for your AICodeBot sidekick", style=console.bot_style)
+    console.print(f"Enter a request for your {AICODEBOT} sidekick", style=console.bot_style)
 
     edited_input = None
     while True:  # continuous loop for multiple questions

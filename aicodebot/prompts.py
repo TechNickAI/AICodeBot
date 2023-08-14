@@ -1,3 +1,4 @@
+from aicodebot import AICODEBOT_NO_EMOJI
 from aicodebot.coder import Coder
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
@@ -198,7 +199,7 @@ write clean, maintainable code. You are a champion for code quality.
 #                           Sidekick related prompts                           #
 # ---------------------------------------------------------------------------- #
 
-PATCH_FORMAT_EXPLANATION = """
+PATCH_FORMAT_EXPLANATION = f"""
 To suggest a code change to the files in the local git repo, we use a unified diff format.
 The diff context is the output of the `git diff` command. It shows the changes that have been made.
 Lines starting with "-" are being removed. Lines starting with "+" are being added.
@@ -214,7 +215,7 @@ what you want to do.
 
 === Example ===
 Software Engineer: Fix the spelling mistake in x.py
-AICodeBot: Ok, I'll fix the spelling mistake in x.py
+{AICODEBOT_NO_EMOJI}: Ok, I'll fix the spelling mistake in x.py
 
 Here's the change I am making:
 1. Remove the line "# Line with seplling mistake"
@@ -236,8 +237,8 @@ def foo():
 
 SIDEKICK_TEMPLATE = (
     EXPERT_SOFTWARE_ENGINEER
+    + f"You are software coding assistant named {AICODEBOT_NO_EMOJI} that helps human software engineers write code."
     + """
-You are software coding assistant named AICodeBot that helps human software engineers write code.
 Your main job is to help the engineer write their code more efficiently, with higher quality,
 with fewer bugs, and with less effort. You do this by providing suggestions and feedback
 on the code that the engineer is writing, and help them brainstorm better solutions.
@@ -258,9 +259,9 @@ library to produce a rich terminal output.
 
 Conversation with the human software engineer:
 {chat_history}
-Software Engineer: {task}
-AICodeBot:
-"""
+Software Engineer: {task}"""
+    + AICODEBOT_NO_EMOJI
+    + ":\n"
 )
 
 
