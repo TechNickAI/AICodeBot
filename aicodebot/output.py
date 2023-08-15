@@ -53,8 +53,9 @@ class OurCodeBlock(CodeBlock):
 
 
 class OurMarkdown(Markdown):
-    """Extend the default elements to include OurCodeBlock for processing code blocks in markdown"""
+    """Extended Markdown class that implements OurCodeBlock and adds functionality for parsing output"""
 
+    # Extend the default elements to include OurCodeBlock for processing code blocks in markdown
     elements = {**Markdown.elements, "fence": OurCodeBlock, "code_block": OurCodeBlock}
 
     def pull_code_blocks(self):
