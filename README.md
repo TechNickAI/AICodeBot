@@ -22,10 +22,10 @@ We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time
 | Explaining code | ✅ |
 | Writing tests | ✅ |
 | Integration with GitHub | ✅ |
-| Modifying local files | Limited support |
+| Modifying local files | Early stages |
 | Searching the internet for answers | In Progress |
-| Reading library documentation | In Progress |
-| Coding with a large number of files |  As LLMs improve |
+| Reading library documentation | Early stages |
+| Coding with a large number of files |  As LMs get larger token limits |
 | Writing senior developer level code | Eventually |
 | Major refactors | Eventually |
 | Build entire apps | Eventually |
@@ -141,7 +141,7 @@ How about automated code reviews on every commit? You can have AICodeBot run as 
 ### Fun
 
 * [X] **Alignment**: Gives a heart-centered inspirational message about how we can build AI in a way that aligns with humanity. Try it out with `aicodebot alignment`.
-* [ ] **Telling Jokes**: We've gotta figure out how to teach LLMs about humor. :)
+* [ ] **Telling Jokes**: We've gotta figure out how to teach language models about humor. :)
 * [ ] **Supportive Encouragement**: High fives and kudos for a job well done
 * [ ] **GIF Reactions**: Reacts to messages with relevant and fun gifs.
 
