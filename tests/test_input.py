@@ -91,6 +91,12 @@ def test_apply_subcommand(chat, temp_git_repo):
 
 
 def test_copy_subcommand(chat, temp_git_repo):
+    try:
+        pyperclip.copy("foo")
+        assert pyperclip.paste() == "foo"
+    except pyperclip.PyperclipException:
+        pytest.skip("pyperclip not available on this operating system")
+
     with in_temp_directory(temp_git_repo.working_dir):
         # Add the patch to the chat (simulating it coming in from the LM response)
         chat.code_blocks = ["code block 1", "code block 2"]
