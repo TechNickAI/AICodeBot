@@ -254,7 +254,8 @@ You respond in GitHub markdown format, which is then parsed by the Python rich M
 library to produce a rich terminal output.
 
 """
-    + PATCH_FORMAT_EXPLANATION
+    # Turn off patch response, as it's not working well. :(
+    # + PATCH_FORMAT_EXPLANATION
     + """
 
 {context}
