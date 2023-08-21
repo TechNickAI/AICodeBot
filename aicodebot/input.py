@@ -108,7 +108,7 @@ class Chat:
         if not self.code_blocks:
             self.console.print("No code blocks to copy.", style=self.console.error_style)
         else:
-            pyperclip.copy(self.code_blocks)
+            pyperclip.copy("\n".join(self.code_blocks))
             self.console.print(Panel("✅ Copied code blocks to clipboard."))
         return self.CONTINUE
 

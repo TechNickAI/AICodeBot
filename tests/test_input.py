@@ -4,7 +4,7 @@ from aicodebot.output import get_console
 from io import StringIO
 from pathlib import Path
 from tests.conftest import in_temp_directory
-import pytest, textwrap
+import pyperclip, pytest, textwrap
 
 
 class MockConsole:
@@ -88,3 +88,14 @@ def test_apply_subcommand(chat, temp_git_repo):
 
         # Check if the file was properly modified
         assert "It is now even better!" in mod_file.read_text()
+
+
+def test_copy_subcommand(chat, temp_git_repo):
+    with in_temp_directory(temp_git_repo.working_dir):
+        # Add the patch to the chat (simulating it coming in from the LM response)
+        chat.code_blocks = ["code block 1", "code block 2"]
+
+        # Apply the patch using the /apply command
+        assert chat.parse_human_input("/copy") == chat.CONTINUE
+
+        assert pyperclip.paste() is "\n".join(chat.code_blocks)
