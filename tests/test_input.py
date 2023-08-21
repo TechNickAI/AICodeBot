@@ -98,4 +98,4 @@ def test_copy_subcommand(chat, temp_git_repo):
         # Apply the patch using the /apply command
         assert chat.parse_human_input("/copy") == chat.CONTINUE
 
-        assert pyperclip.paste() is "\n".join(chat.code_blocks)
+        assert pyperclip.paste() == "\n".join(chat.code_blocks)  # lint-ignore
