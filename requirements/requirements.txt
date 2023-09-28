@@ -10,6 +10,8 @@ aiohttp==3.8.5
     #   openai
 aiosignal==1.3.1
     # via aiohttp
+anyio==3.7.1
+    # via langchain
 arrow==1.2.3
     # via -r requirements/requirements.in
 async-timeout==4.0.3
@@ -44,11 +46,16 @@ humanize==4.7.0
     # via -r requirements/requirements.in
 idna==3.4
     # via
+    #   anyio
     #   requests
     #   yarl
-langchain==0.0.287
+jsonpatch==1.33
+    # via langchain
+jsonpointer==2.4
+    # via jsonpatch
+langchain==0.0.302
     # via -r requirements/requirements.in
-langsmith==0.0.22
+langsmith==0.0.41
     # via langchain
 loguru==0.7.0
     # via -r requirements/requirements.in
@@ -104,6 +111,8 @@ six==1.16.0
     # via python-dateutil
 smmap==5.0.0
     # via gitdb
+sniffio==1.3.0
+    # via anyio
 soupsieve==2.4.1
     # via beautifulsoup4
 sqlalchemy==2.0.19
