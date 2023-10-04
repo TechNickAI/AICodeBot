@@ -4,6 +4,7 @@ from aicodebot.helpers import logger
 from langchain import HuggingFaceHub
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.chat_models import ChatLiteLLM
 from langchain.memory import ConversationTokenBufferMemory
 from openai.api_resources import engine
 import functools, openai, os, tiktoken
@@ -23,7 +24,18 @@ class LanguageModelManager:
     OPENAI = "OpenAI"
     OPENROUTER = "OpenRouter"
     HUGGINGFACE_HUB = "HuggingFace Hub"
-    PROVIDERS = [OPENAI, OPENROUTER, HUGGINGFACE_HUB]
+    AZURE = "Azure"
+    PALM = "Palm"
+    BEDROCK = "Bedrock"
+    ANTHROPIC = "Anthropic"
+    AI21 = "A21"
+    NLP_CLOUD = "NLP Cloud"
+    REPLICATE = "Replicate"
+    COHERE = "Cohere"
+    TOGETHER_AI = "Together AI"
+    ALEPH_ALPHA = "Aleph Alpha"
+    
+    PROVIDERS = [OPENAI, OPENROUTER, HUGGINGFACE_HUB, AZURE, PALM, BEDROCK, ANTHROPIC, AI21, NLP_CLOUD, REPLICATE, COHERE, TOGETHER_AI, ALEPH_ALPHA]
     DEFAULT_MODEL = "gpt-4"
     DEFAULT_PROVIDER = OPENAI
 
@@ -68,24 +80,8 @@ class LanguageModelManager:
 
         provider, model_name = self.read_model_config()
 
-        if provider == self.OPENAI:
-            return self.get_openai_model(
-                model_name,
-                response_token_size=response_token_size,
-                temperature=temperature,
-                streaming=streaming,
-                callbacks=callbacks,
-            )
-        elif provider == self.OPENROUTER:
-            return self.get_openrouter_model(
-                model_name,
-                response_token_size=response_token_size,
-                temperature=temperature,
-                streaming=streaming,
-                callbacks=callbacks,
-            )
-        elif provider == self.HUGGINGFACE_HUB:
-            return self.get_huggingface_hub_model(
+        try: 
+            return get_litellm_model(
                 model_name,
                 response_token_size=response_token_size,
                 temperature=temperature,
@@ -136,6 +132,23 @@ class LanguageModelManager:
                 ai_prefix=AICODEBOT_NO_EMOJI,
             )
         return self._memory
+    
+    def get_litellm_model(
+        self,
+        model_name,
+        response_token_size=None,
+        temperature=PRECISE_TEMPERATURE,
+        streaming=False,
+        callbacks=None,
+    ):
+        """Get a LiteLLM model object for the specified model name."""
+        return ChatLiteLLM(
+            model=model_name,
+            max_tokens=response_token_size,
+            temperature=temperature,
+            streaming=streaming,
+            callbacks=callbacks,
+        )
 
     def get_openai_model(
         self,
