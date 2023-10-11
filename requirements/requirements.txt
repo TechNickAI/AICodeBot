@@ -42,7 +42,7 @@ gitpython==3.1.32
     # via -r requirements/requirements.in
 greenlet==2.0.2
     # via sqlalchemy
-humanize==4.7.0
+humanize==4.8.0
     # via -r requirements/requirements.in
 idna==3.4
     # via
