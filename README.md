@@ -8,7 +8,7 @@ We've planned to build out multiple different interfaces for interacting with AI
 
 Status: This project is in its early stages, but it already improves the software development workflow, and has a healthy roadmap of features (below).
 
-We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more.
+We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/TechNickAI/AICodeBot/blob/main/CONTRIBUTING.md) for more.
 
 ## Current features - how you can use it today
 
@@ -209,7 +209,7 @@ There are a couple of things you can do:
 
 ## Development / Contributing
 
-We'd love your help! If you're interested in contributing, here's how to get started. See [CONTRIBUTING](https://github.com/gorillamania/AICodeBot/blob/main/CONTRIBUTING.md) for more details.
+We'd love your help! If you're interested in contributing, here's how to get started. See [CONTRIBUTING](https://github.com/TechNickAI/AICodeBot/blob/main/CONTRIBUTING.md) for more details.
 
 ## Docker
 
