@@ -53,9 +53,9 @@ jsonpatch==1.33
     # via langchain
 jsonpointer==2.4
     # via jsonpatch
-langchain==0.0.302
+langchain==0.0.316
     # via -r requirements/requirements.in
-langsmith==0.0.41
+langsmith==0.0.44
     # via langchain
 loguru==0.7.0
     # via -r requirements/requirements.in
@@ -71,12 +71,8 @@ multidict==6.0.4
     #   yarl
 mypy-extensions==1.0.0
     # via typing-inspect
-numexpr==2.8.5
-    # via langchain
 numpy==1.25.2
-    # via
-    #   langchain
-    #   numexpr
+    # via langchain
 openai==0.28.0
     # via -r requirements/requirements.in
 packaging==23.1
