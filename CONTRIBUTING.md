@@ -4,8 +4,8 @@
 
 ### Test and Build
 
-[![GitHub Build](https://github.com/gorillamania/AICodeBot/actions/workflows/build.yml/badge.svg)](https://github.com/gorillamania/AICodeBot/actions?query=build)
-[![CodeCov](https://codecov.io/gh/gorillamania/AICodeBot/branch/main/graph/badge.svg)](https://codecov.io/gh/gorillamania/AICodeBot)
+[![GitHub Build](https://github.com/TechNickAI/AICodeBot/actions/workflows/build.yml/badge.svg)](https://github.com/TechNickAI/AICodeBot/actions?query=build)
+[![CodeCov](https://codecov.io/gh/TechNickAI/AICodeBot/branch/main/graph/badge.svg)](https://codecov.io/gh/TechNickAI/AICodeBot)
 [![Pytest](https://img.shields.io/badge/%F0%9F%A7%AA-Pytest-blue)](https://docs.pytest.org/en/stable/contents.html)
 
 ### Code Quality
@@ -14,7 +14,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
-[![Super Linter](https://github.com/gorillamania/AIcodeBot/actions/workflows/linter.yml/badge.svg)](https://github.com/gorillamania/AIcodeBot/actions/workflows/linter.yml)
+[![Super Linter](https://github.com/TechNickAI/AIcodeBot/actions/workflows/linter.yml/badge.svg)](https://github.com/TechNickAI/AIcodeBot/actions/workflows/linter.yml)
 
 ### Infrastructure
 
@@ -25,7 +25,7 @@
 
 We need your help to make AICodeBot better.
 
-We welcome contributions of all kinds, including code, documentation, bug reports, feature requests, and more. We use [GitHub issues](https://github.com/gorillamania/AICodeBot/issues) to track all of these.
+We welcome contributions of all kinds, including code, documentation, bug reports, feature requests, and more. We use [GitHub issues](https://github.com/TechNickAI/AICodeBot/issues) to track all of these.
 
 In particular, we need help with:
 
@@ -42,7 +42,7 @@ In particular, we need help with:
 * Documentation. Setting up an automated process for this would be great
 * YouTube walk-throughs of using AICodeBot
 
-See the [issues](https://github.com/gorillamania/AICodeBot/issues) for an up-to-date list of tasks that need help.
+See the [issues](https://github.com/TechNickAI/AICodeBot/issues) for an up-to-date list of tasks that need help.
 
 ## Code Contributions
 
@@ -98,7 +98,7 @@ Highly recommend you set up your editor to run all of these on each file save, i
 ### Testing
 
 Install the test dependencies with
-`pip install -r requirements/requirements-test.txt` - this is what is used in the [GitHub Actions workflow](https://github.com/gorillamania/AICodeBot/actions), you can look at the [build workflow](.github/workflows/build.yml) to see how to run the tests.
+`pip install -r requirements/requirements-test.txt` - this is what is used in the [GitHub Actions workflow](https://github.com/TechNickAI/AICodeBot/actions), you can look at the [build workflow](.github/workflows/build.yml) to see how to run the tests.
 
 We use `pytest` for testing. It will skip some tests if OPENAI_API_KEY is not set, so to test everything, run pytest with your OPENAI_API_KEY set.
 
