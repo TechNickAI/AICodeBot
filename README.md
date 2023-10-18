@@ -191,7 +191,8 @@ In AI models like OpenAI's GPT-4, a "token" is a piece of text, as short as a ch
 
 Each model has a maximum token limit. For example, GPT-3.5 has a limit of 4096 tokens, and GPT-4 has a token limit of 8192 tokens. If a conversation exceeds this limit, you must reduce your text until it fits.
 
-When using commands like the Sidekick command in AICodeBot, which allows you to pass in files for context, it's important to manage your tokens effectively. Due to token limits, it's not feasible to load your entire codebase. Instead, you should only load the specific files that are relevant to the task you're working on. This ensures that the AI model can process your request efficiently and provide the most relevant suggestions for your current task.
+When using commands like the Sidekick command in AICodeBot, which allows you to pass in files for context, it's important to manage your tokens effectively. Due to token limits, it's not feasible to load your entire codebase. Instead, you should only load the specific files that are relevant to the task you're working on.
+This ensures that the AI model can process your request efficiently and provide the most relevant suggestions for your current task.
 
 ### How can I get a larger token limit?
 
@@ -215,7 +216,7 @@ We'd love your help! If you're interested in contributing, here's how to get sta
 
 Assumes you have changes in current working dir that are already added.
 
-```
+```shell
 docker build -t aicodebot .
 docker run -v ~/.aicodebot.yaml:/home/user/.aicodebot.yaml -v .:/app aicodebot commit -y
 ```
