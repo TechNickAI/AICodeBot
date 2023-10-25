@@ -23,8 +23,9 @@ def cli(ctx, debug_output):
             configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
             sys.exit(0)
     else:
-        os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
-
+        # TODO: fetch what model is currently in use in lm.py
+        os.environ["OLLAMA_LOCAL"] = existing_config["ollama_local"]
+        # os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
     # Turn on langchain debug output if requested
     langchain.debug = debug_output
 
