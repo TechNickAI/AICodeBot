@@ -77,7 +77,7 @@ numpy==1.25.2
     # via
     #   langchain
     #   numexpr
-openai==0.28.0
+openai==0.28.1
     # via -r requirements/requirements.in
 packaging==23.1
     # via marshmallow
