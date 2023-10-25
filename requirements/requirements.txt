@@ -57,7 +57,7 @@ langchain==0.0.302
     # via -r requirements/requirements.in
 langsmith==0.0.41
     # via langchain
-loguru==0.7.0
+loguru==0.7.2
     # via -r requirements/requirements.in
 markdown-it-py==3.0.0
     # via rich
