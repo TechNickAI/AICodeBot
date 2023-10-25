@@ -119,7 +119,7 @@ sqlalchemy==2.0.19
     # via langchain
 tenacity==8.2.2
     # via langchain
-tiktoken==0.4.0
+tiktoken==0.5.1
     # via -r requirements/requirements.in
 tqdm==4.66.1
     # via openai
