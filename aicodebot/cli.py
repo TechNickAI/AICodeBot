@@ -1,6 +1,7 @@
 from aicodebot import AICODEBOT, version as aicodebot_version
 from aicodebot.commands import alignment, commit, configure, debug, learn, review, sidekick, sidekick_agent
 from aicodebot.config import read_config
+from aicodebot.lm import LanguageModelManager
 from aicodebot.output import get_console
 import click, langchain, os, sys
 
@@ -23,9 +24,15 @@ def cli(ctx, debug_output):
             configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
             sys.exit(0)
     else:
-        # TODO: fetch what model is currently in use in lm.py
-        os.environ["OLLAMA_LOCAL"] = existing_config["ollama_local"]
-        # os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
+        match LanguageModelManager.DEFAULT_PROVIDER:  # Change this to current provider when implemented
+            case LanguageModelManager.OPENAI:
+                os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
+            case LanguageModelManager.OLLAMA:
+                os.environ["OLLAMA_LOCAL"] = existing_config["ollama_local"]
+            case LanguageModelManager.OPENROUTER:
+                os.environ["OPENROUTER_API_KEY"] = existing_config["openrouter_api_key"]
+            case _:
+                raise ValueError(f"Model {LanguageModelManager.DEFAULT_PROVIDER} not found. Exiting.")
     # Turn on langchain debug output if requested
     langchain.debug = debug_output
 

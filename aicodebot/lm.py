@@ -25,7 +25,7 @@ class LanguageModelManager:
     OLLAMA = "Ollama"
     PROVIDERS = [OPENAI, OPENROUTER, OLLAMA]
     DEFAULT_MODEL = "gpt-4"
-    DEFAULT_PROVIDER = OLLAMA  # TODO: make OLLAMA work here (edit cli.py)
+    DEFAULT_PROVIDER = OLLAMA
 
     def __init__(self, model_name=None, provider=None):
         self.model_name = model_name
@@ -301,7 +301,7 @@ class LanguageModelManager:
 
 def token_size(text):
     # Shortcut
-    # temporary for getting llama2 to work. returns default token size
+    # temporary for getting Ollama to work. returns default token size for Ollama
     if LanguageModelManager.DEFAULT_PROVIDER == LanguageModelManager.OLLAMA:
         return 2048
     return LanguageModelManager().get_token_size(text)
