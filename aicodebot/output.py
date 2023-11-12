@@ -18,7 +18,11 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, *args, **kwargs):
         """Initially print a message that we are sending to the LM"""
-        message = f'Sending request to *{serialized["kwargs"]["model"]}*...'
+        if "kwargs" in serialized and "model" in serialized["kwargs"]:
+            model = serialized["kwargs"]["model"]
+        else:
+            model = "local model"
+        message = f"Sending request to *{model}*..."
         self.live.update(Panel(OurMarkdown(message)), refresh=True)
 
     def on_llm_new_token(self, token, **kwargs):

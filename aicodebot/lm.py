@@ -25,7 +25,10 @@ class LanguageModelManager:
     OLLAMA = "Ollama"
     PROVIDERS = [OPENAI, OPENROUTER, OLLAMA]
     DEFAULT_MODEL = "gpt-4"
-    DEFAULT_PROVIDER = OLLAMA
+    DEFAULT_PROVIDER = OPENAI
+    CURRENT_PROVIDER = OLLAMA
+    # NOTE: CURRENT_PROVIDER needs to be manually set.
+    #       This will change when the configure command is implemented and CURRENT_PROVIDER can be changed at will.
 
     def __init__(self, model_name=None, provider=None):
         self.model_name = model_name
@@ -83,12 +86,14 @@ class LanguageModelManager:
                 streaming=streaming,
                 callbacks=callbacks,
             )
+        # NOTE: Ollama does not have a streaming parameter, this is handled by callbacks instead.
+        #       This may result in slight changes elsewhere in the codebase when Ollama is used.
+        # TODO: Create a wrapper for Ollama models, enabling them to use the streaming parameter.
         elif provider == self.OLLAMA:
             return self.get_ollama_model(
                 model_name,
                 response_token_size=response_token_size,
                 temperature=temperature,
-                # streaming=streaming,
                 callbacks=callbacks,
             )
         else:  # pragma: no cover
@@ -112,18 +117,14 @@ class LanguageModelManager:
         model_name,
         response_token_size=None,
         temperature=PRECISE_TEMPERATURE,
-        # streaming=False,
         callbacks=None,
     ):
         return Ollama(
             model=model_name,
             num_ctx=response_token_size,
             temperature=temperature,
-            # streaming=streaming,
             callbacks=callbacks,
         )
-        # get github copilot in vscode
-        # remove huggingface support [done]
 
     def get_openai_model(
         self,
@@ -134,7 +135,7 @@ class LanguageModelManager:
         callbacks=None,
     ):
         """Get an OpenAI model object for the specified model name."""
-        api_key = self.get_api_key("OPENAI_API_KEY")
+        api_key = self.get_key("OPENAI_API_KEY")
 
         return ChatOpenAI(
             openai_api_key=api_key,
@@ -145,12 +146,12 @@ class LanguageModelManager:
             callbacks=callbacks,
         )
 
-    def get_api_key(self, key_name):
+    def get_key(self, key_name):
         # Read the api key from either the environment or the config file
         key_name_upper = key_name.upper()
-        api_key = os.getenv(key_name_upper)
-        if api_key:
-            return api_key
+        key = os.getenv(key_name_upper)
+        if key:
+            return key
         else:
             config = read_config() or {}
             key_name_lower = key_name.lower()
@@ -170,7 +171,7 @@ class LanguageModelManager:
         streaming=False,
         callbacks=None,
     ):
-        api_key = self.get_api_key("OPENROUTER_API_KEY")
+        api_key = self.get_key("OPENROUTER_API_KEY")
 
         # Set the API base to the Open Router API, and set special headers that are required
         api_base = "https://openrouter.ai/api/v1"
@@ -214,7 +215,7 @@ class LanguageModelManager:
         # Figure out which model to use, based on the config file or environment variables
         config = read_config() or {}
         self.provider = os.getenv(
-            "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER)
+            "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.CURRENT_PROVIDER)
         )
         self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
@@ -227,16 +228,20 @@ class LanguageModelManager:
             key_name = "OLLAMA_LOCAL"
         else:
             raise ValueError(f"Unrecognized provider: {self.provider}")
-
-        # this function will return either an api key or local model type. suggest renaming
-        if not self.get_api_key(key_name):
+        model = self.get_key(key_name)
+        if not model:
             raise ValueError(
                 f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
             )
-        # temporary code to get ollama working.
-        if key_name == "OLLAMA_LOCAL":
-            self.model_name = self.get_api_key(key_name)
-        # TODO: Verify the model
+        # NOTE: This code doesnt do anything except set the name Ollama.
+        #       When configure is implemented this will dynamically organize which model is being used.
+        match self.provider:
+            case self.OLLAMA:
+                self.model_name = model
+            case self.OPENAI:
+                self.model_name = "gpt-4"
+            case self.OPENROUTER:
+                self.model_name = "openrouter"
 
         return self.provider, self.model_name
 
@@ -301,8 +306,11 @@ class LanguageModelManager:
 
 def token_size(text):
     # Shortcut
-    # temporary for getting Ollama to work. returns default token size for Ollama
-    if LanguageModelManager.DEFAULT_PROVIDER == LanguageModelManager.OLLAMA:
+    # NOTE: This sets the token size to default value for Ollama.
+    #       TikToken doesn't seem to support Ollama-based models.
+    #       Local models will not work as intended without dynamically setting the token size.
+    # TODO: Dynamically set token size for Ollama-based models.
+    if LanguageModelManager.CURRENT_PROVIDER == LanguageModelManager.OLLAMA:
         return 2048
     return LanguageModelManager().get_token_size(text)
 

@@ -24,7 +24,7 @@ def cli(ctx, debug_output):
             configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
             sys.exit(0)
     else:
-        match LanguageModelManager.DEFAULT_PROVIDER:  # Change this to current provider when implemented
+        match LanguageModelManager.CURRENT_PROVIDER:
             case LanguageModelManager.OPENAI:
                 os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
             case LanguageModelManager.OLLAMA:
@@ -32,7 +32,7 @@ def cli(ctx, debug_output):
             case LanguageModelManager.OPENROUTER:
                 os.environ["OPENROUTER_API_KEY"] = existing_config["openrouter_api_key"]
             case _:
-                raise ValueError(f"Model {LanguageModelManager.DEFAULT_PROVIDER} not found. Exiting.")
+                raise ValueError(f"Model {LanguageModelManager.CURRENT_PROVIDER} not found. Exiting.")
     # Turn on langchain debug output if requested
     langchain.debug = debug_output
 
