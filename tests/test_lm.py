@@ -30,7 +30,7 @@ def test_chain_factory(provider, model_name, monkeypatch):
 
     lmm = LanguageModelManager()
     assert os.getenv("OPENROUTER_API_KEY") == "dummy"
-    assert lmm.get_api_key("OPENROUTER_API_KEY") == "dummy"
+    assert lmm.get_key("OPENROUTER_API_KEY") == "dummy"
 
     prompt = get_prompt("alignment")
     chain = lmm.chain_factory(prompt)
