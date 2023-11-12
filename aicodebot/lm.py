@@ -26,7 +26,7 @@ class LanguageModelManager:
     PROVIDERS = [OPENAI, OPENROUTER, OLLAMA]
     DEFAULT_MODEL = "gpt-4"
     DEFAULT_PROVIDER = OPENAI
-    CURRENT_PROVIDER = OLLAMA
+    CURRENT_PROVIDER = DEFAULT_PROVIDER
     # NOTE: CURRENT_PROVIDER needs to be manually set.
     #       This will change when the configure command is implemented and CURRENT_PROVIDER can be changed at will.
 
