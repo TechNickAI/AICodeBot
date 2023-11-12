@@ -233,15 +233,11 @@ class LanguageModelManager:
             raise ValueError(
                 f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
             )
-        # NOTE: This code doesnt do anything except set the name Ollama.
-        #       When configure is implemented this will dynamically organize which model is being used.
+        # NOTE: This code just sets the name to the local llm when Ollama is used.
+        #       When configure is implemented this should be expanded to dynamically organize which model is being used.
         match self.provider:
             case self.OLLAMA:
                 self.model_name = model
-            case self.OPENAI:
-                self.model_name = "gpt-4"
-            case self.OPENROUTER:
-                self.model_name = "openrouter"
 
         return self.provider, self.model_name
 
