@@ -6,6 +6,7 @@ from rich.markdown import CodeBlock, Markdown
 from rich.panel import Panel
 from rich.style import Style
 from rich.syntax import Syntax
+import re
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):
@@ -20,8 +21,10 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
         """Initially print a message that we are sending to the LM"""
         if "kwargs" in serialized and "model" in serialized["kwargs"]:
             model = serialized["kwargs"]["model"]
+        elif "repr" in serialized:
+            model = re.search(r"model='(.*?)'", serialized["repr"]).group(1)
         else:
-            model = "local model"
+            model = "language model"
         message = f"Sending request to *{model}*..."
         self.live.update(Panel(OurMarkdown(message)), refresh=True)
 
