@@ -66,9 +66,9 @@ jsonpatch==1.33
     # via langchain
 jsonpointer==2.4
     # via jsonpatch
-langchain==0.0.331
+langchain==0.0.335
     # via -r requirements/requirements.in
-langsmith==0.0.60
+langsmith==0.0.64
     # via langchain
 loguru==0.7.2
     # via -r requirements/requirements.in
