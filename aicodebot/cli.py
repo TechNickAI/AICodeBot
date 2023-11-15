@@ -1,7 +1,6 @@
 from aicodebot import AICODEBOT, version as aicodebot_version
 from aicodebot.commands import alignment, commit, configure, debug, learn, review, sidekick, sidekick_agent
 from aicodebot.config import read_config
-from aicodebot.lm import LanguageModelManager
 from aicodebot.output import get_console
 import click, langchain, os, sys
 
