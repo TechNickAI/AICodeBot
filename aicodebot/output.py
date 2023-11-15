@@ -22,6 +22,9 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
         if "kwargs" in serialized and "model" in serialized["kwargs"]:
             model = serialized["kwargs"]["model"]
         elif "repr" in serialized:
+            # When Ollama is being used, serialized does not have a [kwargs][model] key.
+            # Instead serialized has a [repr] key that contains a string with info about the Ollama parameters.
+            # This line searches that string for the model being used and returns it.
             model = re.search(r"model='(.*?)'", serialized["repr"]).group(1)
         else:
             model = "language model"

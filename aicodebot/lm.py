@@ -25,10 +25,7 @@ class LanguageModelManager:
     OLLAMA = "Ollama"
     PROVIDERS = [OPENAI, OPENROUTER, OLLAMA]
     DEFAULT_MODEL = "gpt-4"
-    DEFAULT_PROVIDER = OPENAI
-    CURRENT_PROVIDER = DEFAULT_PROVIDER
-    # NOTE: CURRENT_PROVIDER needs to be manually set.
-    #       This will change when the configure command is implemented and CURRENT_PROVIDER can be changed at will.
+    DEFAULT_PROVIDER = OLLAMA
 
     def __init__(self, model_name=None, provider=None):
         self.model_name = model_name
@@ -135,7 +132,7 @@ class LanguageModelManager:
         callbacks=None,
     ):
         """Get an OpenAI model object for the specified model name."""
-        api_key = self.get_key("OPENAI_API_KEY")
+        api_key = self.get_api_key("OPENAI_API_KEY")
 
         return ChatOpenAI(
             openai_api_key=api_key,
@@ -146,7 +143,7 @@ class LanguageModelManager:
             callbacks=callbacks,
         )
 
-    def get_key(self, key_name):
+    def get_api_key(self, key_name):
         # Read the api key from either the environment or the config file
         key_name_upper = key_name.upper()
         key = os.getenv(key_name_upper)
@@ -171,7 +168,7 @@ class LanguageModelManager:
         streaming=False,
         callbacks=None,
     ):
-        api_key = self.get_key("OPENROUTER_API_KEY")
+        api_key = self.get_api_key("OPENROUTER_API_KEY")
 
         # Set the API base to the Open Router API, and set special headers that are required
         api_base = "https://openrouter.ai/api/v1"
@@ -215,29 +212,30 @@ class LanguageModelManager:
         # Figure out which model to use, based on the config file or environment variables
         config = read_config() or {}
         self.provider = os.getenv(
-            "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.CURRENT_PROVIDER)
+            "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER)
         )
         self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
-        # --------------------------- API key verification --------------------------- #
-        if self.provider == self.OPENAI:
-            key_name = "OPENAI_API_KEY"
-        elif self.provider == self.OPENROUTER:
-            key_name = "OPENROUTER_API_KEY"
-        elif self.provider == self.OLLAMA:
-            key_name = "OLLAMA_LOCAL"
+        # --------------------------- Model/API key verification --------------------------- #
+        if self.provider == self.OLLAMA:
+            # If using Ollama, we should be using a local model and not GPT-4
+            # TODO: Dynamically get a list of supported Ollama models to check that the model the user wants to use
+            #       is supported by Ollama
+            if self.model_name == self.DEFAULT_MODEL:
+                raise ValueError(
+                    f"In order to use {self.provider}, you must set the language_model in your environment or config file"
+                )
         else:
-            raise ValueError(f"Unrecognized provider: {self.provider}")
-        model = self.get_key(key_name)
-        if not model:
-            raise ValueError(
-                f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
-            )
-        # NOTE: This code just sets the name to the local llm when Ollama is used.
-        #       When configure is implemented this should be expanded to dynamically organize which model is being used.
-        match self.provider:
-            case self.OLLAMA:
-                self.model_name = model
+            if self.provider == self.OPENAI:
+                key_name = "OPENAI_API_KEY"
+            elif self.provider == self.OPENROUTER:
+                key_name = "OPENROUTER_API_KEY"
+            else:
+                raise ValueError(f"Unrecognized provider: {self.provider}")
+            if not self.get_api_key(key_name):
+                raise ValueError(
+                    f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
+                )
 
         return self.provider, self.model_name
 
@@ -306,7 +304,7 @@ def token_size(text):
     #       TikToken doesn't seem to support Ollama-based models.
     #       Local models will not work as intended without dynamically setting the token size.
     # TODO: Dynamically set token size for Ollama-based models.
-    if LanguageModelManager.CURRENT_PROVIDER == LanguageModelManager.OLLAMA:
+    if LanguageModelManager.DEFAULT_PROVIDER == LanguageModelManager.OLLAMA:
         return 2048
     return LanguageModelManager().get_token_size(text)
 
