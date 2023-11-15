@@ -223,8 +223,7 @@ class LanguageModelManager:
             #       is supported by Ollama
             if self.model_name == self.DEFAULT_MODEL:
                 raise ValueError(
-                    f"In order to use {self.provider}, 
-                    you must set the language_model in your environment or config file"
+                    f"In order to use {self.provider}, you must specify a model in your environment or config file"
                 )
         else:
             if self.provider == self.OPENAI:
