@@ -219,11 +219,12 @@ class LanguageModelManager:
         # --------------------------- Model/API key verification --------------------------- #
         if self.provider == self.OLLAMA:
             # If using Ollama, we should be using a local model and not GPT-4
-            # TODO: Dynamically get a list of supported Ollama models to check that the model the user wants to use
+            # TODO: Dynamically get a list of supported Ollama models to check the model the user wants to use
             #       is supported by Ollama
             if self.model_name == self.DEFAULT_MODEL:
                 raise ValueError(
-                    f"In order to use {self.provider}, you must set the language_model in your environment or config file"
+                    f"In order to use {self.provider}, 
+                    you must set the language_model in your environment or config file"
                 )
         else:
             if self.provider == self.OPENAI:
