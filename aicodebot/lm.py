@@ -5,7 +5,8 @@ from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import Ollama
 from langchain.memory import ConversationTokenBufferMemory
-from openai.api_resources import engine
+from openai.resources.models import Models
+from rich import inspect
 import functools, openai, os, tiktoken
 
 DEFAULT_RESPONSE_TOKENS = 512
@@ -316,7 +317,8 @@ def openai_supported_engines():
     """Get a list of the models supported by the OpenAI API key."""
     config = read_config()
     openai.api_key = config["openai_api_key"]
-    engines = engine.Engine.list()
+    models = Models.list()
+    inspect(models)
     out = [engine.id for engine in engines.data]
     logger.trace(f"OpenAI supported engines: {out}")
     return out

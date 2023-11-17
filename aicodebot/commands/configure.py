@@ -1,9 +1,9 @@
 from aicodebot import AICODEBOT
 from aicodebot.config import get_config_file, read_config
 from aicodebot.helpers import create_and_write_file
+from aicodebot.lm import openai_supported_engines
 from aicodebot.output import get_console
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES
-from openai.api_resources import engine
 import click, openai, os, sys, webbrowser, yaml
 
 
@@ -72,7 +72,7 @@ def configure(verbose, openai_api_key):
     try:
         openai.api_key = config_data["openai_api_key"]
         with console.status("Validating the OpenAI API key", spinner=console.DEFAULT_SPINNER):
-            engine.Engine.list()
+            openai_supported_engines()
     except Exception as e:
         raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
     console.print("✅ The API key is valid.")
