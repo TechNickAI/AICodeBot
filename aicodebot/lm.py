@@ -25,7 +25,7 @@ class LanguageModelManager:
     OLLAMA = "Ollama"
     PROVIDERS = [OPENAI, OPENROUTER, OLLAMA]
     DEFAULT_MODEL = "gpt-4"
-    DEFAULT_PROVIDER = OLLAMA
+    DEFAULT_PROVIDER = OPENAI
 
     def __init__(self, model_name=None, provider=None):
         self.model_name = model_name
