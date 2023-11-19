@@ -119,6 +119,7 @@ class LanguageModelManager:
     ):
         return Ollama(
             model=model_name,
+            # NOTE: num_ctx is similar, but not exactly the same as response_token_size
             num_ctx=response_token_size,
             temperature=temperature,
             callbacks=callbacks,
