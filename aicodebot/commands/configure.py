@@ -72,7 +72,7 @@ def configure(verbose, openai_api_key):
     try:
         openai.api_key = config_data["openai_api_key"]
         with console.status("Validating the OpenAI API key", spinner=console.DEFAULT_SPINNER):
-            openai_supported_engines()
+            openai_supported_engines(config_data["openai_api_key"])
     except Exception as e:
         raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
     console.print("✅ The API key is valid.")
