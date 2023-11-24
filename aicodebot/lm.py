@@ -119,6 +119,7 @@ class LanguageModelManager:
         return Ollama(
             model=model_name,
             # NOTE: num_ctx is similar, but not exactly the same as response_token_size
+            #       num_ctx is the number of tokens in the context, whereas response_token_size is the number of tokens
             num_ctx=response_token_size,
             temperature=temperature,
             callbacks=callbacks,
@@ -205,7 +206,15 @@ class LanguageModelManager:
 
     def get_token_size(self, text):
         """Get the number of tokens in a string using the tiktoken library."""
-        encoding = tiktoken.encoding_for_model(self.tiktoken_model_name)
+
+        try:
+            encoding = tiktoken.encoding_for_model(self.tiktoken_model_name)
+        except KeyError:
+            # NOTE: This sets the token size to default value for Ollama.
+            #       TikToken doesn't seem to support Ollama-based models.
+            #       Local models will not work as intended without dynamically setting the token size.
+            # TODO: Dynamically set token size for Ollama-based models.
+            return 2048
         tokens = encoding.encode(text)
         return len(tokens)
 
@@ -301,12 +310,6 @@ class LanguageModelManager:
 
 def token_size(text):
     # Shortcut
-    # NOTE: This sets the token size to default value for Ollama.
-    #       TikToken doesn't seem to support Ollama-based models.
-    #       Local models will not work as intended without dynamically setting the token size.
-    # TODO: Dynamically set token size for Ollama-based models.
-    if LanguageModelManager.DEFAULT_PROVIDER == LanguageModelManager.OLLAMA:
-        return 2048
     return LanguageModelManager().get_token_size(text)
 
 
