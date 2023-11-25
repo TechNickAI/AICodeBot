@@ -1,9 +1,9 @@
 from aicodebot import AICODEBOT_NO_EMOJI
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
-from langchain import HuggingFaceHub
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import Ollama
 from langchain.memory import ConversationTokenBufferMemory
 from openai import OpenAI
 import functools, os, tiktoken
@@ -22,8 +22,8 @@ class LanguageModelManager:
 
     OPENAI = "OpenAI"
     OPENROUTER = "OpenRouter"
-    HUGGINGFACE_HUB = "HuggingFace Hub"
-    PROVIDERS = [OPENAI, OPENROUTER, HUGGINGFACE_HUB]
+    OLLAMA = "Ollama"
+    PROVIDERS = [OPENAI, OPENROUTER, OLLAMA]
     DEFAULT_MODEL = "gpt-4"
     DEFAULT_PROVIDER = OPENAI
 
@@ -63,8 +63,7 @@ class LanguageModelManager:
         # We support multiple approaches for using language models:
         # 1. OpenAI API
         # 2. Open Router API
-        # 3. SOON Hugging Face API
-        # 4. FUTURE - Local models
+        # 3. FUTURE - Local models
 
         provider, model_name = self.read_model_config()
 
@@ -84,45 +83,18 @@ class LanguageModelManager:
                 streaming=streaming,
                 callbacks=callbacks,
             )
-        elif provider == self.HUGGINGFACE_HUB:
-            return self.get_huggingface_hub_model(
+        # NOTE: Ollama does not have a streaming parameter, this is handled by callbacks instead.
+        #       This may result in slight changes elsewhere in the codebase when Ollama is used.
+        # TODO: Create a wrapper for Ollama models, enabling them to use the streaming parameter.
+        elif provider == self.OLLAMA:
+            return self.get_ollama_model(
                 model_name,
                 response_token_size=response_token_size,
                 temperature=temperature,
-                streaming=streaming,
                 callbacks=callbacks,
             )
         else:  # pragma: no cover
             raise ValueError(f"Provider {provider} is not one of: {self.PROVIDERS}")
-
-    def get_huggingface_hub_model(
-        self,
-        model_name,
-        response_token_size=None,
-        temperature=PRECISE_TEMPERATURE,
-        streaming=False,
-        callbacks=None,
-    ):
-        # Support for HuggingFace Hub. It works. Barely. Don't expect good results.
-        # And there is no streaming.
-        # If you want to play with it, add the following to your ~/.aicodebot.yaml file:
-        """
-        language_model_provider: HuggingFace Hub
-        huggingface_api_key: hf_xxxxx
-        # This is about the only model I could get to work
-        language_model: google/flan-t5-xxl
-        """
-
-        api_key = self.get_api_key("huggingface_api_key")
-        return HuggingFaceHub(
-            huggingfacehub_api_token=api_key,
-            repo_id=model_name,
-            model_kwargs={
-                "temperature": temperature,
-                "max_length": response_token_size,
-                "max_new_tokens": response_token_size,
-            },
-        )
 
     def get_memory(self, llm, token_limit=DEFAULT_MEMORY_TOKENS, memory_key="chat_history", input_key="task"):
         """Initializes a memory object with the specified parameters."""
@@ -136,6 +108,22 @@ class LanguageModelManager:
                 ai_prefix=AICODEBOT_NO_EMOJI,
             )
         return self._memory
+
+    def get_ollama_model(
+        self,
+        model_name,
+        response_token_size=None,
+        temperature=PRECISE_TEMPERATURE,
+        callbacks=None,
+    ):
+        return Ollama(
+            model=model_name,
+            # NOTE: num_ctx is similar, but not exactly the same as response_token_size
+            #       num_ctx is the number of tokens in the context, whereas response_token_size is the number of tokens
+            num_ctx=response_token_size,
+            temperature=temperature,
+            callbacks=callbacks,
+        )
 
     def get_openai_model(
         self,
@@ -160,9 +148,9 @@ class LanguageModelManager:
     def get_api_key(self, key_name):
         # Read the api key from either the environment or the config file
         key_name_upper = key_name.upper()
-        api_key = os.getenv(key_name_upper)
-        if api_key:
-            return api_key
+        key = os.getenv(key_name_upper)
+        if key:
+            return key
         else:
             config = read_config() or {}
             key_name_lower = key_name.lower()
@@ -218,7 +206,15 @@ class LanguageModelManager:
 
     def get_token_size(self, text):
         """Get the number of tokens in a string using the tiktoken library."""
-        encoding = tiktoken.encoding_for_model(self.tiktoken_model_name)
+
+        try:
+            encoding = tiktoken.encoding_for_model(self.tiktoken_model_name)
+        except KeyError:
+            # NOTE: This sets the token size to default value for Ollama.
+            #       TikToken doesn't seem to support Ollama-based models.
+            #       Local models will not work as intended without dynamically setting the token size.
+            # TODO: Dynamically set token size for Ollama-based models.
+            return 2048
         tokens = encoding.encode(text)
         return len(tokens)
 
@@ -230,22 +226,26 @@ class LanguageModelManager:
         )
         self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
-        # --------------------------- API key verification --------------------------- #
-        if self.provider == self.OPENAI:
-            key_name = "OPENAI_API_KEY"
-        elif self.provider == self.OPENROUTER:
-            key_name = "OPENROUTER_API_KEY"
-        elif self.provider == self.HUGGINGFACE_HUB:
-            key_name = "HUGGINGFACE_API_KEY"
+        # --------------------------- Model/API key verification --------------------------- #
+        if self.provider == self.OLLAMA:
+            # If using Ollama, we should be using a local model and not GPT-4
+            # TODO: Dynamically get a list of supported Ollama models to check the model the user wants to use
+            #       is supported by Ollama
+            if self.model_name == self.DEFAULT_MODEL:
+                raise ValueError(
+                    f"In order to use {self.provider}, you must specify a model in your environment or config file"
+                )
         else:
-            raise ValueError(f"Unrecognized provider: {self.provider}")
-
-        if not self.get_api_key(key_name):
-            raise ValueError(
-                f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
-            )
-
-        # TODO: Verify the model
+            if self.provider == self.OPENAI:
+                key_name = "OPENAI_API_KEY"
+            elif self.provider == self.OPENROUTER:
+                key_name = "OPENROUTER_API_KEY"
+            else:
+                raise ValueError(f"Unrecognized provider: {self.provider}")
+            if not self.get_api_key(key_name):
+                raise ValueError(
+                    f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
+                )
 
         return self.provider, self.model_name
 

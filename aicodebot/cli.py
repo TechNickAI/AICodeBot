@@ -24,7 +24,6 @@ def cli(ctx, debug_output):
             sys.exit(0)
     else:
         os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
-
     # Turn on langchain debug output if requested
     langchain.debug = debug_output
 

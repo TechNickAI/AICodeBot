@@ -183,6 +183,16 @@ personality: Stewie
 version: 1.2
 ```
 
+To run a local language model using Ollama, specify 'Ollama' as your provider and choose your model in the config. Example:
+
+```yaml
+language_model_provider: Ollama
+language_model: llama2
+openai_api_key: sk-*****
+personality: Feynman
+version: 1.2
+```
+
 Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
 ### Understanding Tokens and Using Commands Efficiently

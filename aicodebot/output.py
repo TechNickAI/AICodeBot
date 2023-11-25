@@ -6,6 +6,7 @@ from rich.markdown import CodeBlock, Markdown
 from rich.panel import Panel
 from rich.style import Style
 from rich.syntax import Syntax
+import re
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):
@@ -18,7 +19,16 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, *args, **kwargs):
         """Initially print a message that we are sending to the LM"""
-        message = f'Sending request to *{serialized["kwargs"]["model"]}*...'
+        if "kwargs" in serialized and "model" in serialized["kwargs"]:
+            model = serialized["kwargs"]["model"]
+        elif "repr" in serialized:
+            # When Ollama is being used, serialized does not have a [kwargs][model] key.
+            # Instead serialized has a [repr] key that contains a string with info about the Ollama parameters.
+            # This line searches that string for the model being used and returns it.
+            model = re.search(r"model='(.*?)'", serialized["repr"]).group(1)
+        else:
+            model = "language model"
+        message = f"Sending request to *{model}*..."
         self.live.update(Panel(OurMarkdown(message)), refresh=True)
 
     def on_llm_new_token(self, token, **kwargs):

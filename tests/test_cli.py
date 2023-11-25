@@ -19,9 +19,42 @@ def test_alignment(cli_runner, monkeypatch):
     assert result.exit_code == 0, f"Output: {result.output}"
 
 
+def test_alignment_ollama(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
+    result = cli_runner.invoke(cli, ["alignment", "-t", "50"])
+    assert result.exit_code == 0, f"Output: {result.output}"
+
+
 @pytest.mark.vcr()
 def test_commit(cli_runner, temp_git_repo, monkeypatch):
     monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
+    with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
+        # Scenario 1: Only unstaged changes
+        create_and_write_file("test1.txt", "This is a test file.")
+        repo = Repo(temp_git_repo.working_dir)
+        repo.git.add("test1.txt")  # stage the new file
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE, "test1.txt"])
+        assert result.exit_code == 0, f"Output: {result.output}"
+        # Check if the file was committed by looking in git
+        assert "test1.txt" in repo.git.ls_files()
+
+        # Scenario 2: Both staged and unstaged changes
+        create_and_write_file("test2.txt", "This is another test file.")
+        repo = Repo(temp_git_repo.working_dir)
+        repo.git.add("test2.txt")  # stage the new file
+        create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
+        assert result.exit_code == 0, f"Output: {result.output}"
+        assert "test2.txt" in repo.git.ls_files()
+
+        # Scenario 3: No changes at all
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
+        assert result.exit_code == 0, f"Output: {result.output}"
+        assert "No changes" in result.output
+
+
+def test_commit_ollama(cli_runner, temp_git_repo, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
     with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
         # Scenario 1: Only unstaged changes
         create_and_write_file("test1.txt", "This is a test file.")
@@ -97,6 +130,14 @@ def test_debug_success(cli_runner, monkeypatch):
     assert "The command completed successfully." in result.output
 
 
+def test_debug_success_ollama(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
+    result = cli_runner.invoke(cli, ["debug", "echo", "Hello, world!"])
+    assert result.exit_code == 0, f"Output: {result.output}"
+    assert "echo Hello, world!" in result.output
+    assert "The command completed successfully." in result.output
+
+
 @pytest.mark.vcr()
 def test_debug_failure(cli_runner, monkeypatch):
     monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
@@ -136,6 +177,29 @@ def test_review(cli_runner, temp_git_repo, monkeypatch):
         assert parsed["review_status"] in ["PASSED"]
 
 
+def test_review_ollama(cli_runner, temp_git_repo, monkeypatch):
+    # Set the config file to use Ollama
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
+
+    with cli_runner.isolated_filesystem() and in_temp_directory(temp_git_repo.working_dir):
+        # Add a new file
+        create_and_write_file("test.txt", "Adding a new line.")
+
+        repo = Repo(temp_git_repo.working_dir)
+        # Stage the new file
+        repo.git.add("test.txt")
+
+        # Run the review command
+        result = cli_runner.invoke(cli, ["review", "-t", TEST_RESPONSE_TOKEN_SIZE, "test.txt"])
+
+        # Check that the review command ran successfully
+        assert result.exit_code == 0, f"Output: {result.output}"
+        assert len(result.output) > 20
+
+        # NOTE: Streaming hasn't been implemented for Ollama yet, so we can't test json output
+        # TODO: Add a test for json output when streaming is implemented
+
+
 @pytest.mark.vcr()
 def test_sidekick(cli_runner, monkeypatch):
     monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
@@ -150,8 +214,28 @@ def test_sidekick(cli_runner, monkeypatch):
     assert "5" in result.output
 
 
+def test_sidekick_ollama(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
+    # Define a mock request and file context
+    mock_request = "What is 3 + 2? Just give me the answer, nothing else. Use a number, not text"
+    mock_files = [".gitignore"]
+
+    # Invoke the sidekick command
+    result = cli_runner.invoke(cli, ["sidekick", "--request", mock_request] + mock_files)
+
+    assert result.exit_code == 0, f"Output: {result.output}"
+    assert "5" in result.output
+
+
 def test_version(cli_runner, monkeypatch):
     monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
+    result = cli_runner.invoke(cli, ["-V"])
+    assert result.exit_code == 0, f"output: {result.output}"
+    assert aicodebot_version in result.output
+
+
+def test_version_ollama(cli_runner, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
     result = cli_runner.invoke(cli, ["-V"])
     assert result.exit_code == 0, f"output: {result.output}"
     assert aicodebot_version in result.output

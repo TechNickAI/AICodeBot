@@ -52,6 +52,20 @@ def test_parse_human_input_files(chat, tmp_path, monkeypatch):
         assert chat.file_context == set()
 
 
+def test_parse_human_input_files_ollama(chat, tmp_path, monkeypatch):
+    monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "ollama_test_config.yaml"))
+    with in_temp_directory(tmp_path):
+        create_and_write_file(tmp_path / "file.txt", "text")
+
+        assert chat.parse_human_input("/add file.txt") == chat.CONTINUE
+        assert chat.file_context == {"file.txt"}
+
+        assert chat.parse_human_input("/files") == chat.CONTINUE
+
+        assert chat.parse_human_input("/drop file.txt") == chat.CONTINUE
+        assert chat.file_context == set()
+
+
 def test_parse_human_input_commands(chat):
     # Test /sh command
     assert chat.parse_human_input("/sh ls") == chat.CONTINUE
