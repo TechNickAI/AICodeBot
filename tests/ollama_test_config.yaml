@@ -1,0 +1,6 @@
+---
+language_model_provider: Ollama
+language_model: llama2
+openai_api_key: sk-dummy
+personality: Linus
+version: 1.2
