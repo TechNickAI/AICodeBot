@@ -4,6 +4,8 @@ from pathlib import Path
 import os, pytest
 
 
+# NOTE: Ollama doesnt have dynamic token allocation so there is no point in testing it (it will always fail)
+# TODO: Add ollama test for token_size when dynamic token allocation is implemented
 def test_token_size(monkeypatch):
     monkeypatch.setenv("AICODEBOT_CONFIG_FILE", str(Path(__file__).parent / "test_config.yaml"))
     assert token_size("") == 0
