@@ -5,7 +5,9 @@
 #    pip-compile
 #
 aiohttp==3.9.0
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-community
 aiosignal==1.3.1
     # via aiohttp
 annotated-types==0.6.0
@@ -13,14 +15,14 @@ annotated-types==0.6.0
 anyio==3.7.1
     # via
     #   httpx
-    #   langchain
+    #   langchain-core
     #   openai
 arrow==1.3.0
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 attrs==23.1.0
     # via aiohttp
 beautifulsoup4==4.12.2
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 certifi==2023.11.17
     # via
     #   httpcore
@@ -29,13 +31,15 @@ certifi==2023.11.17
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 dataclasses-json==0.6.2
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-community
 distro==1.8.0
     # via openai
 faiss-cpu==1.7.4
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 frozenlist==1.4.0
     # via
     #   aiohttp
@@ -43,7 +47,9 @@ frozenlist==1.4.0
 gitdb==4.0.11
     # via gitpython
 gitpython==3.1.40
-    # via -r requirements.in
+    # via -r requirements/requirements.in
+greenlet==3.0.2
+    # via sqlalchemy
 h11==0.14.0
     # via httpcore
 httpcore==1.0.2
@@ -51,7 +57,7 @@ httpcore==1.0.2
 httpx==0.25.1
     # via openai
 humanize==4.8.0
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 idna==3.4
     # via
     #   anyio
@@ -59,15 +65,26 @@ idna==3.4
     #   requests
     #   yarl
 jsonpatch==1.33
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-core
 jsonpointer==2.4
     # via jsonpatch
-langchain==0.0.338
-    # via -r requirements.in
-langsmith==0.0.65
+langchain==0.0.351
+    # via -r requirements/requirements.in
+langchain-community==0.0.4
     # via langchain
+langchain-core==0.1.1
+    # via
+    #   langchain
+    #   langchain-community
+langsmith==0.0.72
+    # via
+    #   langchain
+    #   langchain-community
+    #   langchain-core
 loguru==0.7.2
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 markdown-it-py==3.0.0
     # via rich
 marshmallow==3.20.1
@@ -81,16 +98,21 @@ multidict==6.0.4
 mypy-extensions==1.0.0
     # via typing-inspect
 numpy==1.26.2
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-community
 openai==1.3.3
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 packaging==23.2
-    # via marshmallow
+    # via
+    #   langchain-core
+    #   marshmallow
 prompt-toolkit==3.0.41
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 pydantic==2.5.1
     # via
     #   langchain
+    #   langchain-core
     #   langsmith
     #   openai
 pydantic-core==2.14.3
@@ -98,22 +120,26 @@ pydantic-core==2.14.3
 pygments==2.17.1
     # via rich
 pyperclip==1.8.2
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 python-dateutil==2.8.2
     # via arrow
 pyyaml==6.0.1
     # via
-    #   -r requirements.in
+    #   -r requirements/requirements.in
     #   langchain
+    #   langchain-community
+    #   langchain-core
 regex==2023.10.3
     # via tiktoken
 requests==2.31.0
     # via
     #   langchain
+    #   langchain-community
+    #   langchain-core
     #   langsmith
     #   tiktoken
 rich==13.7.0
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 six==1.16.0
     # via python-dateutil
 smmap==5.0.1
@@ -125,11 +151,16 @@ sniffio==1.3.0
 soupsieve==2.5
     # via beautifulsoup4
 sqlalchemy==2.0.23
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-community
 tenacity==8.2.3
-    # via langchain
+    # via
+    #   langchain
+    #   langchain-community
+    #   langchain-core
 tiktoken==0.5.1
-    # via -r requirements.in
+    # via -r requirements/requirements.in
 tqdm==4.66.1
     # via openai
 types-python-dateutil==2.8.19.14
