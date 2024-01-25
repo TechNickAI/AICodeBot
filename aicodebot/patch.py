@@ -3,6 +3,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import re, subprocess
 
+
 class Patch:
     """Handle patches in unified diff format for making changes to the local file system."""
 
@@ -70,6 +71,7 @@ class Patch:
             return SimpleNamespace(line=line, type="context", parsed=line[1:])
         else:
             raise ValueError(f"Invalid line: '{line}'")
+
     @staticmethod
     def rebuild_patch(patch_string):  # noqa: PLR0915
         """We ask the LM to respond with unified patch format. It often gets it wrong, especially the chunk headers.
