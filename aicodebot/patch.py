@@ -3,9 +3,11 @@ from pathlib import Path
 from types import SimpleNamespace
 import re, subprocess
 
-
 class Patch:
     """Handle patches in unified diff format for making changes to the local file system."""
+
+    # Compile the regular expression used in parse_line method
+    CHUNK_HEADER_REGEX = re.compile(r"@@ -(\d+),(\d+) \+(\d+),(\d+) @@")
 
     @staticmethod
     def apply_patch(patch_string, is_rebuilt=False):
@@ -39,7 +41,7 @@ class Patch:
             return True
 
     @staticmethod
-    def parse_line(line):  # noqa: PLR0911
+    def parse_line(line):
         """Parse a line of the patch and return a SimpleNamespace with the line, type, and parsed line."""
         if line.startswith(("diff --git", "index")):
             return SimpleNamespace(line=line, type="header", parsed=line)
@@ -48,7 +50,7 @@ class Patch:
         elif line.startswith("+++"):
             return SimpleNamespace(line=line, type="destination_file", parsed=line[6:])
         elif line.startswith("@@"):
-            chunk_header_match = re.match(r"@@ -(\d+),(\d+) \+(\d+),(\d+) @@", line)
+            chunk_header_match = Patch.CHUNK_HEADER_REGEX.match(line)
             if not chunk_header_match:
                 raise ValueError(f"Invalid chunk header: {line}")
 
