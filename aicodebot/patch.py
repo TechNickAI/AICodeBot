@@ -41,7 +41,7 @@ class Patch:
             return True
 
     @staticmethod
-    def parse_line(line):
+    def parse_line(line):  # noqa: PLR0911
         """Parse a line of the patch and return a SimpleNamespace with the line, type, and parsed line."""
         if line.startswith(("diff --git", "index")):
             return SimpleNamespace(line=line, type="header", parsed=line)
@@ -70,7 +70,6 @@ class Patch:
             return SimpleNamespace(line=line, type="context", parsed=line[1:])
         else:
             raise ValueError(f"Invalid line: '{line}'")
-
     @staticmethod
     def rebuild_patch(patch_string):  # noqa: PLR0915
         """We ask the LM to respond with unified patch format. It often gets it wrong, especially the chunk headers.
