@@ -7,6 +7,9 @@ import re, subprocess
 class Patch:
     """Handle patches in unified diff format for making changes to the local file system."""
 
+    # Compile the regular expression used in parse_line method
+    CHUNK_HEADER_REGEX = re.compile(r"@@ -(\d+),(\d+) \+(\d+),(\d+) @@")
+
     @staticmethod
     def apply_patch(patch_string, is_rebuilt=False):
         """Applies a patch to the local file system using git apply."""
@@ -48,7 +51,7 @@ class Patch:
         elif line.startswith("+++"):
             return SimpleNamespace(line=line, type="destination_file", parsed=line[6:])
         elif line.startswith("@@"):
-            chunk_header_match = re.match(r"@@ -(\d+),(\d+) \+(\d+),(\d+) @@", line)
+            chunk_header_match = Patch.CHUNK_HEADER_REGEX.match(line)
             if not chunk_header_match:
                 raise ValueError(f"Invalid chunk header: {line}")
 
