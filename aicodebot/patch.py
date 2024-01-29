@@ -15,21 +15,16 @@ class Patch:
         """Applies a patch to the local file system using git apply."""
         try:
             result = subprocess.run(
-                [
-                    "git",
-                    "apply",
-                    "--verbose",
-                    "--recount",
-                ],
+                ["git", "apply", "--verbose", "--recount"],
                 input=patch_string.encode("utf-8"),
                 check=True,
                 capture_output=True,
+                text=True  # For explicit encoding handling
             )
-            logger.debug(f"git apply output {result.stdout}")
+            logger.debug(f"Patch applied successfully. Output: \n{result.stdout}")
         except subprocess.CalledProcessError as e:
-            logger.error("Failed to apply patch:")
-            print(patch_string)  # noqa: T201
-            logger.error(e.stderr)
+            logger.error(f"Failed to apply patch. Error Output: \n{e.stderr}")
+            logger.debug(f"Failed patch content:\n{patch_string}")
 
             # Rebuild it and try again
             if not is_rebuilt:
