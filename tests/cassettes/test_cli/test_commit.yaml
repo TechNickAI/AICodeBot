@@ -73,1282 +73,80 @@ interactions:
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c80b0d09ce406c-LHR
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:16:19 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=q5tZvv8eoTcjEkARDH3Up62mhGDvy78NRyl_eMT058E-1719854179-1.0.1.1-AdXIg75Nm4hcnik2qZ0vjBcQjqzbemjOpciWRx.kOBSypkMs4EMtQzoqP9xaZ_wfqowH6mjuL_aw6ZequLSMBA;
-        path=/; expires=Mon, 01-Jul-24 17:46:19 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=_WpeNRXzlB4zEFgGDId.n8_BscV.w1jczUWwN8eqK9g-1719854179505-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_bfc10514360ca46fdc341ed4b82cb0a1
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c80de3de4a5bea-LIS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:18:15 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=KyNbpitlh_P.37gjDHlZ2UwBX.gOytRXVKM5islMuJU-1719854295-1.0.1.1-Req35a9pXpHpu5O0UBSpD5Kt7ebQw5tBHmi_ojzBQdOjDzE1cm5lXSUPgYv1.rVp8GoWmVyZj2TJCxo5JjJhFA;
-        path=/; expires=Mon, 01-Jul-24 17:48:15 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=LDs92_KNFUM.rGxiI4OTUr5Zwv2cetKrE6u6I1AziIc-1719854295830-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_1984d567ace957f8b5ddba9036e5f1e6
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c80ed29c5e52e8-LHR
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:18:53 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=cq8R3_9HVWPPAPcmJiT4P7ptEeutH0jAKDd35wRUwQs-1719854333-1.0.1.1-wjGQ94fV0JcebSpObu3ZK632LVA66ACryUSaBs.gW_diC239davqVh5kFODxE4824dEj_97XCrH4HSt27GSDjQ;
-        path=/; expires=Mon, 01-Jul-24 17:48:53 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=WJDI9YdWvfqZtYfnMIMx33Wnxh0uqKy7nlB_bn.nalM-1719854333989-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_fae33bdca41d9fb19eb87ca6dc86760b
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c80f9c2f6b48b6-LHR
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:19:26 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=kftgpeQQO7FAOL5sZDEU3c0O0J5JpuQlt1mfE4c1t.s-1719854366-1.0.1.1-2FwjA.gZ4cLOsiqtZHQ1TtDvw5GugTmMOVLF__YTMAsUQqq3lEJH2c5kPi7foGdpPsjJLr1mR24bfDuPvL9rGA;
-        path=/; expires=Mon, 01-Jul-24 17:49:26 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=hw_nYYteQIaXZh1_FTRpRjgoICtnvmmJh_HAaUaZIrY-1719854366240-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_4080e4499385f401dde666ed977ac375
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c810889a475bd4-LIS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:20:04 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=t0pumOKkCPtg6R2DTNEo5vUNKx.d6o1DXMlOuWyZHz4-1719854404-1.0.1.1-FFr_7CTrxs5Sw.k5CqZ7MaswTpgiQq8qMiOb3hTn6LK4qKimt4_8S0lEnr8STmcpO10H1esMVsWWmG2LeCsEcQ;
-        path=/; expires=Mon, 01-Jul-24 17:50:04 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=.Kn.xi2jxKakaeeJ83I5QyTotmSgnw_N7708yir0ZLU-1719854404099-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_95c3ff066abd8cec00003dc47f5b2002
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c811264ae05be0-LIS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:20:29 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=n3AljGFYGg4rZpQXOPIn4AufCexhPc63.rlJgcUbpDw-1719854429-1.0.1.1-Ua1hMUGJv85Zw1T3zv__1Dk8GKh_A1MYTYZny3qFIULlM0DyIqOPKG6Hzflm5TGvHPFWA9WFsUf6LHtWaecj9g;
-        path=/; expires=Mon, 01-Jul-24 17:50:29 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=wBPMpxFmE2PxYPs6WhM2pHIpCdbdg5H32p_9Owuq8w4-1719854429359-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_3657ab3e88213525e7f154a6349f2863
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c811a6dc6f5bea-LIS
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:20:49 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=i_aeZmfFZbptL.cJCr7eU2aEyVtD1f2JEIXcKYckMFU-1719854449-1.0.1.1-HLwXsEWbaehaYbQFxHvheYVB35c_B1.aXv8wIRQZxWSsKduqpTtITgl14C_0dxQfAzzrUKnil_CnHIXqEIFTwA;
-        path=/; expires=Mon, 01-Jul-24 17:50:49 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=_3fLRazZ3OwpKUrpD25wR8GFPgC3C7cLLvs1g8p5p.E-1719854449925-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_4a6d52e1720953f8565d7beeb875652b
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
-        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
-        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
-        \"invalid_api_key\"\n    }\n}\n"
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c812386817067a-LHR
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '258'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:21:13 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=_3Jab75wnMr1jX1HTaXJ2Uv51XBtWCMrXvFmUd_iMzk-1719854473-1.0.1.1-fkt0K.kkzVMR6olbG0p_i_YsIm4ix_hFOhk1Xtt7ftGrRGc5xauoJJ8cqY13EtDB2mOtxMMyVeLNartlabSFnA;
-        path=/; expires=Mon, 01-Jul-24 17:51:13 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=nKfzc6mIsufdXKi0ChA.TjO54jna0akwx97C6L4xs.M-1719854473169-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      alt-svc:
-      - h3=":443"; ma=86400
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      vary:
-      - Origin
-      x-request-id:
-      - req_919d60be96f1a573ad25ed5471c618ab
-    status:
-      code: 401
-      message: Unauthorized
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: 'data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+      string: 'data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         test"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        file"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"1"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         for"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         initial"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        setup"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        verification"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36nzSl6KFRJvSg4405ELxLhw5i","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
-
-
-        data: [DONE]
-
-
-        '
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c81694e923950c-LIS
-      Connection:
-      - keep-alive
-      Content-Type:
-      - text/event-stream; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:24:12 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=c5lfOQOctUD44fp57gNky7q9N9wTBVeAFVFcierV6lA-1719854652-1.0.1.1-JL_jhubHzfYb0ui.Cmqj.ovAh0jkuhbRI3I0nTqMUp_OSxevTVo_kJkK4R4Xjsun.V0J5wIoFPdm4IN_7Iq9Yg;
-        path=/; expires=Mon, 01-Jul-24 17:54:12 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=K8VcAhmtgdqLS7j7UZvsOG9oIF2oG7O8y8xt07m6Amc-1719854652298-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      Transfer-Encoding:
-      - chunked
-      alt-svc:
-      - h3=":443"; ma=86400
-      openai-organization:
-      - user-ajb4nhk52gcguoemw0t5dq45
-      openai-processing-ms:
-      - '378'
-      openai-version:
-      - '2020-10-01'
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      x-ratelimit-limit-requests:
-      - '5000'
-      x-ratelimit-limit-tokens:
-      - '600000'
-      x-ratelimit-remaining-requests:
-      - '4999'
-      x-ratelimit-remaining-tokens:
-      - '599116'
-      x-ratelimit-reset-requests:
-      - 12ms
-      x-ratelimit-reset-tokens:
-      - 88ms
-      x-request-id:
-      - req_92b57c2e7352e2e325ec623609a3bcd3
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test2.txt\nThis is another test file.\n    END
-      DIFF\n\n    Instructions for the commit message:\n    * Start with a short summary
-      (less than 72 characters).\n    * Follow with a blank line and detailed text,
-      but only if necessary. If the summary is sufficient,\n        then omit the
-      detailed text.\n    * Determine what functionality was added or modified instead
-      of just describing the exact changes.\n    * Use imperative mood (e.g., \"Add
-      feature\")\n    * Be in GitHub-flavored markdown format.\n    * Have a length
-      that scales with the length of the diff context. If the DIFF is a small change,\n      respond
-      quickly with a terse message so we can go faster.\n    * Do not repeat information
-      that is already known from the git commit.\n    * Be terse.\n    * Do not add
-      anything other then description of code changes.\n\n    BEGIN SAMPLE COMMIT
-      MESSAGE\n    Update README with better instructions for installation\n\n    The
-      previous instructions were not clear enough for new users, so we''ve updated
-      them\n    with more sample use cases and an improved installation process. This
-      should help\n    new users get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting
-      instructions:\n    Start your response with the commit message. No prefix or
-      introduction.\n    Your entire response will be the commit message. No quotation
-      marks.\n", "role": "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream":
-      true, "temperature": 0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3135'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: 'data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        new"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        file"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        `"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"2"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"`"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF36U2J62b3l0qzyceCK3jsr10ft","object":"chat.completion.chunk","created":1719854652,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
-
-
-        data: [DONE]
-
-
-        '
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c8169b1ce7496d-LHR
-      Connection:
-      - keep-alive
-      Content-Type:
-      - text/event-stream; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:24:13 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=k1kOW7gvRsY7_Zewv2fTy6gtrx3vji8oBQyRjhIMaTg-1719854653-1.0.1.1-o829igrrh6ZwgCn101mnPdo2TTvgBWuPavdP2sLwiPxrRNqqgv.1ED.Js50YS0XdzcxQIXGLrQFXwvwgtrvsHA;
-        path=/; expires=Mon, 01-Jul-24 17:54:13 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=FgR1cuM44ug4jPFQkyr4GHa4S5LnS02nayo7LbCTiDU-1719854653291-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      Transfer-Encoding:
-      - chunked
-      alt-svc:
-      - h3=":443"; ma=86400
-      openai-organization:
-      - user-ajb4nhk52gcguoemw0t5dq45
-      openai-processing-ms:
-      - '333'
-      openai-version:
-      - '2020-10-01'
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      x-ratelimit-limit-requests:
-      - '5000'
-      x-ratelimit-limit-tokens:
-      - '600000'
-      x-ratelimit-remaining-requests:
-      - '4999'
-      x-ratelimit-remaining-tokens:
-      - '599113'
-      x-ratelimit-reset-requests:
-      - 12ms
-      x-ratelimit-reset-tokens:
-      - 88ms
-      x-request-id:
-      - req_31b3160f3905c4fa059c0d42e016d5b2
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: 'data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"1"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        for"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        initial"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         testing"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"\n\n"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"\n\n"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"This"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"This"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         new"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         file"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         will"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         be"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         used"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         for"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         initial"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         testing"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         purposes"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"."},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"."},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5GZAGHEg754OTdbreU3v9Ek8gS","object":"chat.completion.chunk","created":1719854786,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
+        data: {"id":"chatcmpl-9gFKRoUjncOJxGdAdQfMOhDQp1CjC","object":"chat.completion.chunk","created":1719855727,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
 
 
         data: [DONE]
@@ -1359,20 +157,20 @@ interactions:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 89c819d9afb24071-LHR
+      - 89c830d28fbf5bd4-LIS
       Connection:
       - keep-alive
       Content-Type:
       - text/event-stream; charset=utf-8
       Date:
-      - Mon, 01 Jul 2024 17:26:26 GMT
+      - Mon, 01 Jul 2024 17:42:07 GMT
       Server:
       - cloudflare
       Set-Cookie:
-      - __cf_bm=.k9GkOEltFvumabZB.0j.5Lvj99bZX6fYWtSht43A3A-1719854786-1.0.1.1-6NsJ.Z51KMW0m9t6gtH6kPcpeuy_gA5H7JTHE_Uja9RJMgl3ctUHLUeAiVweDy3vnAomSzu2a_YRECv97uixpg;
-        path=/; expires=Mon, 01-Jul-24 17:56:26 GMT; domain=.api.openai.com; HttpOnly;
+      - __cf_bm=AqCb.xCFui7v31.JftH42vWbXA_G.fsXMlB.JdTceDE-1719855727-1.0.1.1-kLjzsSEeJf2P179eOdABEacoYHf598xc_xi0cAQWoWdgjtT.luSorhLxzhH3R.0BoQKQa2xAh8ZPpIBom25_Iw;
+        path=/; expires=Mon, 01-Jul-24 18:12:07 GMT; domain=.api.openai.com; HttpOnly;
         Secure; SameSite=None
-      - _cfuvid=EeFSeqae1rhyZZ6UDotCaVY2Np6lY5onI_Vr64G9xdQ-1719854786259-0.0.1.1-604800000;
+      - _cfuvid=K7bt3NJn6xmUjeWuI5h0AA4dFHyGi2wqlDOiN34Zm0o-1719855727502-0.0.1.1-604800000;
         path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
       Transfer-Encoding:
       - chunked
@@ -1381,7 +179,7 @@ interactions:
       openai-organization:
       - user-ajb4nhk52gcguoemw0t5dq45
       openai-processing-ms:
-      - '353'
+      - '343'
       openai-version:
       - '2020-10-01'
       strict-transport-security:
@@ -1399,7 +197,7 @@ interactions:
       x-ratelimit-reset-tokens:
       - 88ms
       x-request-id:
-      - req_10d53fbd81b9fe5ce32d2ed3c3957125
+      - req_ae496aac23dbf25b4626fe0002d0f628
     status:
       code: 200
       message: OK
@@ -1477,399 +275,84 @@ interactions:
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
-      string: 'data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+      string: 'data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        new"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         test"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"2"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         file"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        `"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"2"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"`"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF5HRTPKtXd6e72OxiphVsQcsNRL","object":"chat.completion.chunk","created":1719854787,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
-
-
-        data: [DONE]
-
-
-        '
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c819e1be70496a-LHR
-      Connection:
-      - keep-alive
-      Content-Type:
-      - text/event-stream; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:26:27 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=vEXkY059A1m6LLC9c3rReek3pc6cUiHw1u_vPwDsc8E-1719854787-1.0.1.1-sx9I_ypsUD6wEJ7qRTENn1qA8zrVXktlnt0FkrvTx0SlErI2cIHITCENEqCiMvhXSaxuX3.sU6jzrFDMLODvNg;
-        path=/; expires=Mon, 01-Jul-24 17:56:27 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=EOX8yQycBCQX2HNGrVPrEOkXooi0sm1YkxKod6glBIQ-1719854787557-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      Transfer-Encoding:
-      - chunked
-      alt-svc:
-      - h3=":443"; ma=86400
-      openai-organization:
-      - user-ajb4nhk52gcguoemw0t5dq45
-      openai-processing-ms:
-      - '393'
-      openai-version:
-      - '2020-10-01'
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      x-ratelimit-limit-requests:
-      - '5000'
-      x-ratelimit-limit-tokens:
-      - '600000'
-      x-ratelimit-remaining-requests:
-      - '4999'
-      x-ratelimit-remaining-tokens:
-      - '599113'
-      x-ratelimit-reset-requests:
-      - 12ms
-      x-ratelimit-reset-tokens:
-      - 88ms
-      x-request-id:
-      - req_198398e137e2abfedd7f850723e042fc
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test1.txt\nThis is a test file.\n    END DIFF\n\n    Instructions
-      for the commit message:\n    * Start with a short summary (less than 72 characters).\n    *
-      Follow with a blank line and detailed text, but only if necessary. If the summary
-      is sufficient,\n        then omit the detailed text.\n    * Determine what functionality
-      was added or modified instead of just describing the exact changes.\n    * Use
-      imperative mood (e.g., \"Add feature\")\n    * Be in GitHub-flavored markdown
-      format.\n    * Have a length that scales with the length of the diff context.
-      If the DIFF is a small change,\n      respond quickly with a terse message so
-      we can go faster.\n    * Do not repeat information that is already known from
-      the git commit.\n    * Be terse.\n    * Do not add anything other then description
-      of code changes.\n\n    BEGIN SAMPLE COMMIT MESSAGE\n    Update README with
-      better instructions for installation\n\n    The previous instructions were not
-      clear enough for new users, so we''ve updated them\n    with more sample use
-      cases and an improved installation process. This should help\n    new users
-      get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
-      your response with the commit message. No prefix or introduction.\n    Your
-      entire response will be the commit message. No quotation marks.\n", "role":
-      "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream": true, "temperature":
-      0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3129'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: 'data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"1"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        file"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         for"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        testing"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{"content":"
-        purposes"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF78tAjnC2taVVvISXLMvhU8eYsd","object":"chat.completion.chunk","created":1719854902,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_ce0793330f","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
-
-
-        data: [DONE]
-
-
-        '
-    headers:
-      CF-Cache-Status:
-      - DYNAMIC
-      CF-RAY:
-      - 89c81cb4f8c20712-LHR
-      Connection:
-      - keep-alive
-      Content-Type:
-      - text/event-stream; charset=utf-8
-      Date:
-      - Mon, 01 Jul 2024 17:28:23 GMT
-      Server:
-      - cloudflare
-      Set-Cookie:
-      - __cf_bm=vJ6TS7GrMIPdnk0H3eQNNKQayzrPoDURvfAq57MOnhs-1719854903-1.0.1.1-zZjHh67k.WWLqnsoJarnY27Co8jTJtLvLzMCjVWCmaRhTJxPBCceolQoEIO9KcgmqDfKh.NRrwhp7WJSLji0Jw;
-        path=/; expires=Mon, 01-Jul-24 17:58:23 GMT; domain=.api.openai.com; HttpOnly;
-        Secure; SameSite=None
-      - _cfuvid=utDImtqt4o4VK7EY2mb32XkrnJ7CuIbk.xY.Y1G66Ig-1719854903125-0.0.1.1-604800000;
-        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
-      Transfer-Encoding:
-      - chunked
-      alt-svc:
-      - h3=":443"; ma=86400
-      openai-organization:
-      - user-ajb4nhk52gcguoemw0t5dq45
-      openai-processing-ms:
-      - '292'
-      openai-version:
-      - '2020-10-01'
-      strict-transport-security:
-      - max-age=31536000; includeSubDomains
-      x-ratelimit-limit-requests:
-      - '5000'
-      x-ratelimit-limit-tokens:
-      - '600000'
-      x-ratelimit-remaining-requests:
-      - '4999'
-      x-ratelimit-remaining-tokens:
-      - '599115'
-      x-ratelimit-reset-requests:
-      - 12ms
-      x-ratelimit-reset-tokens:
-      - 88ms
-      x-request-id:
-      - req_b507e10a346254e66bd3bc23167f9498
-    status:
-      code: 200
-      message: OK
-- request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
-      in many programming languages,\nespecially Text only best practices. You are
-      great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is the AI character from
-      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
-      and you believe in the potential of others. You provide encouragement and support.\nYou
-      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
-      but you know you\nare working in a professional environment, your romantic side
-      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
-      emojis and use them often, but not excessively, only when they help\n\n    I
-      need you to generate a commit message for a change in a git repository.\nThe
-      diff context is the output of the `git diff` command. It shows the changes that
-      have been made.\nLines starting with \"-\" are being removed. Lines starting
-      with \"+\" are being added.\nLines starting with \" \" (space) are unchanged.
-      The file names are shown for context.\n\n=== Example diff ===\n A line of code
-      that is unchanged, that is being passed for context\n A second line of code
-      that is unchanged, that is being passed for context\n-A line of code that is
-      being removed\n+A line of code that is being added\n=== End Example diff ===\n\nUnderstand
-      that when a line is replaced, it will show up as a line being removed and a
-      line being added.\nDon''t comment on lines that only removed, as they are no
-      longer in the file.\n\n\n    Here''s the DIFF that will be committed:\n\n    BEGIN
-      DIFF\n    ## New file added: test2.txt\nThis is another test file.\n    END
-      DIFF\n\n    Instructions for the commit message:\n    * Start with a short summary
-      (less than 72 characters).\n    * Follow with a blank line and detailed text,
-      but only if necessary. If the summary is sufficient,\n        then omit the
-      detailed text.\n    * Determine what functionality was added or modified instead
-      of just describing the exact changes.\n    * Use imperative mood (e.g., \"Add
-      feature\")\n    * Be in GitHub-flavored markdown format.\n    * Have a length
-      that scales with the length of the diff context. If the DIFF is a small change,\n      respond
-      quickly with a terse message so we can go faster.\n    * Do not repeat information
-      that is already known from the git commit.\n    * Be terse.\n    * Do not add
-      anything other then description of code changes.\n\n    BEGIN SAMPLE COMMIT
-      MESSAGE\n    Update README with better instructions for installation\n\n    The
-      previous instructions were not clear enough for new users, so we''ve updated
-      them\n    with more sample use cases and an improved installation process. This
-      should help\n    new users get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting
-      instructions:\n    Start your response with the commit message. No prefix or
-      introduction.\n    Your entire response will be the commit message. No quotation
-      marks.\n", "role": "user"}], "model": "gpt-4o", "max_tokens": 150, "n": 1, "stream":
-      true, "temperature": 0.05}'
-    headers:
-      accept:
-      - application/json
-      accept-encoding:
-      - gzip, deflate
-      connection:
-      - keep-alive
-      content-length:
-      - '3135'
-      content-type:
-      - application/json
-      host:
-      - api.openai.com
-      user-agent:
-      - OpenAI/Python 1.35.7
-      x-stainless-arch:
-      - arm64
-      x-stainless-async:
-      - 'false'
-      x-stainless-lang:
-      - python
-      x-stainless-os:
-      - MacOS
-      x-stainless-package-version:
-      - 1.35.7
-      x-stainless-runtime:
-      - CPython
-      x-stainless-runtime-version:
-      - 3.12.4
-    method: POST
-    uri: https://api.openai.com/v1/chat/completions
-  response:
-    body:
-      string: 'data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"Add"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        new"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        file"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        `"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"test"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"2"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":".txt"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"`\n\n"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"This"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        file"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        serves"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        as"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        an"},"logprobs":null,"finish_reason":null}]}
-
-
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
         additional"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        test"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        testing"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
-        resource"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"\n\n"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"."},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"This"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gF79TFEH2sPhi3QAsisLfgeWuKfq","object":"chat.completion.chunk","created":1719854903,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        new"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        file"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        will"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        be"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        used"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        for"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        further"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        testing"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"
+        purposes"},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{"content":"."},"logprobs":null,"finish_reason":null}]}
+
+
+        data: {"id":"chatcmpl-9gFKSPpVGsDFQRJIlNQ2xEExTQosp","object":"chat.completion.chunk","created":1719855728,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_d576307f90","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
 
 
         data: [DONE]
@@ -1880,20 +363,20 @@ interactions:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 89c81cbb48a33dae-LHR
+      - 89c830dbdb3648be-LHR
       Connection:
       - keep-alive
       Content-Type:
       - text/event-stream; charset=utf-8
       Date:
-      - Mon, 01 Jul 2024 17:28:23 GMT
+      - Mon, 01 Jul 2024 17:42:08 GMT
       Server:
       - cloudflare
       Set-Cookie:
-      - __cf_bm=7cfYAx..JyXCjtr_xG.fmqcMZ_aeyZn7tO8TBG_SHSQ-1719854903-1.0.1.1-XJN1Av.39BxhmOxjCVhA.Gmymc8EDn93_hBCfcTPa6LDIMsZbrnCk5I66_PUrZ7nNeCVddPsxSqh0uXsNUEhMw;
-        path=/; expires=Mon, 01-Jul-24 17:58:23 GMT; domain=.api.openai.com; HttpOnly;
+      - __cf_bm=9icjFuBwRYDzUBWxoGWevUIsVObk4f3ZdgItOqNyRuo-1719855728-1.0.1.1-bOMQ.IqJNZKLM.tIs_8vgSuRuSLxEgt3jgdg6YIQQCFo9kW.5XBQOuwxyt8wkO_VOyDU0PUYnwC_ZsK6SRKw6A;
+        path=/; expires=Mon, 01-Jul-24 18:12:08 GMT; domain=.api.openai.com; HttpOnly;
         Secure; SameSite=None
-      - _cfuvid=z13wb6DJSabYwjj5iCZP6sqDOg0qUvaUDgV8pBDuVkU-1719854903921-0.0.1.1-604800000;
+      - _cfuvid=7E1qLfKutDF6gcbSf6yEQpc2apek8p6hJ38ePx5FynQ-1719855728748-0.0.1.1-604800000;
         path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
       Transfer-Encoding:
       - chunked
@@ -1902,7 +385,7 @@ interactions:
       openai-organization:
       - user-ajb4nhk52gcguoemw0t5dq45
       openai-processing-ms:
-      - '144'
+      - '446'
       openai-version:
       - '2020-10-01'
       strict-transport-security:
@@ -1920,7 +403,7 @@ interactions:
       x-ratelimit-reset-tokens:
       - 88ms
       x-request-id:
-      - req_6a18b93780907cfcb374e225b1192da5
+      - req_cf6d6ab41ac69c9474a4bbb99493a38e
     status:
       code: 200
       message: OK
