@@ -35,7 +35,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements/requirements-test.txt
-        pip install wheel
+        pip install wheel setuptools
 
     - name: Build and install aicodebot
       run: |
