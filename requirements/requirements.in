@@ -6,14 +6,13 @@
 # Keep this list sorted alphabetically.
 
 arrow
-beautifulsoup4 # needed by langchain
 click
-faiss-cpu # for learn
 GitPython
 humanize
-langchain
+langchain_core
+langchain_anthropic
+langchain_openai
 loguru
-openai
 prompt-toolkit
 pyperclip
 pyyaml

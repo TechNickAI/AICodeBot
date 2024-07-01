@@ -2,8 +2,8 @@ from aicodebot import AICODEBOT_NO_EMOJI
 from aicodebot.coder import Coder
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
-from langchain import PromptTemplate
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers.pydantic import PydanticOutputParser
+from langchain_core.prompts import PromptTemplate
 from pathlib import Path
 from pydantic import BaseModel, Field
 from types import SimpleNamespace
@@ -260,8 +260,6 @@ library to produce a rich terminal output.
 
 {context}
 
-Conversation with the human software engineer:
-{chat_history}
 Software Engineer: {task}"""
     + AICODEBOT_NO_EMOJI
     + ":\n"
@@ -450,7 +448,7 @@ def get_prompt(command, structured_output=False):
             "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output", "languages"]),
             "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
             "sidekick": PromptTemplate(
-                template=SIDEKICK_TEMPLATE, input_variables=["chat_history", "task", "context", "languages"]
+                template=SIDEKICK_TEMPLATE, input_variables=["task", "context", "languages"]
             ),
         }
 

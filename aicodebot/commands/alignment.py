@@ -7,7 +7,7 @@ import click
 
 
 @click.command()
-@click.option("-t", "--response-token-size", type=int, default=350)
+@click.option("-t", "--response-token-size", type=int, default=500)
 def alignment(response_token_size):
     """A message about AI Alignment 🤖 + ❤"""
     console = get_console()
@@ -18,13 +18,13 @@ def alignment(response_token_size):
     lmm = LanguageModelManager()
 
     with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
-        chain = lmm.chain_factory(
-            prompt=prompt,
+        llm = lmm.model_factory(
             response_token_size=response_token_size,
             temperature=CREATIVE_TEMPERATURE,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
+        chain = prompt | llm
 
-        response = chain.run({})
+        response = str(chain.invoke({}))
         live.update(OurMarkdown(response))

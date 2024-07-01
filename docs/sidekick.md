@@ -29,28 +29,24 @@ code bases one git commit at a time.
    the necessary steps and potential challenges, and determining where it needs
    clarification on the requirements.
 
-3. **Learning**: AICodeBot gathers the information required to complete the
-   task. This includes researching the best approach, understanding the existing
-   codebase and architecture, and learning about necessary libraries or APIs.
-
-4. **Clarification**: If any aspect of the task is unclear, AICodeBot asks
+3. **Clarification**: If any aspect of the task is unclear, AICodeBot asks
    clarifying questions to ensure a comprehensive understanding of the task.
    Great engineers know how to talk to the customer to see what they want.
 
-5. **Code Generation**: AICodeBot generates code that aligns with the style of
+4. **Code Generation**: AICodeBot generates code that aligns with the style of
    the existing codebase, following conventions and best practices.
 
-6. **Self-Review**: AICodeBot reviews and improves the generated code,
+5. **Self-Review**: AICodeBot reviews and improves the generated code,
    identifying potential issues or areas for enhancement. Note: This practice
    of self-reflection has been shown to boost the effectiveness of AI systems.
 
-7. **Code Modification**: AICodeBot modifies the local code with the new
+6. **Code Modification**: AICodeBot modifies the local code with the new
    changes, making them available for review with a diff.
 
-8. **Unit Testing**: AICodeBot writes and runs unit tests for the new code,
+7. **Unit Testing**: AICodeBot writes and runs unit tests for the new code,
    debugging and modifying the code as necessary until all tests pass.
 
-9. **Code Review**: AICodeBot submits the code for review, and marks the task
+8. **Code Review**: AICodeBot submits the code for review, and marks the task
     as complete and ready for you to commit.
 
 **Future** - Reinforcement Learning and Active Learning

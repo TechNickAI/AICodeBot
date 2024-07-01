@@ -1,6 +1,6 @@
 from aicodebot.helpers import logger
 from functools import cache
-from langchain.callbacks.base import BaseCallbackHandler
+from langchain_core.callbacks import BaseCallbackHandler
 from rich.console import Console
 from rich.markdown import CodeBlock, Markdown
 from rich.panel import Panel
@@ -18,7 +18,7 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, *args, **kwargs):
         """Initially print a message that we are sending to the LM"""
-        message = f'Sending request to *{serialized["kwargs"]["model"]}*...'
+        message = f'Sending request to *{serialized["kwargs"]["model_name"]}*...'
         self.live.update(Panel(OurMarkdown(message)), refresh=True)
 
     def on_llm_new_token(self, token, **kwargs):

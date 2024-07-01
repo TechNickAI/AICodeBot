@@ -1,10 +1,9 @@
 from aicodebot import AICODEBOT
 from aicodebot.config import get_config_file, read_config
 from aicodebot.helpers import create_and_write_file
-from aicodebot.lm import openai_supported_engines
 from aicodebot.output import get_console
 from aicodebot.prompts import DEFAULT_PERSONALITY, PERSONALITIES
-import click, openai, os, sys, webbrowser, yaml
+import click, os, sys, webbrowser, yaml
 
 
 @click.command()
@@ -67,15 +66,6 @@ def configure(verbose, openai_api_key):
             webbrowser.open(openai_api_key_url)
 
         config_data["openai_api_key"] = click.prompt("Please enter your OpenAI API key").strip()
-
-    # Validate the API key
-    try:
-        openai.api_key = config_data["openai_api_key"]
-        with console.status("Validating the OpenAI API key", spinner=console.DEFAULT_SPINNER):
-            openai_supported_engines(config_data["openai_api_key"])
-    except Exception as e:
-        raise click.ClickException(f"Failed to validate the API key: {str(e)}") from e
-    console.print("✅ The API key is valid.")
 
     # ---------------------- Collect the personality choice ---------------------- #
 

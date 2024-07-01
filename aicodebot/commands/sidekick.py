@@ -1,5 +1,4 @@
 from aicodebot import AICODEBOT
-from aicodebot.agents import SidekickAgent
 from aicodebot.coder import Coder
 from aicodebot.config import Session
 from aicodebot.helpers import logger
@@ -29,7 +28,9 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
         sys.exit(1)
 
     console.print(
-        Panel(OurMarkdown("This is an *experimental* feature. We love bug reports 😉", style=console.warning_style))
+        Panel(
+            OurMarkdown("This is an *experimental* feature. We love bug reports 😉", style=console.warning_style)
+        )
     )
 
     # ----------------- Determine which files to use for context ----------------- #
@@ -101,29 +102,18 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
             with Live(
                 OurMarkdown(f"Sending task to {lmm.model_name} via {lmm.provider}"), auto_refresh=False
             ) as live:
-                chain = lmm.chain_factory(
-                    prompt=prompt,
+                llm = lmm.model_factory(
                     streaming=True,
                     callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
-                    chat_history=True,
                 )
+                chain = prompt | llm
 
-                # Check if we need to change the model to handle the context size
-                old_model, new_model = lmm.use_appropriate_sized_model(
-                    chain, token_size(context) + token_size(prompt.template) + DEFAULT_MEMORY_TOKENS
-                )
-                if old_model != new_model:
-                    console.print(
-                        f"Changing from {old_model} to {new_model} to handle the context size.",
-                        style=console.warning_style,
-                    )
-
-                chat.raw_response = chain.run(
+                chat.raw_response = chain.invoke(
                     {"task": parsed_human_input, "context": context, "languages": languages}
                 )
 
                 # One last "live" update with the full response
-                markdown = OurMarkdown(chat.raw_response)
+                markdown = OurMarkdown(str(chat.raw_response))
                 live.update(markdown)
 
                 # ------------------------- Post process the markdown ------------------------ #
@@ -152,47 +142,3 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
         if request:
             # If we were given a request, then we only want to run once
             break
-
-
-@click.command()
-@click.option("-l", "--learned-repos", multiple=True, help="The name of the repo to use for learned information")
-def sidekick_agent(learned_repos):
-    """
-    EXPERIMENTAL: Coding help from your AI sidekick, made agentic with tools
-    """
-    console = get_console()
-    if not Coder.is_inside_git_repo():
-        console.print("🛑 This command must be run from within a git repository.", style=console.error_style)
-        sys.exit(1)
-
-    console.print("This is an experimental feature.", style=console.warning_style)
-
-    agent = SidekickAgent.get_agent_executor(learned_repos)
-    our_input_session = generate_prompt_session()
-    our_input_session.completer = None
-
-    console.print(f"Enter a request for your {AICODEBOT} sidekick", style=console.bot_style)
-
-    edited_input = None
-    while True:  # continuous loop for multiple questions
-        human_input = our_input_session.prompt()
-
-        human_input = human_input.strip()
-
-        if not human_input:
-            # Must have been spaces or blank line
-            continue
-
-        elif human_input.lower()[-2:] == r"\e":
-            # If the text ends wit then we want to edit it
-            human_input = edited_input = click.edit(human_input[:-2])
-
-        if edited_input:
-            # If the user edited the input, then we want to print it out so they
-            # have a record of what they asked for on their terminal
-            console.print(f"Request:\n{edited_input}")
-
-        response = agent.run(human_input)
-        # Remove everything after Action: (if it exists)
-        response = response.split("Action:")[0]
-        console.print(OurMarkdown(response))

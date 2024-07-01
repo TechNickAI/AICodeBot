@@ -2,11 +2,16 @@
 
 ## Your AI-powered coding sidekick
 
-AICodeBot is a coding assistant designed to make your coding life easier. Think of it as your AI version of a pair programmer. Perform code reviews, create helpful commit messages, debug problems, and help you think through building new features. A team member that accelerates the pace of development and helps you write better code.
+AICodeBot is a terminal-based coding assistant designed to make your coding life easier.
+Think of it as your AI version of a pair programmer.
+Perform code reviews, create helpful commit messages, debug problems, and help you think through building new features.
+A team member that accelerates the pace of development and helps you write better code.
 
 We've planned to build out multiple different interfaces for interacting with AICodeBot. To start, it's a [command-line tool](https://pypi.org/project/aicodebot/) that you can install and run in your terminal, and a [GitHub Action for Code Reviews](https://github.com/marketplace/actions/aicodebot-code-review).
 
-Status: This project is in its early stages, but it already improves the software development workflow, and has a healthy roadmap of features (below).
+Status: This project was built before AI Coding Assistants were cool. 🤓 As such, much of the functionality has
+been replicated in various IDEs. Where AICodeBot shines is a) it's in the terminal, not GUI, and b) it can be used
+in processes like GitHub actions.
 
 We're using AICodeBot to build AICodeBot, and it's upward spiraling all the time.️ We're looking for contributors to help us build it out. See [CONTRIBUTING](https://github.com/TechNickAI/AICodeBot/blob/main/CONTRIBUTING.md) for more.
 
@@ -92,11 +97,12 @@ Commands:
   sidekick        Coding help from your AI sidekick
 ```
 
-### Open AI key setup
+### API Key setup
 
-The first time you run it, you'll be prompted to enter your OpenAI API Key, which is required, as we use OpenAI's large language models for the AI. You can get one for free by visiting your [API key settings page](https://platform.openai.com/account/api-keys).
+AICodeBot supports multiple Large Language Models, including Anthropic's Claude 3.x, and OpenAI's GPT-3/4x.
+Pull requests for Gemini or Ollama are welcomed, but we feel these two do the trick.
 
-Note: You will be billed by OpenAI based on how much you use it. Typical developers will use less than $10/month - which if you are a professional developer you'll likely more than make up for with saved time and higher quality work. See [OpenAI's pricing page](https://openai.com/pricing/) for more details. Also, see the note about increasing your token size and using better language models below.
+The first time you run AICodeBot, you'll be prompted to enter your API keys
 
 ## Integration with GitHub Actions
 
@@ -161,29 +167,14 @@ It's also not a "build a site for me in 5 minutes" tool that takes a well-constr
 
 ## Configuring the language model to use
 
-Not all OpenAI accounts have GPT-4 API access enabled. By default, AICodeBot will use GPT-4. If your OpenAI account supports it, we will check the first time you run it. If your OpenAI API does not support GPT-4, you can ask to be added to the waitlist [here](https://openai.com/waitlist/gpt-4-api). In our testing, GPT-4 is the best model and provides the best results.
-
 To specify a different model, you can set the `language_model` in your `$HOME/.aicodebot.yaml` file. For example:
 
 ```yaml
 openai_api_key: sk-*****
 language_model: gpt-3.5-turbo
 personality: Stewie
-version: 1.2
+version: 1.3
 ```
-
-You can also use openrouter.ai to get access to advanced models like GPT-4 32k and Anthropic's 100k model for larger context windows. See [openrouter.ai](https://openrouter.ai) for more details. Here's a sample config:
-
-```yaml
-openai_api_key: sk-*****
-openrouter_api_key: sk-or-****
-language_model_provider: OpenRouter
-language_model: openai/gpt-4-32k # or anthropic/claude-2 for 100k token limit
-personality: Stewie
-version: 1.2
-```
-
-Note: We'll be adding more options for AI models in the future, including those that can be run locally, such as [GPT4all](https://gpt4all.io/) and HuggingFace's [Transformers](https://huggingface.co/transformers/).
 
 ### Understanding Tokens and Using Commands Efficiently
 
@@ -205,8 +196,7 @@ The context is too large (21414) for any of the models supported by your API key
 There are a couple of things you can do:
 
 1. Load fewer files into the context (only what you need to work with)
-2. Apply for GPT-4-32k access from OpenAI by contacting them.
-3. Use openrouter.ai - this allows you to use the full power of GPT-4-32k, which offers a 4x larger context window. See [openrouter.ai](https://openrouter.ai) for more details. Once you sign up and set your `openrouter_api_key` in your `$HOME/.aicodebot.yaml` file, you can have access to larger models. Soon we will have support for Claude 2, which has a 100k token limit.
+2. Use Anthropic's Claude, which has much larger context window
 
 ## Development / Contributing
 

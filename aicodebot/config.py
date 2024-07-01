@@ -4,7 +4,7 @@ import os, yaml
 
 
 def get_local_data_dir():
-    data_dir = Path(os.getenv("AICODEBOT_LOCAL_DATA_DIR", str(Path.home() / ".aicodebot_data")))
+    data_dir = Path(os.getenv("AICODEBOT_LOCAL_DATA_DIR", str(Path.home() / ".aicodebot")))
     # Make the directory if it doesn't exist
     if not data_dir.exists():
         logger.debug(f"Creating local data directory {data_dir}")
@@ -17,7 +17,7 @@ def get_local_data_dir():
 
 
 def get_config_file():
-    return Path(os.getenv("AICODEBOT_CONFIG_FILE", str(Path.home() / ".aicodebot.yaml")))
+    return Path(os.getenv("AICODEBOT_CONFIG_FILE", get_local_data_dir() / "config.yaml"))
 
 
 def read_config():

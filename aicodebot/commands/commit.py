@@ -69,7 +69,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
             )
         else:
             console.print("Running pre-commit checks...")
-            result = subprocess.run(["pre-commit", "run", "--files"] + files)
+            result = subprocess.run(["pre-commit", "run", "--files"] + files, check=False)
             if result.returncode != 0:
                 console.print("🛑 Pre-commit checks failed. Please fix the issues and try again.")
                 return
@@ -85,13 +85,13 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
 
     console.print("Analyzing the differences and generating a commit message")
     with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
-        chain = lmm.chain_factory(
-            prompt=prompt,
+        llm = lmm.chain_factory(
             response_token_size=response_token_size,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
-        response = chain.run({"diff_context": diff_context, "languages": languages})
+        chain = prompt | llm
+        response = chain.invoke({"diff_context": diff_context, "languages": languages})
         live.update(OurMarkdown(response))
 
     commit_message_approved = not console.is_terminal or click.confirm(

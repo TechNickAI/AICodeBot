@@ -16,7 +16,7 @@ def debug(ctx, command):
     # Run the command and capture its output
     command_str = " ".join(command)
     console.print(f"Executing the command:\n{command_str}", highlight=False)
-    process = subprocess.run(command_str, shell=True, capture_output=True, text=True)  # noqa: S602
+    process = subprocess.run(command_str, shell=True, capture_output=True, text=True, check=False)  # noqa: S602
 
     # Print the output of the command
     output = f"Standard Output:\n{process.stdout}\nStandard Error:\n{process.stderr}"
@@ -36,12 +36,12 @@ def debug(ctx, command):
     lmm = LanguageModelManager()
 
     with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
-        chain = lmm.chain_factory(
-            prompt=prompt,
+        llm = lmm.model_factory(
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
-        response = chain.run({"command_output": output, "languages": ["unix", "bash", "shell"]})
+        chain = prompt | llm
+        response = chain.invoke({"command_output": output, "languages": ["unix", "bash", "shell"]})
         live.update(OurMarkdown(response))
 
     sys.exit(process.returncode)
