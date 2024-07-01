@@ -102,7 +102,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
         # For some reason the response often contains quotes around the summary, even if I tell it not to
         # So we strip them here
-        commit_message = str(response).replace('"', "").strip()
+        commit_message = str(response.content).replace('"', "").strip()
 
         temp.write(commit_message)
         temp_file_name = temp.name
