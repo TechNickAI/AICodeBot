@@ -1,11 +1,11 @@
 [tool.black]
 line-length = 115
-target-version = ["py311"]
+target-version = ["py312"]
 
 [tool.isort]
 line_length = 115
 profile = "black"
-py_version = 311
+py_version = 312
 use_parentheses = true
 ## Ignore the source of the import and just sort alphabetically, with "from" before "import"
 combine_as_imports = true
@@ -81,7 +81,7 @@ lint.select = [
     "W",   # pycodestyle warnings
     "YTT", # flake8 2020
 ]
-target-version = "py311"
+target-version = "py312"
 # Certain errors we don't want to fix because they are too aggressive,
 # especially in the editor (removing variables we haven't used yet
 extend-exclude = [
