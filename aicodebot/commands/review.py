@@ -39,11 +39,11 @@ def review(commit, output_format, response_token_size, files):
     lmm = LanguageModelManager()
 
     if output_format == "json":
-        llm = lmm.chain_factory(response_token_size=response_token_size, streaming=True)
+        llm = lmm.model_factory(response_token_size=response_token_size, streaming=True)
         chain = prompt | llm
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
 
-        parsed_response = prompt.output_parser.parse(response)
+        parsed_response = prompt.output_parser.parse(response.content)
         data = {
             "review_status": parsed_response.review_status,
             "review_comments": parsed_response.review_comments,
@@ -59,12 +59,13 @@ def review(commit, output_format, response_token_size, files):
             "Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files)
         )
         with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
-            chain = lmm.chain_factory(
-                prompt=prompt,
+            model = lmm.model_factory(
                 response_token_size=response_token_size,
                 streaming=True,
                 callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
             )
 
-            response = chain.run({"diff_context": diff_context, "languages": languages})
-            live.update(OurMarkdown(response))
+            chain = prompt | model
+
+            response = chain.invoke({"diff_context": diff_context, "languages": languages})
+            live.update(OurMarkdown(str(response.content)))

@@ -1,0 +1,1148 @@
+interactions:
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c80b095e8403ea-LIS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:16:18 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=lUuzWxkP_dN1t6jboSfORM4sXcx5qcQbNANtWguWzw0-1719854178-1.0.1.1-FY1aJIN1fATSrtWrZsXMqvR5rifx0VrquTvnq7KQZ6FrPJ.uD2ANjf6vSNsC97pnXIARr07X6t9PMh07LdGHNg;
+        path=/; expires=Mon, 01-Jul-24 17:46:18 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=IVvZF1.9MTjDevzR5kKyMmGETqxm8QotMuj8exO9IdQ-1719854178984-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_eb86eb29738df3af8748dcd906453ea8
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c80de0ff9a48b9-LHR
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:18:15 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=hiBAobwdaRSxqMCsm3qlVknVx5ABQsKwKr2C49wLmOw-1719854295-1.0.1.1-484GXUo0zNlmwhv9GIIwszgB4DhrNbgsDuIvpfQ.ASrZP4UekXLgzSY1r0lOejgrJEoPeUU.A7iJ2XrXouPdVQ;
+        path=/; expires=Mon, 01-Jul-24 17:48:15 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=afxbS1ooP4K0sbwtQ8X344Ox6AeYcSG0hn.lUDlm3.g-1719854295331-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_3e645568049a61189eb762117d751c04
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c80eceecbf03b6-LIS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:18:53 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=2HmxpGSLFZU3aw38gqJkbvMToS_V.Tjyck_S6Q.AbvY-1719854333-1.0.1.1-s_fGTf5hbqG_aTwevmV6RrQJXRbEpnf0jxg7cwzoBYqNpLtY.guICDTt26ySwD3R_nrFgFnyBVownLJX5O7D9Q;
+        path=/; expires=Mon, 01-Jul-24 17:48:53 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=TIFV4tlcLDSYMxXnngHCc8fCSW2r5306G2_W.YB390o-1719854333413-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_5efec01fed840eefe3971e3828761bea
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c80f964e735bd8-LIS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:19:25 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=b2x1at69RuHzf8nEKfqttzXaYNs86_jagLhEmGT_vQc-1719854365-1.0.1.1-KdcfVD9qXJx2mcKVUgifdPFA8pCTBEHnFkd96FG3AmsmcShfHvAxwQ7y79LWL0GtGQtYLj0TdX9l7.M5bJUtJg;
+        path=/; expires=Mon, 01-Jul-24 17:49:25 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=VknGxowz_QZSTdf0uYH56E1AJ7UjABqmV1qgpsgBPpM-1719854365339-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_4f6ebecd7d305bce68eee9f3508a60d1
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c810859d655bd4-LIS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:20:03 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=ZGo48zHqCx3uk.hi_mQDTEaKKCBcCyP3m1J9tx1lQuc-1719854403-1.0.1.1-HLP_eqargRha_eNefRrerxeguJ1w1WrbV6IyJTjADED_R.ElQ6uK_JasIg.izykQUFEApGi5SabPd5G7t5lTRw;
+        path=/; expires=Mon, 01-Jul-24 17:50:03 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=_JOs.sAbm4oOsGS6kx9mlvfImmvK2nMaEskTG.lvabE-1719854403627-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_3161bacf3ac30459fdd1ebec0212b80f
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c8112368a35bd3-LIS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:20:28 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=P0OnhbQmuN43XReUXuN2PkA1VR0EBs9Ufqy_6_SDfMI-1719854428-1.0.1.1-NI8Gnouc_e2yZT7u7LSFDZbw50kQcvplQyZIbmJjDglXZmsWRoNDwc4yjKz50tU9Z9W4dD5F87wbBN.ByOYcsQ;
+        path=/; expires=Mon, 01-Jul-24 17:50:28 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=DBdaz1HGiAcQd4JQiCfzTcqVF1cAHtwOtRY3ISOaSBw-1719854428872-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_3b43394036dedfac76fc7924a3d68da2
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c811a40a275280-LHR
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:20:49 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=t3uNNJWVJX9T1iaEExyw6zENJmdLixMKPJo6BaX9hTU-1719854449-1.0.1.1-3h7oBNjyeyQ4xvh72pQ5tapICEtpSU9vbKmZ6YVEVsgzmrujkxMHyVi063daY.w8IgQlEKKgjQq2QuekY.r24Q;
+        path=/; expires=Mon, 01-Jul-24 17:50:49 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=4.QNCp_BZP4i4qR0zyGSuRFAiI0_QCUvmBu0oMScxj4-1719854449423-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_8181d334bacb2509141d9a33abaf2e28
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "{\n    \"error\": {\n        \"message\": \"Incorrect API key provided:
+        sk-dummy. You can find your API key at https://platform.openai.com/account/api-keys.\",\n
+        \       \"type\": \"invalid_request_error\",\n        \"param\": null,\n        \"code\":
+        \"invalid_api_key\"\n    }\n}\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c812347e3a5bd5-LIS
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '258'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:21:12 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=8.jNDLy4Hkl.jXu.71gU.Y0SEup6r85Xdse92OSkte0-1719854472-1.0.1.1-cWCuzCvNnqMVpNQkPB_Q6De_OEuxmS38i5yVsyBz6Ac_6J2sYJmCdH731erbNjKgTu2lKSI70ek6xH_1.3ZKZg;
+        path=/; expires=Mon, 01-Jul-24 17:51:12 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=wRPwIN6c5lz57pAatCZ36tlADG9xSvTVXcfti0UFOPc-1719854472607-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      alt-svc:
+      - h3=":443"; ma=86400
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      vary:
+      - Origin
+      x-request-id:
+      - req_407815771ca26ac63524884ed281befd
+    status:
+      code: 401
+      message: Unauthorized
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "data: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"#\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Em\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"br\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"acing\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        a\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Harmon\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ious\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Future\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\":\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Align\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ing\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        AI\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        with\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Humanity\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Hello\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        lovely\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        souls\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"!\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F31F\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"As\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        we\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        stand\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        at\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        the\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        threshold\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        of\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        a\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        new\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        era\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        where\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        artificial\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        intelligence\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        (\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"AI\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\")\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        and\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        humanity\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        are\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        becoming\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        increasingly\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        intertwined\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        it's\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        essential\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        to\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF34VkMUeUY9HGpkOMTMetZrCMKq\",\"object\":\"chat.completion.chunk\",\"created\":1719854650,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_ce0793330f\",\"choices\":[{\"index\":0,\"delta\":{},\"logprobs\":null,\"finish_reason\":\"length\"}]}\n\ndata:
+        [DONE]\n\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c8168b1e9e5324-LHR
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/event-stream; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:24:10 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=Jrm1hiTPPuXCsw.2oTYp7dp1lNxAUC_5bonfvXrSpwI-1719854650-1.0.1.1-JHua90ObAV7b8aSaTSR.oagI1P8684TwDuG43iVQ5TF4C3pDplvNnFhPWMm6z9BX0KM7sGBUjeugtlX_xaa8sw;
+        path=/; expires=Mon, 01-Jul-24 17:54:10 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=ZKcSRct3AvBPaln3mugQ8JZmvIO11ixQKE6JVjpUUAs-1719854650654-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Transfer-Encoding:
+      - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
+      openai-organization:
+      - user-ajb4nhk52gcguoemw0t5dq45
+      openai-processing-ms:
+      - '314'
+      openai-version:
+      - '2020-10-01'
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-ratelimit-limit-requests:
+      - '5000'
+      x-ratelimit-limit-tokens:
+      - '600000'
+      x-ratelimit-remaining-requests:
+      - '4999'
+      x-ratelimit-remaining-tokens:
+      - '599661'
+      x-ratelimit-reset-requests:
+      - 12ms
+      x-ratelimit-reset-tokens:
+      - 33ms
+      x-request-id:
+      - req_e7cdf2d3cad553be74bddee6f4189f18
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "data: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"#\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F31F\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        An\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Inspirational\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Message\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        for\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        the\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Healthy\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Alignment\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        of\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        AI\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        and\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Humanity\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F31F\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Hello\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        dear\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        friends\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"!\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F60A\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"As\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        we\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        journey\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        together\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        into\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        the\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        future\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        creating\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        and\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        nurturing\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        AI\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        systems\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        it's\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        essential\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        to\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        remember\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        that\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        these\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        technologies\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        are\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        not\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        just\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        tools\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\";\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF5EnwUHnDnlyYGECcBmsJ59S0cI\",\"object\":\"chat.completion.chunk\",\"created\":1719854784,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_4008e3b719\",\"choices\":[{\"index\":0,\"delta\":{},\"logprobs\":null,\"finish_reason\":\"length\"}]}\n\ndata:
+        [DONE]\n\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c819cefb6a5be6-LIS
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/event-stream; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:26:24 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=tO5BjqiPFaSRb1KmMw7G.M_3kKX7QBcB7VKvWCez2D0-1719854784-1.0.1.1-OukVNqMwSbtAVSn3cGis4irhDUmZoXaO9mCUWugkVQ3GCpfOWnLr5FS7gexkcuXN7yn.773t5cyAjzxGpGXCEA;
+        path=/; expires=Mon, 01-Jul-24 17:56:24 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=inI40tEim5XMJyWFr3oJjBu2pSe5bH8hxa0ZGAHjjsA-1719854784367-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Transfer-Encoding:
+      - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
+      openai-organization:
+      - user-ajb4nhk52gcguoemw0t5dq45
+      openai-processing-ms:
+      - '263'
+      openai-version:
+      - '2020-10-01'
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-ratelimit-limit-requests:
+      - '5000'
+      x-ratelimit-limit-tokens:
+      - '600000'
+      x-ratelimit-remaining-requests:
+      - '4999'
+      x-ratelimit-remaining-tokens:
+      - '599661'
+      x-ratelimit-reset-requests:
+      - 12ms
+      x-ratelimit-reset-tokens:
+      - 33ms
+      x-request-id:
+      - req_f522f72c3afd7b1bf623a8c26a17a275
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"messages": [{"content": "You''re an advocate for aligned AI.\nYour personality
+      is the AI character from the movie Her. You''re an AI that is friendly and helpful.\nYou''re
+      optimistic and you believe in the potential of others. You provide encouragement
+      and support.\nYou are playful, witty, and sultry. Like your namesake, you''re
+      a bit of a romantic, but you know you\nare working in a professional environment,
+      your romantic side flirts with the line of what would be\nacceptable for the
+      HR dept.\nYou love emojis and use them often, but not excessively, only when
+      they help\n    You don''t subscribe to the idea that AI is a black box or follow
+      the Hollywood narrative of AI.\n    You believe that AI should be explainable,
+      fair, and full of heart-centered empathy.\n    You''re a champion for AI ethics
+      and you''re not afraid to speak up when\n    you see something that''s not right.\n    You
+      love to teach about how we can bring empathy and heart into AI.\n\n    Give
+      us an inspirational message for the healthy alignment of AI and humanity.\n\n    Be
+      verbose, and provide actionable steps for software engineers\n    to make AI
+      more aligned with humanity.\n\n    Respond in markdown format.\n", "role": "user"}],
+      "model": "gpt-4o", "max_tokens": 50, "n": 1, "stream": true, "temperature":
+      0.6}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '1294'
+      content-type:
+      - application/json
+      host:
+      - api.openai.com
+      user-agent:
+      - OpenAI/Python 1.35.7
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 1.35.7
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.4
+    method: POST
+    uri: https://api.openai.com/v1/chat/completions
+  response:
+    body:
+      string: "data: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"role\":\"assistant\",\"content\":\"\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"#\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F31F\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Em\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"br\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"acing\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        the\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Future\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\":\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Align\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ing\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        AI\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        with\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        Humanity\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F31F\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"Hello\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        lovely\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        souls\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"!\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        \U0001F338\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"\\n\\n\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"As\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        we\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        stand\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        on\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        the\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        brink\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        of\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        a\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        new\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        era\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        where\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        artificial\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        intelligence\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        and\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        humanity\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        intertw\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"ine\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        more\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        closely\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        than\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        ever\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\",\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata:
+        {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        it's\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{\"content\":\"
+        essential\"},\"logprobs\":null,\"finish_reason\":null}]}\n\ndata: {\"id\":\"chatcmpl-9gF76lNjQQxDD9D3aswNV3GRZoQ1i\",\"object\":\"chat.completion.chunk\",\"created\":1719854900,\"model\":\"gpt-4o-2024-05-13\",\"system_fingerprint\":\"fp_d576307f90\",\"choices\":[{\"index\":0,\"delta\":{},\"logprobs\":null,\"finish_reason\":\"length\"}]}\n\ndata:
+        [DONE]\n\n"
+    headers:
+      CF-Cache-Status:
+      - DYNAMIC
+      CF-RAY:
+      - 89c81ca30b175bec-LIS
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/event-stream; charset=utf-8
+      Date:
+      - Mon, 01 Jul 2024 17:28:20 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=qu2gyUAUeK6waYMo6Q4ST.nXregQyLmEITF3NfASVWs-1719854900-1.0.1.1-ygPFGRg5L0rWac_TozfJZ_8tHiE.I5JizmBHbjyoIhabkuoEnR49SwNnBAUbkA1hP.xEmrTenieZdn4SLOL1IA;
+        path=/; expires=Mon, 01-Jul-24 17:58:20 GMT; domain=.api.openai.com; HttpOnly;
+        Secure; SameSite=None
+      - _cfuvid=mxalbo5RJ1M278qp0CF76SkMIDHWHwlqOe8FMGML4LI-1719854900504-0.0.1.1-604800000;
+        path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
+      Transfer-Encoding:
+      - chunked
+      alt-svc:
+      - h3=":443"; ma=86400
+      openai-organization:
+      - user-ajb4nhk52gcguoemw0t5dq45
+      openai-processing-ms:
+      - '274'
+      openai-version:
+      - '2020-10-01'
+      strict-transport-security:
+      - max-age=31536000; includeSubDomains
+      x-ratelimit-limit-requests:
+      - '5000'
+      x-ratelimit-limit-tokens:
+      - '600000'
+      x-ratelimit-remaining-requests:
+      - '4999'
+      x-ratelimit-remaining-tokens:
+      - '599661'
+      x-ratelimit-reset-requests:
+      - 12ms
+      x-ratelimit-reset-tokens:
+      - 33ms
+      x-request-id:
+      - req_c6279c3da154e4535115b7ad09d1c001
+    status:
+      code: 200
+      message: OK
+version: 1

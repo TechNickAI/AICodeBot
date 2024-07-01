@@ -4,7 +4,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
 import os, tiktoken
 
-DEFAULT_RESPONSE_TOKENS = 512
+DEFAULT_RESPONSE_TOKENS = 1_000
 DEFAULT_MEMORY_TOKENS = DEFAULT_RESPONSE_TOKENS * 2
 DEFAULT_CONTEXT_TOKENS = DEFAULT_RESPONSE_TOKENS * 4
 PRECISE_TEMPERATURE = 0.05
@@ -32,7 +32,7 @@ class LanguageModelManager:
 
     def model_factory(
         self,
-        response_token_size=None,
+        response_token_size=DEFAULT_RESPONSE_TOKENS,
         temperature=PRECISE_TEMPERATURE,
         streaming=False,
         callbacks=None,
@@ -84,8 +84,7 @@ class LanguageModelManager:
 
     def get_model_token_limit(self, model_name):
         model_token_limits = {
-            "anthropic/claude-2": 100_000,
-            "anthropic/claude-3": 200_000,
+            "claude-3": 200_000,
             "gpt-4": 8192,
             "gpt-4-32k": 32768,
             "gpt-3.5-turbo-16k": 16384,
