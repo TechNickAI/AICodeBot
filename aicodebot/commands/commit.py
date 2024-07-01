@@ -85,14 +85,14 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
 
     console.print("Analyzing the differences and generating a commit message")
     with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
-        llm = lmm.chain_factory(
+        llm = lmm.model_factory(
             response_token_size=response_token_size,
             streaming=True,
             callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
         )
         chain = prompt | llm
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
-        live.update(OurMarkdown(response))
+        live.update(OurMarkdown(str(response)))
 
     commit_message_approved = not console.is_terminal or click.confirm(
         "Would you like to use this generated commit message? Type 'n' to edit it.", default=True
