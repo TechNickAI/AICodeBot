@@ -75,7 +75,7 @@ jobs:
 
     - name: Build the package
       run: |
-        pip install wheel twine
+        pip install wheel twine setuptools
         python setup.py sdist bdist_wheel
 
     - name: Publish to PyPi
