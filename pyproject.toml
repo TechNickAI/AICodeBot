@@ -20,7 +20,7 @@ filterwarnings = "ignore::DeprecationWarning"
 
 
 [tool.ruff]
-extend-ignore = [
+lint.extend-ignore = [
     "DTZ003",
     "DTZ007",
     "E401",    # multiple imports on one line
@@ -45,7 +45,7 @@ extend-ignore = [
 ]
 # https://beta.ruff.rs/docs/rules/#ruff-specific-rules-ruf
 line-length = 120 # Tell the linter the max length is 120, and the other tools aim for 115
-select = [
+lint.select = [
     # Note, don't use isort through ruff, it's not as configurable as the standalone tool
     "A", # builtins
     #"ARG", # unused arguments
@@ -88,9 +88,9 @@ extend-exclude = [
     # Don't look at the patch data because it contains incomplete python files
     "tests/rebuild_patch_data",
 ]
-unfixable = ["F401", "F841"]
+lint.unfixable = ["F401", "F841"]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Allow print statements in tests
 "test_*.py" = ["T201"]
 

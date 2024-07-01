@@ -3,7 +3,7 @@ from aicodebot.coder import Coder
 from aicodebot.config import Session
 from aicodebot.helpers import logger
 from aicodebot.input import Chat, generate_prompt_session
-from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, DEFAULT_MEMORY_TOKENS, LanguageModelManager, token_size
+from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
 from rich.live import Live

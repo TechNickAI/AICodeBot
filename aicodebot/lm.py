@@ -1,4 +1,3 @@
-from aicodebot import AICODEBOT_NO_EMOJI
 from aicodebot.config import read_config
 from aicodebot.helpers import logger
 from langchain_anthropic import ChatAnthropic

@@ -90,10 +90,8 @@ class Chat:
         if not self.diff_blocks:
             self.console.print("No diff blocks to apply.", style=self.console.error_style)
         else:
-            count = 0
-            for diff_block in self.diff_blocks:
+            for count, diff_block in enumerate(self.diff_blocks, start=1):
                 # Apply the diff with git apply
-                count += 1
                 if Patch.apply_patch(diff_block):
                     self.console.print(Panel(f"✅ change {count} applied."))
         return self.CONTINUE
@@ -149,7 +147,7 @@ class Chat:
             return self.CONTINUE
 
         # Execute the shell command and let the output go directly to the console
-        subprocess.run(shell_command, shell=True)  # noqa: S602
+        subprocess.run(shell_command, shell=True, check=False)  # noqa: S602
         return self.CONTINUE
 
     def help(self, human_input=None):  # noqa: A003

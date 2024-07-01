@@ -250,7 +250,9 @@ class Coder:
 
     def is_inside_git_repo():
         """Checks if the current directory is inside a git repository."""
-        out = subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], capture_output=True, text=True)
+        out = subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"], capture_output=True, text=True, check=False
+        )
         if out.returncode == 0:
             return True
         else:
