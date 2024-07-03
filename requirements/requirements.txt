@@ -68,7 +68,7 @@ langchain-core==0.2.10
     #   -r requirements/requirements.in
     #   langchain-anthropic
     #   langchain-openai
-langchain-openai==0.1.13
+langchain-openai==0.1.14
     # via -r requirements/requirements.in
 langsmith==0.1.82
     # via langchain-core
