@@ -63,7 +63,7 @@ jsonpointer==3.0.0
     # via jsonpatch
 langchain-anthropic==0.1.17
     # via -r requirements/requirements.in
-langchain-core==0.2.10
+langchain-core==0.2.12
     # via
     #   -r requirements/requirements.in
     #   langchain-anthropic
