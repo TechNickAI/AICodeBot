@@ -36,6 +36,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements/requirements-test.txt
         pip install wheel
+        # Install setuptools for Python 3.12 and above
+        if [[ "$(python -c 'import sys; print(sys.version_info >= (3, 12))')" == "True" ]]; then
+          pip install setuptools
+        fi
 
     - name: Build and install aicodebot
       run: |
@@ -75,7 +79,7 @@ jobs:
 
     - name: Build the package
       run: |
-        pip install wheel twine
+        pip install wheel twine setuptools
         python setup.py sdist bdist_wheel
 
     - name: Publish to PyPi
