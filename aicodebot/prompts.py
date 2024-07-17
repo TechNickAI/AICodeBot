@@ -449,7 +449,9 @@ def get_prompt(command, structured_output=False):
             "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context", "languages"]),
             "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output", "languages"]),
             "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
-            "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["task", "context", "languages"]),
+            "sidekick": PromptTemplate(
+                template=SIDEKICK_TEMPLATE, input_variables=["task", "context", "languages"]
+            ),
         }
 
         try:

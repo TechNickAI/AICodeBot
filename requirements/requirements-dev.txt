@@ -6,7 +6,7 @@
 aicodebot
 
 # For committing, formatting, and dependency management
-black==24.4.2
+black
 isort
 pip-tools
 pre-commit
