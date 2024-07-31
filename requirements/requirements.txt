@@ -63,12 +63,12 @@ jsonpointer==3.0.0
     # via jsonpatch
 langchain-anthropic==0.1.20
     # via -r requirements/requirements.in
-langchain-core==0.2.20
+langchain-core==0.2.25
     # via
     #   -r requirements/requirements.in
     #   langchain-anthropic
     #   langchain-openai
-langchain-openai==0.1.16
+langchain-openai==0.1.19
     # via -r requirements/requirements.in
 langsmith==0.1.82
     # via langchain-core
