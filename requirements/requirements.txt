@@ -61,9 +61,9 @@ jsonpatch==1.33
     # via langchain-core
 jsonpointer==3.0.0
     # via jsonpatch
-langchain-anthropic==0.1.20
+langchain-anthropic==0.1.21
     # via -r requirements/requirements.in
-langchain-core==0.2.20
+langchain-core==0.2.25
     # via
     #   -r requirements/requirements.in
     #   langchain-anthropic
