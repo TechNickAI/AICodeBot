@@ -63,12 +63,12 @@ jsonpointer==3.0.0
     # via jsonpatch
 langchain-anthropic==0.1.20
     # via -r requirements/requirements.in
-langchain-core==0.2.20
+langchain-core==0.2.28
     # via
     #   -r requirements/requirements.in
     #   langchain-anthropic
     #   langchain-openai
-langchain-openai==0.1.16
+langchain-openai==0.1.20
     # via -r requirements/requirements.in
 langsmith==0.1.82
     # via langchain-core
@@ -144,6 +144,7 @@ typing-extensions==4.12.2
     # via
     #   anthropic
     #   huggingface-hub
+    #   langchain-core
     #   openai
     #   pydantic
     #   pydantic-core
