@@ -56,19 +56,21 @@ idna==3.7
     #   httpx
     #   requests
 jiter==0.5.0
-    # via anthropic
+    # via
+    #   anthropic
+    #   openai
 jsonpatch==1.33
     # via langchain-core
 jsonpointer==3.0.0
     # via jsonpatch
 langchain-anthropic==0.1.20
     # via -r requirements/requirements.in
-langchain-core==0.2.20
+langchain-core==0.2.30
     # via
     #   -r requirements/requirements.in
     #   langchain-anthropic
     #   langchain-openai
-langchain-openai==0.1.16
+langchain-openai==0.1.21
     # via -r requirements/requirements.in
 langsmith==0.1.82
     # via langchain-core
@@ -78,7 +80,7 @@ markdown-it-py==3.0.0
     # via rich
 mdurl==0.1.2
     # via markdown-it-py
-openai==1.35.7
+openai==1.40.6
     # via langchain-openai
 orjson==3.10.5
     # via langsmith
@@ -144,6 +146,7 @@ typing-extensions==4.12.2
     # via
     #   anthropic
     #   huggingface-hub
+    #   langchain-core
     #   openai
     #   pydantic
     #   pydantic-core
