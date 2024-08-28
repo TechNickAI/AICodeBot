@@ -108,7 +108,13 @@ class LanguageModelManager:
             or (os.getenv("OPENAI_API_KEY") and self.OPENAI)
             or os.getenv("AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER))
         )
-        self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
+
+        if self.provider == self.OPENAI:
+            self.model_name = "chatgpt-4o-latest"
+        elif self.provider == self.ANTHROPIC:
+            self.model_name = "claude-3-5-sonnet-20240620"
+        else:
+            self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
         # --------------------------- API key verification --------------------------- #
         if self.provider == self.OPENAI:
