@@ -114,7 +114,7 @@ requests==2.32.3
     #   huggingface-hub
     #   langsmith
     #   tiktoken
-rich==13.7.1
+rich==13.8.0
     # via -r requirements/requirements.in
 six==1.16.0
     # via python-dateutil
