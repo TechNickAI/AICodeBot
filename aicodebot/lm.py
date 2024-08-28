@@ -101,10 +101,12 @@ class LanguageModelManager:
         return len(tokens)
 
     def read_model_config(self):
-        # Figure out which model to use, based on the config file or environment variables
+        # Figure out which model to use, based on the environment variables or config file
         config = read_config() or {}
-        self.provider = os.getenv(
-            "AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER)
+        self.provider = (
+            (os.getenv("ANTHROPIC_API_KEY") and self.ANTHROPIC)
+            or (os.getenv("OPENAI_API_KEY") and self.OPENAI)
+            or os.getenv("AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER))
         )
         self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
