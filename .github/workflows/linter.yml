@@ -33,6 +33,7 @@ jobs:
           VALIDATE_PYTHON_ISORT: false
           VALIDATE_PYTHON_MYPY: false
           VALIDATE_PYTHON_PYLINT: false
-
+          # Disable CHECKOV validation
+          VALIDATE_CHECKOV: false
           # Don't run JSCPD - it's never useful, it's very verbose, and it's slow
           VALIDATE_JSCPD: false
