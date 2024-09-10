@@ -12,7 +12,7 @@ requirements = [line for line in requirements if line and not line.startswith("#
 
 setup(
     name="aicodebot",
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     version=version,
     url="https://github.com/gorillamania/AICodeBot",
     author="Nick Sullivan",
@@ -32,7 +32,6 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Affero General Public License v3",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",

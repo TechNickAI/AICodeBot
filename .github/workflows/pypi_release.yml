@@ -6,7 +6,7 @@ on:
   push:
     tags:
       # Only run this workflow for tags that start with 'v.' (release tags)
-      - 'v*'
+      - "v*"
 
 jobs:
   test:
@@ -16,48 +16,48 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     runs-on: ${{ matrix.os }}
     name: Test with Python ${{ matrix.python-version }} on ${{ matrix.os }}
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Setup Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: pip
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements/requirements-test.txt
-        pip install wheel
-        # Install setuptools for Python 3.12 and above
-        if [[ "$(python -c 'import sys; print(sys.version_info >= (3, 12))')" == "True" ]]; then
-          pip install setuptools
-        fi
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/requirements-test.txt
+          pip install wheel
+          # Install setuptools for Python 3.12 and above
+          if [[ "$(python -c 'import sys; print(sys.version_info >= (3, 12))')" == "True" ]]; then
+            pip install setuptools
+          fi
 
-    - name: Build and install aicodebot
-      run: |
-        python setup.py sdist bdist_wheel
-        pip install dist/*.whl
+      - name: Build and install aicodebot
+        run: |
+          python setup.py sdist bdist_wheel
+          pip install dist/*.whl
 
-    - name: Test
-      run: |
-        aicodebot -V
-        # Python 3.9 testing fails because of an issue with vcrpy
-        # https://github.com/kevin1024/vcrpy/issues/688
-        if [[ "${{ matrix.python-version }}" == "3.9" ]]; then
-          echo "Skipping tests for Python 3.9, running alignment instead"
-          aicodebot configure
-          aicodebot alignment
-        else
-          pytest --record-mode=new_episodes
-        fi
+      - name: Test
+        run: |
+          aicodebot -V
+          # Python 3.9 testing fails because of an issue with vcrpy
+          # https://github.com/kevin1024/vcrpy/issues/688
+          if [[ "${{ matrix.python-version }}" == "3.9" ]]; then
+            echo "Skipping tests for Python 3.9, running alignment instead"
+            aicodebot configure
+            aicodebot alignment
+          else
+            pytest --record-mode=new_episodes
+          fi
 
   pypi_release:
     needs: test
@@ -68,29 +68,29 @@ jobs:
       contents: write
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: 3.12
-        cache: pip
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: pip
 
-    - name: Build the package
-      run: |
-        pip install wheel twine setuptools
-        python setup.py sdist bdist_wheel
+      - name: Build the package
+        run: |
+          pip install wheel twine setuptools
+          python setup.py sdist bdist_wheel
 
-    - name: Publish to PyPi
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        twine check dist/*
-        twine upload dist/*
+      - name: Publish to PyPi
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          twine check dist/*
+          twine upload dist/*
 
-    - name: Create GitHub Release
-      uses: ncipollo/release-action@v1
-      with:
-        generateReleaseNotes: true
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
