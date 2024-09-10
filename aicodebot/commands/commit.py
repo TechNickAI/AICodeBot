@@ -4,18 +4,21 @@ from aicodebot.lm import LanguageModelManager
 from aicodebot.output import OurMarkdown, get_console
 from aicodebot.prompts import get_prompt
 from pathlib import Path
-from pydantic import BaseModel, Field, constr
+from pydantic import BaseModel, Field
 from rich.panel import Panel
+from typing import Optional
 import click, os, shutil, subprocess, sys, tempfile
 
 
 class CommitMessage(BaseModel):
-    git_message_summary: constr(max_length=72) = Field(
-        description="A brief summary of the commit message (max 72 characters)"
+    # Use Optional[str] instead of str | None for Python 3.9 compatibility
+    git_message_detail: Optional[str] = Field(  # noqa: UP007
+        default="",
+        description="An optional detailed explanation of the changes made in this commit,"
+        " if the summary doesn't provide enough context",
     )
-    git_message_detail: str | None = Field(
-        default=None, description="An optional detailed explanation of the changes made in this commit"
-    )
+
+    git_message_summary: str = Field(description="A brief summary of the commit message (max 72 characters)")
 
 
 @click.command()
@@ -100,7 +103,11 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         chain = prompt | structured_llm
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
 
-    console.print(Panel(OurMarkdown(f"{response.git_message_summary}\n\n{response.git_message_detail}")))
+    commit_message = response["git_message_summary"]
+    if response.get("git_message_detail"):
+        commit_message += f"\n\n{response['git_message_detail']}"
+
+    console.print(Panel(OurMarkdown(commit_message)))
 
     commit_message_approved = not console.is_terminal or click.confirm(
         "Would you like to use this generated commit message? Type 'n' to edit it.", default=True
@@ -108,7 +115,6 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
-        commit_message = f"{response.git_message_summary}\n\n{response.git_message_detail}"
         temp.write(commit_message)
         temp_file_name = temp.name
 
