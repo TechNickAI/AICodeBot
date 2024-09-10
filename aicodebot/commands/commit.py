@@ -4,15 +4,18 @@ from aicodebot.lm import LanguageModelManager
 from aicodebot.output import OurMarkdown, get_console
 from aicodebot.prompts import get_prompt
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, constr
 from rich.panel import Panel
 import click, os, shutil, subprocess, sys, tempfile
 
 
 class CommitMessage(BaseModel):
-    # Important to put the detail first, as it improves the quality of the summary
-    git_message_detail: str = Field(description="A detailed explanation of the changes made in this commit")
-    git_message_summary: str = Field(description="A brief summary of the commit message")
+    git_message_summary: constr(max_length=72) = Field(
+        description="A brief summary of the commit message (max 72 characters)"
+    )
+    git_message_detail: str | None = Field(
+        default=None, description="An optional detailed explanation of the changes made in this commit"
+    )
 
 
 @click.command()

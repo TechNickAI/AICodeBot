@@ -27,7 +27,7 @@ def test_commit(cli_runner, temp_git_repo, monkeypatch):
         create_and_write_file("test1.txt", "This is a test file.")
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test1.txt")  # stage the new file
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE, "test1.txt"])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", 250, "test1.txt"])
         assert result.exit_code == 0, f"Output: {result.output}"
         # Check if the file was committed by looking in git
         assert "test1.txt" in repo.git.ls_files()
@@ -37,12 +37,12 @@ def test_commit(cli_runner, temp_git_repo, monkeypatch):
         repo = Repo(temp_git_repo.working_dir)
         repo.git.add("test2.txt")  # stage the new file
         create_and_write_file("test3.txt", "This is yet another test file.")  # unstaged file
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", 250])
         assert result.exit_code == 0, f"Output: {result.output}"
         assert "test2.txt" in repo.git.ls_files()
 
         # Scenario 3: No changes at all
-        result = cli_runner.invoke(cli, ["commit", "-y", "-t", TEST_RESPONSE_TOKEN_SIZE])
+        result = cli_runner.invoke(cli, ["commit", "-y", "-t", 250])
         assert result.exit_code == 0, f"Output: {result.output}"
         assert "No changes" in result.output
 
