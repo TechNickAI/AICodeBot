@@ -1,11 +1,18 @@
 from aicodebot.coder import Coder
 from aicodebot.helpers import exec_and_get_output, logger
 from aicodebot.lm import LanguageModelManager
-from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
+from aicodebot.output import OurMarkdown, get_console
 from aicodebot.prompts import get_prompt
 from pathlib import Path
-from rich.live import Live
+from pydantic import BaseModel, Field
+from rich.panel import Panel
 import click, os, shutil, subprocess, sys, tempfile
+
+
+class CommitMessage(BaseModel):
+    # Important to put the detail first, as it improves the quality of the summary
+    git_message_detail: str = Field(description="A detailed explanation of the changes made in this commit")
+    git_message_summary: str = Field(description="A brief summary of the commit message")
 
 
 @click.command()
@@ -84,15 +91,13 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     lmm = LanguageModelManager()
 
     console.print("Analyzing the differences and generating a commit message")
-    with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
-        llm = lmm.model_factory(
-            response_token_size=response_token_size,
-            streaming=True,
-            callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
-        )
-        chain = prompt | llm
+    with console.status(f"Generating commit message with {lmm.model_name} via {lmm.provider}", spinner="dots"):
+        llm = lmm.model_factory(response_token_size=response_token_size)
+        structured_llm = llm.with_structured_output(CommitMessage)
+        chain = prompt | structured_llm
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
-        live.update(OurMarkdown(str(response)))
+
+    console.print(Panel(OurMarkdown(f"{response.git_message_summary}\n\n{response.git_message_detail}")))
 
     commit_message_approved = not console.is_terminal or click.confirm(
         "Would you like to use this generated commit message? Type 'n' to edit it.", default=True
@@ -100,10 +105,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
 
     # Write the commit message to a temporary file
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as temp:
-        # For some reason the response often contains quotes around the summary, even if I tell it not to
-        # So we strip them here
-        commit_message = str(response.content).replace('"', "").strip()
-
+        commit_message = f"{response.git_message_summary}\n\n{response.git_message_detail}"
         temp.write(commit_message)
         temp_file_name = temp.name
 
