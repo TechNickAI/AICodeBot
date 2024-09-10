@@ -102,9 +102,17 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         chain = prompt | structured_llm
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
 
-    commit_message = response.git_message_summary
-    if response.git_message_detail:
-        commit_message += f"\n\n{response.git_message_detail}"
+    # Handle both object and dict responses,
+    # The structured output sometimes returns a dict and sometimes returns an object?!
+    def get_attr_or_item(obj, key):
+        return obj[key] if isinstance(obj, dict) else getattr(obj, key, None)
+
+    git_message_summary = get_attr_or_item(response, "git_message_summary")
+    git_message_detail = get_attr_or_item(response, "git_message_detail")
+
+    commit_message = git_message_summary or "No summary provided"
+    if git_message_detail:
+        commit_message += f"\n\n{git_message_detail}"
 
     console.print(Panel(OurMarkdown(commit_message)))
 
