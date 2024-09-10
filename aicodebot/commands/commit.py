@@ -6,13 +6,12 @@ from aicodebot.prompts import get_prompt
 from pathlib import Path
 from pydantic import BaseModel, Field
 from rich.panel import Panel
-from typing import Optional
 import click, os, shutil, subprocess, sys, tempfile
 
 
 class CommitMessage(BaseModel):
-    # Use Optional[str] instead of str | None for Python 3.9 compatibility
-    git_message_detail: Optional[str] = Field(  # noqa: UP007
+    # Note we get better results if the message_detail is first.
+    git_message_detail: str | None = Field(
         default="",
         description="An optional detailed explanation of the changes made in this commit,"
         " if the summary doesn't provide enough context",
@@ -103,9 +102,9 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         chain = prompt | structured_llm
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
 
-    commit_message = response["git_message_summary"]
-    if response.get("git_message_detail"):
-        commit_message += f"\n\n{response['git_message_detail']}"
+    commit_message = response.git_message_summary
+    if response.git_message_detail:
+        commit_message += f"\n\n{response.git_message_detail}"
 
     console.print(Panel(OurMarkdown(commit_message)))
 
