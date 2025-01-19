@@ -14,7 +14,7 @@ setup(
     name="aicodebot",
     python_requires=">=3.10",
     version=version,
-    url="https://github.com/gorillamania/AICodeBot",
+    url="https://github.com/TechNickAI/AICodeBot",
     author="Nick Sullivan",
     description="AI-powered tool for developers, simplifying coding tasks and improving workflow efficiency.",
     long_description=long_description,
@@ -35,5 +35,6 @@ setup(
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ],
 )
