@@ -98,8 +98,8 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     console.print("Analyzing the differences and generating a commit message")
     with console.status(f"Generating commit message with {lmm.model_name} via {lmm.provider}", spinner="dots"):
         llm = lmm.model_factory(response_token_size=response_token_size)
-        structured_llm = llm.with_structured_output(CommitMessage)
-        chain = prompt | structured_llm
+        # Using Langchain Expression Language (LCEL) for structured output. So chic! 😉
+        chain = prompt | llm.with_structured_output(CommitMessage)
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
 
     # Handle both object and dict responses,
