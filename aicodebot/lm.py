@@ -133,16 +133,8 @@ class LanguageModelManager:
 
     @property
     def tiktoken_model_name(self):
-        if "/" in self.model_name:
-            if self.model_name.startswith("openai/"):
-                # For OpenAI models, this is as simple as stripping the prefix "openai/" from the model name
-                return self.model_name.replace("openai/", "")
-            else:
-                # For non-OpenAI models, we set the model name to "gpt-4" for now. Seems to work.
-                # Tested with anthropic/claude2
-                return self.DEFAULT_MODEL
-        else:
-            return self.model_name
+        # This seems to work for both OpenAI and Anthropic
+        return "gpt-4o"
 
     def use_appropriate_sized_model(self, chain, token_size):
         current_model = self.model_name
