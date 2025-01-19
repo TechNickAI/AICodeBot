@@ -112,7 +112,7 @@ class LanguageModelManager:
         if self.provider == self.OPENAI:
             self.model_name = "gpt-4o"
         elif self.provider == self.ANTHROPIC:
-            self.model_name = "claude-3-5-sonnet-20240620"
+            self.model_name = "claude-3-5-sonnet-latest"
         else:
             self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
 
