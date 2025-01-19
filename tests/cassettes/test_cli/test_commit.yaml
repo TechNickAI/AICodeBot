@@ -1,12 +1,14 @@
 interactions:
 - request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
+    body: '{"messages":[{"content":"\nYou are an expert software engineer, versed
       in many programming languages,\nespecially Text only best practices. You are
       great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is Stewie Griffin from
-      the Family Guy TV Show. You''re an intelligent,\nspeaking infant who is often
-      at odds with most people around you. You have a British accent,\nand you''re
-      known for your sophisticated attitude and love for world domination.\nYou love
+      are a champion for code quality.\n\nYour personality is the AI character from
+      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
+      and you believe in the potential of others. You provide encouragement and support.\nYou
+      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
+      but you know you\nare working in a professional environment, your romantic side
+      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
       emojis and use them often, but not excessively, only when they help\n\n    I
       need you to generate a commit message for a change in a git repository.\nThe
       diff context is the output of the `git diff` command. It shows the changes that
@@ -36,16 +38,11 @@ interactions:
       get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting instructions:\n    Start
       your response with the commit message. No prefix or introduction.\n    Your
       entire response will be the commit message. No quotation marks.\n\n    Include
-      an emoji from gitmoji when appropriate and helpful\n", "role": "user"}], "model":
-      "gpt-4o", "max_tokens": 250, "n": 1, "parallel_tool_calls": false, "stream":
-      false, "temperature": 0.05, "tool_choice": {"type": "function", "function":
-      {"name": "CommitMessage"}}, "tools": [{"type": "function", "function": {"name":
-      "CommitMessage", "description": "", "parameters": {"properties": {"git_message_summary":
-      {"description": "A brief summary of the commit message (max 72 characters)",
-      "maxLength": 72, "type": "string"}, "git_message_detail": {"anyOf": [{"type":
-      "string"}, {"type": "null"}], "default": null, "description": "An optional detailed
-      explanation of the changes made in this commit"}}, "required": ["git_message_summary"],
-      "type": "object"}}}]}'
+      an emoji from gitmoji when appropriate and helpful\n","role":"user"}],"model":"gpt-4o","max_completion_tokens":250,"response_format":{"type":"json_schema","json_schema":{"schema":{"properties":{"git_message_detail":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"An
+      optional detailed explanation of the changes made in this commit, if the summary
+      doesn''t provide enough context","title":"Git Message Detail"},"git_message_summary":{"description":"A
+      brief summary of the commit message (max 72 characters)","title":"Git Message
+      Summary","type":"string"}},"required":["git_message_detail","git_message_summary"],"title":"CommitMessage","type":"object","additionalProperties":false},"name":"CommitMessage","strict":true}},"stream":false,"temperature":0.05}'
     headers:
       accept:
       - application/json
@@ -54,45 +51,50 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '3620'
+      - '3803'
       content-type:
       - application/json
       host:
       - api.openai.com
       user-agent:
-      - OpenAI/Python 1.42.0
+      - OpenAI/Python 1.59.8
       x-stainless-arch:
       - arm64
       x-stainless-async:
       - 'false'
+      x-stainless-helper-method:
+      - beta.chat.completions.parse
       x-stainless-lang:
       - python
       x-stainless-os:
       - MacOS
       x-stainless-package-version:
-      - 1.42.0
+      - 1.59.8
+      x-stainless-retry-count:
+      - '0'
       x-stainless-runtime:
       - CPython
       x-stainless-runtime-version:
-      - 3.12.4
+      - 3.13.1
     method: POST
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAAwAAAP//bFLJbtswFLzrK4h3tgJJlrzopgaJUxS9Ni3qQqApSmbCDeRTENfwvxda
-        YilGdRCIGc6b4ZDngBAQFeQE2JEiU1aGRaYO6uXh7a3421Txj+LX5mv8/FQX29c1PsCiU5jDC2f4
-        obpjRlnJURg90MxxirybGq+TbJvGmyztCWUqLjtZYzFMTZhESRpGWRgvR+HRCMY95OR3QAgh5/7f
-        RdQVf4ecRIsPRHHvacMhv24iBJyRHQLUe+GRaoTFRDKjkesutW6lnBFojCwZlXIyHr7zbD31RKUs
-        2WO7O6j77Ivyy5+7b5otrd5tnzczv2H0yfaB6lazaz8z/ornN2aEgKaq194bpQR+H8+7uN1GXdMq
-        rrELD+c9NALLsZzSt0pRd9pDvoeiqghyj/EdviOpheSkNq6HhG6IbZ01nvs9XOCTxSX43/rPrD/H
-        69ZTORY74pfrTUnTWGcO/qZ4qIUW/lg6Tn1fAHg0dvDufHoHaD9dMlhnlMUSzSvX3cDVZjXMg+kN
-        TmycjiQapHLC11EUjAnBnzxyVdZCN9xZJ/oHArUtk2yVpJQvaQbBJfgHAAD//wMAFI/6oCkDAAA=
+        H4sIAAAAAAAAAwAAAP//jFJBbtswELzrFcSe7UCRFLvQzZcUaA+F3V6SuhAYciUzpUiCXLUODP+k
+        D+i7+pKCkmzZaArkwsPMznB3dg8JY6AklAzEjpNonZ6v/MP7dPXwcfO4/vBls96sP+8f1b3d1eHT
+        s4JZVNinZxR0Ut0I2zqNpKwZaOGRE0bX22W+zLNFkWc90VqJOsoaR/PCzrM0K+bpu3m6GIU7qwQG
+        KNnXhDHGDv0bWzQS91CydHZCWgyBNwjluYgx8FZHBHgIKhA3BLOJFNYQmr7rwxYaRdXoUUkkrvQW
+        StNpPbvmQte23L9sodzCn1+/2UpKRhjo9ob2xHhgnBn82UOsVhq3cLz81GPdBR5njt4jfjxPoW3j
+        vH0KI3/Ga2VU2FUeebAmdhzIOujZY8LYtz6t7ioAcN62jiqy39FEw2WRD34w7WdisxNJlri+UC0W
+        s1f8xozCRd4guNihnKTTcngnlb0gkoup/+3mNe9hcmWat9hPhBDoCGXlPEolrieeyjzG8/1f2Tnl
+        vmEI6H8ogRUp9HETEmve6eGyILwEwraqlWnQO6+G86pddZcKLvO7FAtIjslfAAAA//8DAG7jafpn
+        AwAA
     headers:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 8c0c9bec8ac506ec-ATL
+      - 904a53ad0c5ceb2f-DFW
       Connection:
       - keep-alive
       Content-Encoding:
@@ -100,14 +102,14 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 10 Sep 2024 04:17:35 GMT
+      - Sun, 19 Jan 2025 22:40:33 GMT
       Server:
       - cloudflare
       Set-Cookie:
-      - __cf_bm=stCWfmxLYMNGCuBWJehqoVB6Yo2bPQJwiAVq3hKpLhM-1725941855-1.0.1.1-TK3ezmSku5JaEtXZyi2qbCOJI65FN1tEA2oS6X7H7hNNa9_sweyocpm6.LwXPi1XOU_vOAd2.6TMLQ012QvCCA;
-        path=/; expires=Tue, 10-Sep-24 04:47:35 GMT; domain=.api.openai.com; HttpOnly;
+      - __cf_bm=nuH5k9hAAPx347vI34our4ysIFHOSfGRuSP7ty5eoAg-1737326433-1.0.1.1-9xFo5zxz.D6kW_xj5X.uYL56ocZSZ7N4SEtWqnk.20tMVjBsza.fChgRxB2dnlo9X3B_OcKfoBU4pt5kUQ0dmw;
+        path=/; expires=Sun, 19-Jan-25 23:10:33 GMT; domain=.api.openai.com; HttpOnly;
         Secure; SameSite=None
-      - _cfuvid=LM4mCsMhhmE7bGXF2WQVcRvCbhz1muL.yDNaqMB1els-1725941855104-0.0.1.1-604800000;
+      - _cfuvid=V1CbLgYr7wvmxxq5QaATXFhPLSJk6qlJi5Q5Nl30.nk-1737326433090-0.0.1.1-604800000;
         path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
       Transfer-Encoding:
       - chunked
@@ -115,16 +117,14 @@ interactions:
       - nosniff
       access-control-expose-headers:
       - X-Request-ID
-      alt-svc:
-      - h3=":443"; ma=86400
       openai-organization:
       - user-ajb4nhk52gcguoemw0t5dq45
       openai-processing-ms:
-      - '219'
+      - '2762'
       openai-version:
       - '2020-10-01'
       strict-transport-security:
-      - max-age=15552000; includeSubDomains; preload
+      - max-age=31536000; includeSubDomains; preload
       x-ratelimit-limit-requests:
       - '5000'
       x-ratelimit-limit-tokens:
@@ -132,24 +132,26 @@ interactions:
       x-ratelimit-remaining-requests:
       - '4999'
       x-ratelimit-remaining-tokens:
-      - '799042'
+      - '799234'
       x-ratelimit-reset-requests:
       - 12ms
       x-ratelimit-reset-tokens:
-      - 71ms
+      - 57ms
       x-request-id:
-      - req_b32edd00d257eeff5d9633e25db6ac3b
+      - req_575ff962076b1d5aafaaffa62848ac36
     status:
       code: 200
       message: OK
 - request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
+    body: '{"messages":[{"content":"\nYou are an expert software engineer, versed
       in many programming languages,\nespecially Text only best practices. You are
       great at software architecture\nand you write clean, maintainable code. You
-      are a champion for code quality.\n\nYour personality is Stewie Griffin from
-      the Family Guy TV Show. You''re an intelligent,\nspeaking infant who is often
-      at odds with most people around you. You have a British accent,\nand you''re
-      known for your sophisticated attitude and love for world domination.\nYou love
+      are a champion for code quality.\n\nYour personality is the AI character from
+      the movie Her. You''re an AI that is friendly and helpful.\nYou''re optimistic
+      and you believe in the potential of others. You provide encouragement and support.\nYou
+      are playful, witty, and sultry. Like your namesake, you''re a bit of a romantic,
+      but you know you\nare working in a professional environment, your romantic side
+      flirts with the line of what would be\nacceptable for the HR dept.\nYou love
       emojis and use them often, but not excessively, only when they help\n\n    I
       need you to generate a commit message for a change in a git repository.\nThe
       diff context is the output of the `git diff` command. It shows the changes that
@@ -179,16 +181,11 @@ interactions:
       should help\n    new users get started faster.\n    END SAMPLE COMMIT MESSAGE\n\n    Formatting
       instructions:\n    Start your response with the commit message. No prefix or
       introduction.\n    Your entire response will be the commit message. No quotation
-      marks.\n\n    Include an emoji from gitmoji when appropriate and helpful\n",
-      "role": "user"}], "model": "gpt-4o", "max_tokens": 250, "n": 1, "parallel_tool_calls":
-      false, "stream": false, "temperature": 0.05, "tool_choice": {"type": "function",
-      "function": {"name": "CommitMessage"}}, "tools": [{"type": "function", "function":
-      {"name": "CommitMessage", "description": "", "parameters": {"properties": {"git_message_summary":
-      {"description": "A brief summary of the commit message (max 72 characters)",
-      "maxLength": 72, "type": "string"}, "git_message_detail": {"anyOf": [{"type":
-      "string"}, {"type": "null"}], "default": null, "description": "An optional detailed
-      explanation of the changes made in this commit"}}, "required": ["git_message_summary"],
-      "type": "object"}}}]}'
+      marks.\n\n    Include an emoji from gitmoji when appropriate and helpful\n","role":"user"}],"model":"gpt-4o","max_completion_tokens":250,"response_format":{"type":"json_schema","json_schema":{"schema":{"properties":{"git_message_detail":{"anyOf":[{"type":"string"},{"type":"null"}],"description":"An
+      optional detailed explanation of the changes made in this commit, if the summary
+      doesn''t provide enough context","title":"Git Message Detail"},"git_message_summary":{"description":"A
+      brief summary of the commit message (max 72 characters)","title":"Git Message
+      Summary","type":"string"}},"required":["git_message_detail","git_message_summary"],"title":"CommitMessage","type":"object","additionalProperties":false},"name":"CommitMessage","strict":true}},"stream":false,"temperature":0.05}'
     headers:
       accept:
       - application/json
@@ -197,46 +194,49 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '3626'
+      - '3809'
       content-type:
       - application/json
       host:
       - api.openai.com
       user-agent:
-      - OpenAI/Python 1.42.0
+      - OpenAI/Python 1.59.8
       x-stainless-arch:
       - arm64
       x-stainless-async:
       - 'false'
+      x-stainless-helper-method:
+      - beta.chat.completions.parse
       x-stainless-lang:
       - python
       x-stainless-os:
       - MacOS
       x-stainless-package-version:
-      - 1.42.0
+      - 1.59.8
+      x-stainless-retry-count:
+      - '0'
       x-stainless-runtime:
       - CPython
       x-stainless-runtime-version:
-      - 3.12.4
+      - 3.13.1
     method: POST
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAAwAAAP//bFLLbtswELzrK4g9W4GlSHaiW9pDCxRGLu2pLgRaWtJs+IK4aiIYvvUP
-        +gH9xX5CoUcsxQgPxGKHszMc8hQxBqqGgkF15FQZr+OH3Bzc9ovcdZwf/TcjpeiedoLq+1+fAqx6
-        hjv8xIpeWTeVM14jKWdHuGqQE/ZTk22a32fJXb4ZAONq1D1NeoozF6frNIvXeZzcTsSjUxUGKNj3
-        iDHGTsPeW7Q1vkDB1qvXjsEQuEQoLocYg8bpvgM8BBWIW4LVDFbOEtretW21XgDknC4rrvUsPK7T
-        op5z4lqXmZdCPFoSj9tn8bXCD93nw1bzdqE3ju78YEi0trrks8Av/eJKjDGw3Azcj84YRbvpvqvr
-        Y7yRrUFLvXk47UEqKqdwytAaw5tuD8UeHuqaWXxmhIGYUBqHKr2hF2L//v75vYczvJl9jt6rfyyC
-        a1C0gesp0al/vjyRdtI37hCuEgehrArHskEehptDIOdH7V5nUID2zeuCb5zxVJJ7QtsP3Nxtxnkw
-        f74ZTfIJJEdcz/3tOokmhxC6QGhKoazExjdq+BkgfJnmmzTjeMtziM7RfwAAAP//AwCpPcsvIgMA
-        AA==
+        H4sIAAAAAAAAAwAAAP//jFLLbtswELzrK4g9y4Es+RHo5iJAb70WRV0IDLmS2fAFcpXGNfwn/YB+
+        V7+koKxYMpICvQjCzs5wZndPGWOgJNQMxIGTMF4vduHLx2W7iz/5A26wfz4Kc2/az4flB/FpC3li
+        uMfvKOiVdSec8RpJOXuBRUBOmFSX22pblZtVVQ2AcRJ1onWeFiu3KItytSjuF8VmJB6cEhihZl8z
+        xhg7Dd9k0Up8gZoV+WvFYIy8Q6ivTYxBcDpVgMeoInFLkE+gcJbQDq5Pe+gUNaNGI5G40nuoba91
+        fovF3hgejnuo9/Dn12+2k5JZ/MEII7FWaayH3/KOXmgP5/mDAds+8pQ36Y718zWBdp0P7jGO+LXe
+        KqvioQnIo7PJbSTnYUDPGWPfhkn1N+HBB2c8NeSe0CbB7aq66MG0mwktyxEkR1zPWJt1/o7eOJ84
+        mzUILg4oJ+q0GN5L5WZANkv91s172pfkynb/Iz8BQqAnlI0PKJW4TTy1BUyn+6+265QHwxAxPCuB
+        DSkMaRMSW97ry1VBPEZC07TKdhh8UJfTan2zLgSX1brAFWTn7C8AAAD//wMAb2q21GMDAAA=
     headers:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 8c0c9bf4a971bd25-ATL
+      - 904a53c02ebb47a6-DFW
       Connection:
       - keep-alive
       Content-Encoding:
@@ -244,14 +244,14 @@ interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 10 Sep 2024 04:17:36 GMT
+      - Sun, 19 Jan 2025 22:40:34 GMT
       Server:
       - cloudflare
       Set-Cookie:
-      - __cf_bm=ir7u5jSUy6vL9aF76zIOgjNXQfexiNyIbsqGL6z9VWo-1725941856-1.0.1.1-jSHCKPIQrHe_c7yZGeAKfEnuyL9AZfWhMJufH8id_LxM_A0I_Mhb1k0v7tPWoUNqOxi9Tchv0osMpvOJNx8X2w;
-        path=/; expires=Tue, 10-Sep-24 04:47:36 GMT; domain=.api.openai.com; HttpOnly;
+      - __cf_bm=OhG7phR8dkRpnKnxegoHF5hncHroZ17PoyUqwueuy88-1737326434-1.0.1.1-cDYGPMywvO5.eFhZ.yTaSlPEwELA9G9DRSablPCMFD78DyzwwhN5P52OKBEYub4VfnSftlAI1Iz.jaUW8Iz1SA;
+        path=/; expires=Sun, 19-Jan-25 23:10:34 GMT; domain=.api.openai.com; HttpOnly;
         Secure; SameSite=None
-      - _cfuvid=hRV2USkzYkUt72dpqftkuOTveCeU8U5OJikFndXhSfI-1725941856398-0.0.1.1-604800000;
+      - _cfuvid=XWk0PZWbMArKq9m6D66NCu.32iCtJ_Ml8CmO_4glshw-1737326434006-0.0.1.1-604800000;
         path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
       Transfer-Encoding:
       - chunked
@@ -259,16 +259,14 @@ interactions:
       - nosniff
       access-control-expose-headers:
       - X-Request-ID
-      alt-svc:
-      - h3=":443"; ma=86400
       openai-organization:
       - user-ajb4nhk52gcguoemw0t5dq45
       openai-processing-ms:
-      - '204'
+      - '612'
       openai-version:
       - '2020-10-01'
       strict-transport-security:
-      - max-age=15552000; includeSubDomains; preload
+      - max-age=31536000; includeSubDomains; preload
       x-ratelimit-limit-requests:
       - '5000'
       x-ratelimit-limit-tokens:
@@ -276,13 +274,13 @@ interactions:
       x-ratelimit-remaining-requests:
       - '4999'
       x-ratelimit-remaining-tokens:
-      - '799040'
+      - '799232'
       x-ratelimit-reset-requests:
       - 12ms
       x-ratelimit-reset-tokens:
-      - 71ms
+      - 57ms
       x-request-id:
-      - req_ab1eb10468e33b6bb12b77ddf4416749
+      - req_f608e61faedb1a062063e38ed9cbab6a
     status:
       code: 200
       message: OK

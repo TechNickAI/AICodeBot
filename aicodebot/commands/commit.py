@@ -12,7 +12,6 @@ import click, os, shutil, subprocess, sys, tempfile
 class CommitMessage(BaseModel):
     # Note we get better results if the message_detail is first.
     git_message_detail: str | None = Field(
-        default="",
         description="An optional detailed explanation of the changes made in this commit,"
         " if the summary doesn't provide enough context",
     )
@@ -57,9 +56,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         files = unstaged_files
     else:
         # The list of files to be committed is the same as the list of staged files
-        console.print(
-            "The following files have been staged and are ready for commit:\n\t" + "\n\t".join(staged_files)
-        )
+        console.print("The following files have been staged and are ready for commit:\n\t" + "\n\t".join(staged_files))
 
         files = staged_files
 

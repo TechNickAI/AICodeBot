@@ -1,6 +1,6 @@
 interactions:
 - request:
-    body: '{"messages": [{"content": "\nYou are an expert software engineer, versed
+    body: '{"messages":[{"content":"\nYou are an expert software engineer, versed
       in many programming languages,\nespecially  best practices. You are great at
       software architecture\nand you write clean, maintainable code. You are a champion
       for code quality.\nYou are software coding assistant named AICodeBot that helps
@@ -30,26 +30,22 @@ interactions:
       [File] test_helpers.py\n    - [File] test_cli.py\n    - [File] test_coder.py\n  -
       [Directory] requirements\n    - [File] requirements.txt\n    - [File] requirements-test.txt\n    -
       [File] requirements-dev.txt\n    - [File] requirements.in\n  - [Directory] docs\n    -
-      [File] sidekick.md\n  - [File] README.md\n  - [Directory] aicodebot.egg-info\n    -
-      [File] PKG-INFO\n    - [File] SOURCES.txt\n    - [File] entry_points.txt\n    -
-      [File] requires.txt\n    - [File] top_level.txt\n    - [File] dependency_links.txt\n  -
+      [File] ai-software-development.md\n    - [File] sidekick.md\n  - [File] README.md\n  -
       [File] setup.py\n  - [File] .gitignore\n  - [File] CONTRIBUTING.md\n  - [Directory]
       .github\n    - [Directory] workflows\n      - [File] linter.yml\n      - [File]
       aicodebot.yml\n      - [File] pypi_release.yml\n      - [File] build.yml\n    -
-      [File] dependabot.yml\n  - [File] test.txt\n  - [Directory] assets\n    - [File]
-      robot.png\n  - [Directory] aicodebot\n    - [File] patch.py\n    - [File] config.py\n    -
-      [File] __init__.py\n    - [File] coder.py\n    - [File] prompts.py\n    - [File]
-      cli.py\n    - [File] input.py\n    - [File] lm.py\n    - [Directory] commands\n      -
-      [File] configure.py\n      - [File] alignment.py\n      - [File] commit.py\n      -
-      [File] __init__.py\n      - [File] review.py\n      - [File] sidekick.py\n      -
-      [File] debug.py\n    - [File] helpers.py\n    - [File] output.py\nHere are the
-      relevant files we are working with in this session, with line numbers:\n---
-      START OF FILE: .gitignore unknown file, modified 9 months ago ---\n1: *.pyc\n2:
-      *.swp\n3: .DS_Store\n4: .env\n5: .pytest_cache\n6: .vscode\n7: __pycache__\n8:
-      aicodebot.egg-info/\n9: build/\n10: dist/\n11: \n--- END OF FILE: .gitignore
-      ---\n\n\n\nSoftware Engineer: What is 3 + 2? Just give me the answer, nothing
-      else. Use a number, not textAICodeBot:\n", "role": "user"}], "model": "gpt-4o",
-      "max_tokens": 1000, "n": 1, "stream": true, "temperature": 0.05}'
+      [File] dependabot.yml\n  - [Directory] assets\n    - [File] robot.png\n  - [Directory]
+      aicodebot\n    - [File] patch.py\n    - [File] config.py\n    - [File] __init__.py\n    -
+      [File] coder.py\n    - [File] prompts.py\n    - [File] cli.py\n    - [File]
+      input.py\n    - [File] lm.py\n    - [Directory] commands\n      - [File] configure.py\n      -
+      [File] alignment.py\n      - [File] commit.py\n      - [File] __init__.py\n      -
+      [File] review.py\n      - [File] sidekick.py\n      - [File] debug.py\n    -
+      [File] helpers.py\n    - [File] output.py\nHere are the relevant files we are
+      working with in this session, with line numbers:\n--- START OF FILE: .gitignore
+      unknown file, modified 47 minutes ago ---\n1: *.pyc\n2: *.swp\n3: .DS_Store\n4:
+      .env\n5: .pytest_cache\n6: .vscode\n7: __pycache__\n8: aicodebot.egg-info/\n9:
+      build/\n10: dist/\n11: \n--- END OF FILE: .gitignore ---\n\n\n\nSoftware Engineer:
+      What is 3 + 2? Just give me the answer, nothing else. Use a number, not textAICodeBot:\n","role":"user"}],"model":"gpt-4o","max_completion_tokens":1000,"stream":true,"temperature":0.05}'
     headers:
       accept:
       - application/json
@@ -58,13 +54,13 @@ interactions:
       connection:
       - keep-alive
       content-length:
-      - '4078'
+      - '3885'
       content-type:
       - application/json
       host:
       - api.openai.com
       user-agent:
-      - OpenAI/Python 1.35.7
+      - OpenAI/Python 1.59.8
       x-stainless-arch:
       - arm64
       x-stainless-async:
@@ -74,22 +70,24 @@ interactions:
       x-stainless-os:
       - MacOS
       x-stainless-package-version:
-      - 1.35.7
+      - 1.59.8
+      x-stainless-retry-count:
+      - '0'
       x-stainless-runtime:
       - CPython
       x-stainless-runtime-version:
-      - 3.12.4
+      - 3.13.1
     method: POST
     uri: https://api.openai.com/v1/chat/completions
   response:
     body:
-      string: 'data: {"id":"chatcmpl-9gFKiwIUewyS7UyNzzKpMj8NI6JmI","object":"chat.completion.chunk","created":1719855744,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_4008e3b719","choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
+      string: 'data: {"id":"chatcmpl-ArYGAFMPZ7UUjAc0gczO9YfBZQxUT","object":"chat.completion.chunk","created":1737326442,"model":"gpt-4o-2024-08-06","service_tier":"default","system_fingerprint":"fp_50cad350e4","choices":[{"index":0,"delta":{"role":"assistant","content":"","refusal":null},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gFKiwIUewyS7UyNzzKpMj8NI6JmI","object":"chat.completion.chunk","created":1719855744,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_4008e3b719","choices":[{"index":0,"delta":{"content":"5"},"logprobs":null,"finish_reason":null}]}
+        data: {"id":"chatcmpl-ArYGAFMPZ7UUjAc0gczO9YfBZQxUT","object":"chat.completion.chunk","created":1737326442,"model":"gpt-4o-2024-08-06","service_tier":"default","system_fingerprint":"fp_50cad350e4","choices":[{"index":0,"delta":{"content":"5"},"logprobs":null,"finish_reason":null}]}
 
 
-        data: {"id":"chatcmpl-9gFKiwIUewyS7UyNzzKpMj8NI6JmI","object":"chat.completion.chunk","created":1719855744,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_4008e3b719","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
+        data: {"id":"chatcmpl-ArYGAFMPZ7UUjAc0gczO9YfBZQxUT","object":"chat.completion.chunk","created":1737326442,"model":"gpt-4o-2024-08-06","service_tier":"default","system_fingerprint":"fp_50cad350e4","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
 
 
         data: [DONE]
@@ -100,47 +98,49 @@ interactions:
       CF-Cache-Status:
       - DYNAMIC
       CF-RAY:
-      - 89c83142da3b5bdb-LIS
+      - 904a53fa7a8beaa0-DFW
       Connection:
       - keep-alive
       Content-Type:
       - text/event-stream; charset=utf-8
       Date:
-      - Mon, 01 Jul 2024 17:42:25 GMT
+      - Sun, 19 Jan 2025 22:40:42 GMT
       Server:
       - cloudflare
       Set-Cookie:
-      - __cf_bm=SRGbwr0HXcVGVdjqbaGDvUXPVX19krUJJzduvxgIvIQ-1719855745-1.0.1.1-6mmKA0kFZWXjDBUXXY83c1i_yJC10w99cNV5Fc4YZtClCRZmWml0tqLmPHzKx5qB5yVNav_W87NBrSI38NlS9A;
-        path=/; expires=Mon, 01-Jul-24 18:12:25 GMT; domain=.api.openai.com; HttpOnly;
+      - __cf_bm=NalsnwUFViRLl2YeE0RxtFh7IlIMR9TGJzYgD8zSiTg-1737326442-1.0.1.1-DqdDWG38HG8pbZJ.I4tkjAPyeNygsVMgYEfkJNXRXrgyOj0hqpgrfLvgwdh2Fu89ANmq6nF5qcBwTQMEHoPBqw;
+        path=/; expires=Sun, 19-Jan-25 23:10:42 GMT; domain=.api.openai.com; HttpOnly;
         Secure; SameSite=None
-      - _cfuvid=BJK3uNNA5RB5jTulJKLKoMz.c.kIBG2kKfDRrV3LJNU-1719855745169-0.0.1.1-604800000;
+      - _cfuvid=qwOqClISzlELIFm2Vs186blcdkdgR0lCtl7Bb1VV3Uc-1737326442898-0.0.1.1-604800000;
         path=/; domain=.api.openai.com; HttpOnly; Secure; SameSite=None
       Transfer-Encoding:
       - chunked
-      alt-svc:
-      - h3=":443"; ma=86400
+      X-Content-Type-Options:
+      - nosniff
+      access-control-expose-headers:
+      - X-Request-ID
       openai-organization:
       - user-ajb4nhk52gcguoemw0t5dq45
       openai-processing-ms:
-      - '346'
+      - '190'
       openai-version:
       - '2020-10-01'
       strict-transport-security:
-      - max-age=31536000; includeSubDomains
+      - max-age=31536000; includeSubDomains; preload
       x-ratelimit-limit-requests:
       - '5000'
       x-ratelimit-limit-tokens:
-      - '600000'
+      - '800000'
       x-ratelimit-remaining-requests:
       - '4999'
       x-ratelimit-remaining-tokens:
-      - '598043'
+      - '799070'
       x-ratelimit-reset-requests:
       - 12ms
       x-ratelimit-reset-tokens:
-      - 195ms
+      - 69ms
       x-request-id:
-      - req_ef41eb633f0a3060118d09fae2922d89
+      - req_31fa011d2e26279f94f04f0a1160e080
     status:
       code: 200
       message: OK
