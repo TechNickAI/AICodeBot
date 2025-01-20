@@ -56,9 +56,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         files = unstaged_files
     else:
         # The list of files to be committed is the same as the list of staged files
-        console.print(
-            "The following files have been staged and are ready for commit:\n\t" + "\n\t".join(staged_files)
-        )
+        console.print("The following files have been staged and are ready for commit:\n\t" + "\n\t".join(staged_files))
 
         files = staged_files
 

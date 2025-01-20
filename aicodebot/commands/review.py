@@ -55,9 +55,7 @@ def review(commit, output_format, response_token_size, files):
 
     else:
         # Stream live
-        console.print(
-            "Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files)
-        )
+        console.print("Examining the diff and generating the review for the following files:\n\t" + "\n\t".join(files))
         with Live(OurMarkdown(f"Talking to {lmm.model_name} via {lmm.provider}"), auto_refresh=True) as live:
             model = lmm.model_factory(
                 response_token_size=response_token_size,

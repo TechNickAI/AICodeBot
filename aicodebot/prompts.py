@@ -288,9 +288,7 @@ def generate_files_context(files):
         else:
             files_context += f"--- START OF FILE: {file_name} {file_info} file, modified {modification_ago} ---\n"
             contents = Path(file_name).read_text()
-            contents_with_line_numbers = "\n".join(
-                f"{i + 1}: {line}" for i, line in enumerate(contents.split("\n"))
-            )
+            contents_with_line_numbers = "\n".join(f"{i + 1}: {line}" for i, line in enumerate(contents.split("\n")))
             files_context += contents_with_line_numbers
             files_context += f"\n--- END OF FILE: {file_name} ---\n\n"
 
@@ -451,9 +449,7 @@ def get_prompt(command, structured_output=False):
             "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context", "languages"]),
             "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output", "languages"]),
             "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
-            "sidekick": PromptTemplate(
-                template=SIDEKICK_TEMPLATE, input_variables=["task", "context", "languages"]
-            ),
+            "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["task", "context", "languages"]),
         }
 
         try:

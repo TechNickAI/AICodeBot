@@ -28,9 +28,7 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
         sys.exit(1)
 
     console.print(
-        Panel(
-            OurMarkdown("This is an *experimental* feature. We love bug reports 😉", style=console.warning_style)
-        )
+        Panel(OurMarkdown("This is an *experimental* feature. We love bug reports 😉", style=console.warning_style))
     )
 
     # ----------------- Determine which files to use for context ----------------- #
@@ -99,9 +97,7 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
             # have a record of what they asked for on their terminal
             console.print(parsed_human_input)
         try:
-            with Live(
-                OurMarkdown(f"Sending task to {lmm.model_name} via {lmm.provider}"), auto_refresh=False
-            ) as live:
+            with Live(OurMarkdown(f"Sending task to {lmm.model_name} via {lmm.provider}"), auto_refresh=False) as live:
                 llm = lmm.model_factory(
                     streaming=True,
                     callbacks=[RichLiveCallbackHandler(live, console.bot_style)],
@@ -121,9 +117,7 @@ def sidekick(apply, request, no_files, max_file_tokens, files):  # noqa: PLR0915
                 code_blocks = markdown.pull_code_blocks()
                 if code_blocks:
                     logger.debug(f"Found code blocks: {code_blocks}")
-                    code_block_message = (
-                        f"{len(code_blocks)} code block(s) found, **/copy** to copy to your clipboard."
-                    )
+                    code_block_message = f"{len(code_blocks)} code block(s) found, **/copy** to copy to your clipboard."
                     console.print(Panel(OurMarkdown(code_block_message)))
                     chat.code_blocks = markdown.pull_code_blocks()
 

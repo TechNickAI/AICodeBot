@@ -134,13 +134,13 @@ class Patch:
                 first_change_line_index = next(
                     i for i, line in enumerate(parsed_lines) if line.type in ("addition", "subtraction")
                 )
-                parsed_lines.insert(first_change_line_index, Patch.parse_line(f" {source_file_contents[i-1]}"))
+                parsed_lines.insert(first_change_line_index, Patch.parse_line(f" {source_file_contents[i - 1]}"))
 
             # Add x lines of context after the last change
             number_of_subtractions = len([line for line in parsed_lines if line.type == "subtraction"])
             start_trailing_context = first_change_line_number + number_of_subtractions
             for i in range(start_trailing_context, start_trailing_context + lines_of_context):
-                parsed_lines.append(Patch.parse_line(f" {source_file_contents[i-1]}"))
+                parsed_lines.append(Patch.parse_line(f" {source_file_contents[i - 1]}"))
 
         # ------------------------- Rebuild the chunk header ------------------------- #
 
