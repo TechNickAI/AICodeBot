@@ -5,7 +5,7 @@ exclude: '\.git/|__pycache__/|\.pyc'
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: check-added-large-files
         args: [--maxkb=500]
@@ -26,12 +26,12 @@ repos:
       - id: remove-tabs
 
   - repo: https://github.com/sirosen/texthooks
-    rev: 0.6.6
+    rev: 0.6.8
     hooks:
       - id: fix-smartquotes
 
   - repo: https://github.com/psf/black
-    rev: 24.4.2
+    rev: 24.10.0
     hooks:
       - id: black
 
@@ -48,6 +48,6 @@ repos:
 
   # Ruff replaces flake8 and pylint and more
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.5.0
+    rev: v0.9.2
     hooks:
       - id: ruff
