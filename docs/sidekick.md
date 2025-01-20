@@ -13,7 +13,7 @@ We'll document it here anyway, so you can see where we're going with it, ala
 The `sidekick` command for AICodeBot is designed to automate coding
 tasks based on instructions from you. This feature aims to boost developer
 productivity by handling various aspects of the coding process, but keeping you
-in charge of the process and commiting the code.
+in charge of the process and committing the code.
 
 It's not intended to build entire applications, but instead improve existing
 code bases one git commit at a time.
@@ -47,7 +47,7 @@ code bases one git commit at a time.
    debugging and modifying the code as necessary until all tests pass.
 
 8. **Code Review**: AICodeBot submits the code for review, and marks the task
-    as complete and ready for you to commit.
+   as complete and ready for you to commit.
 
 **Future** - Reinforcement Learning and Active Learning
 

@@ -46,7 +46,7 @@ class RichLiveCallbackHandler(BaseCallbackHandler):
 
 
 class OurCodeBlock(CodeBlock):
-    """Ovewrite the default CodeBlock, which puts a leading space in front of the code,
+    """Overwrite the default CodeBlock, which puts a leading space in front of the code,
     which is annoying for copying/pasting code"""
 
     def __rich_console__(self, console, options):
