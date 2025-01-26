@@ -1,12 +1,19 @@
+import os
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import click
+from pydantic import BaseModel, Field
+from rich.panel import Panel
+
 from aicodebot.coder import Coder
 from aicodebot.helpers import exec_and_get_output, logger
 from aicodebot.lm import LanguageModelManager
 from aicodebot.output import OurMarkdown, get_console
 from aicodebot.prompts import get_prompt
-from pathlib import Path
-from pydantic import BaseModel, Field
-from rich.panel import Panel
-import click, os, shutil, subprocess, sys, tempfile
 
 
 class CommitMessage(BaseModel):
@@ -97,7 +104,9 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
         llm = lmm.model_factory(response_token_size=response_token_size)
         # Using Langchain Expression Language (LCEL) for structured output. So chic! 😉
         chain = prompt | llm.with_structured_output(CommitMessage)
+        logger.debug(f"Chain input: {{'diff_context': {diff_context}, 'languages': {languages}}}")
         response = chain.invoke({"diff_context": diff_context, "languages": languages})
+        logger.debug(f"Chain response: {response}")
 
     # Handle both object and dict responses,
     # The structured output sometimes returns a dict and sometimes returns an object?!
