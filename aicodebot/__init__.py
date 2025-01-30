@@ -1,3 +1,3 @@
-version = "0.27.1"
+version = "0.28.1"
 AICODEBOT_NO_EMOJI = "AICodeBot"
 AICODEBOT = f"🤖 {AICODEBOT_NO_EMOJI}"
