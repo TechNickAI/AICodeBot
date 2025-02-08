@@ -19,6 +19,7 @@ from aicodebot.prompts import get_prompt
 class CommitMessage(BaseModel):
     # Note we get better results if the message_detail is first.
     git_message_detail: str | None = Field(
+        default=None,
         description="An optional detailed explanation of the changes made in this commit,"
         " if the summary doesn't provide enough context",
     )
