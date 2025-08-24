@@ -6,8 +6,6 @@
 aicodebot
 
 # For committing, formatting, and dependency management
-black
-isort
 pip-tools
 pre-commit
 ruff
@@ -16,7 +14,6 @@ ruff
 pytest-sugar
 better_exceptions
 pdbpp # ipython in pdb
-
 
 # Release management
 python-semantic-release
