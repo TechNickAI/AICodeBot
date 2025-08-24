@@ -32,6 +32,7 @@ lint.extend-ignore = [
     "RUF012",  # Don't force annotations of mutable class attributes
     "RUF013",  # Optional args are ok
     "RUF010",  # Don't force f-strings everywhere
+    "RUF005",  # Don't force iterable unpacking over concatenation
     "RUF100",  # Allow unused imports
     "S101",    # assert
     "S105",    # possible hardcoded password
@@ -40,6 +41,7 @@ lint.extend-ignore = [
     "S311",    # Trust us with random
     "S324",    # Trust us with hashlib
     "S603",    # subprocess call
+    "S607",    # subprocess with partial executable path
     "SIM102",  # Nested ifs are ok
     "SIM108",  # Don't force ternary operators
     "SIM105",  # try/except/pass is fine
