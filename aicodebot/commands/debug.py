@@ -13,7 +13,7 @@ from aicodebot.prompts import get_prompt
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("command", nargs=-1)
 @click.pass_context
-def debug(ctx, command):  # ruff: noqa: ARG001 - ctx required by click decorator
+def debug(ctx, command):  # noqa: ARG001 - ctx required by click decorator
     """Run a command and debug the output."""
     console = get_console()
 
