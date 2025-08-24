@@ -350,6 +350,10 @@ QUALITY GUIDELINES:
 • For simple changes, omit the body entirely if summary is sufficient
 • Never repeat information that's obvious from reading the diff
 
+"""
+    + DIFF_CONTEXT_EXPLANATION
+    + """
+
 SAMPLE EXCELLENCE:
 🔐 Implement user authentication with JWT tokens
 
