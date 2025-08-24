@@ -1,98 +1,111 @@
-[tool.black]
-line-length = 115
-target-version = ["py312"]
-
-[tool.isort]
-line_length = 115
-profile = "black"
-py_version = 312
-use_parentheses = true
-## Ignore the source of the import and just sort alphabetically, with "from" before "import"
-combine_as_imports = true
-combine_straight_imports = true
-from_first = true
-lines_between_sections = 0
-no_sections = true
-
 [tool.pytest.ini_options]
+python_files = "tests.py test_*.py"
 # Disable warnings from third-party libraries
 filterwarnings = "ignore::DeprecationWarning"
 
-
 [tool.ruff]
+# Format to 120 characters, but don't complain about longer lines for things like log messages
+line-length = 120
+exclude = ["**/migrations", "**/node_modules", "tests/rebuild_patch_data"]
 lint.extend-ignore = [
+    "ARG002",  # Unused method args like args and kwargs are ok
     "DTZ003",
     "DTZ007",
     "E401",    # multiple imports on one line
+    "E501",    # Line too long - format to 120 but don't complain about longer
+    "FURB157", # Quotes in Decimal calls are ok
     "N817",    # D for decimal
-    "PLR0912", # Don't compplain about too many branches
+    "PERF401", # Don't force list comprehensions
+    "PLR0911", # Don't complain about too many return statements
+    "PLR0912", # Don't complain about too many branches
     "PLR0913", # don't complain about too many arguments
+    "PLR0915", # Don't complain about too many statements in a method
     "PLR2004", # Don't force every magic value to be a constant
     "PLW0120", # else without a break is fine (I use return with for-else)
     "RET505",  # Allow for return values to be set outside of if/else blocks
     "RET506",  # Allow for return values to be set after raising an exception
     "RET507",  # Allow for return values to be set after continue
     "RET508",  # Allow for return values to be set after break
+    "RUF001",  # Don't complain about ambiguous text in strings
+    "RUF002",  # Don't complain about × (multiplication sign) in docstrings
+    "RUF003",  # Don't complain about × (multiplication sign)
+    "RUF012",  # Don't force annotations of mutable class attributes
+    "RUF013",  # Optional args are ok
+    "RUF010",  # Don't force f-strings everywhere
+    "RUF100",  # Allow unused imports
     "S101",    # assert
     "S105",    # possible hardcoded password
+    "S106",    # possible hardcoded password
     "S308",    # Trust us with mark_safe
     "S311",    # Trust us with random
     "S324",    # Trust us with hashlib
-    "S603",    # Trust us with subprocess
-    "S607",    # Trust us with subprocess with partial commands
+    "S603",    # subprocess call
+    "SIM102",  # Nested ifs are ok
     "SIM108",  # Don't force ternary operators
+    "SIM105",  # try/except/pass is fine
+    "TRY300",  #
+    "TRY301",  # Let me raise errors how I want to
     "TRY003",  # long messages in exceptions are ok
 ]
 # https://beta.ruff.rs/docs/rules/#ruff-specific-rules-ruf
-line-length = 120 # Tell the linter the max length is 120, and the other tools aim for 115
 lint.select = [
-    # Note, don't use isort through ruff, it's not as configurable as the standalone tool
-    "A", # builtins
-    #"ARG", # unused arguments
-    "B",   # bugbear
-    "DJ",  # django
-    "DTZ", # datetimez
-    "E",   # pycodestyle
-    "EXE", # executable settings
-    "F",   # pyflakes
-    "INP", # implicit namespace packages
-    "ISC", # string concatenation
-    "N",   # pep8 naming
-    "NPY", # numpy
-    "PD",  # pandas checking
-    "PGH", # explicit noqa
-    "PIE", # flake8 pie
-    "PLC", # pylint convention
-    "PLE", # pylint errors
-    "PLR", # pylint refactor
-    "PLW", # pylint warnings
-    #"PT",  # pytest style
-    "PTH", # Use path library
-    "RET", # return statements
-    "RSE", # raise statements
-    #"RUF", # ruff Disabled because it is too aggressive about removing noqa settings when editing files
-    "S",   # flake8-bandit
-    "SIM", # flake8 simplify
-    "SLF", # self
-    "T10", # debug statements
-    "T20", # print statements
-    "TRY", # try/except
-    "UP",  # pyupgrade
-    "W",   # pycodestyle warnings
-    "YTT", # flake8 2020
+    "A",    # builtins
+    "ARG",  # unused arguments
+    "B",    # bugbear
+    "DTZ",  # datetimez
+    "E",    # pycodestyle
+    "EXE",  # executable settings
+    "F",    # pyflakes
+    "FURB", # modernize codebase
+    "I",    # Isort
+    "INP",  # implicit namespace packages
+    "ISC",  # string concatenation
+    "N",    # pep8 naming
+    "NPY",  # numpy
+    "PD",   # pandas checking
+    "PERF", # Perflint
+    "PGH",  # explicit noqa
+    "PIE",  # flake8 pie
+    "PLC",  # pylint convention
+    "PLE",  # pylint errors
+    "PLR",  # pylint refactor
+    "PLW",  # pylint warnings
+    "PTH",  # Use path library
+    "RET",  # return statements
+    "RSE",  # raise statements
+    "RUF",  # ruff
+    "S",    # flake8-bandit
+    "SIM",  # flake8 simplify
+    "SLF",  # self
+    "SLOT",
+    "T10",  # debug statements
+    "T20",  # print statements
+    "TRY",  # try/except
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warnings
+    "YTT",  # flake8 2020
 ]
-target-version = "py312"
+target-version = "py313"
+format.docstring-code-format = true
+
 # Certain errors we don't want to fix because they are too aggressive,
-# especially in the editor (removing variables we haven't used yet
-extend-exclude = [
-    # Don't look at the patch data because it contains incomplete python files
-    "tests/rebuild_patch_data",
-]
+# especially in the editor (removing variables we haven't used yet)
 lint.unfixable = ["F401", "F841"]
 
 [tool.ruff.lint.per-file-ignores]
-# Allow print statements in tests
-"test_*.py" = ["T201"]
+"test_*.py" = [
+    "PLR0915", # Pylint: Too many statements (tests can be long)
+    "ARG001",  # Ruff: Unused function argument (common with pytest fixtures)
+    "ARG005",  # Ruff: Unused argument in lambda expression
+    "SLF001",  # Ruff: Private member accessed (tests may need to inspect internals)
+    "F841",    # Ruff: Local variable assigned but never used (common in test setup)
+    "T201",    # Allow print statements in tests
+]
+"*/conftest.py" = [
+    "ARG001",  # Allow unused arguments in pytest hooks and fixtures
+]
+
+
 
 [tool.semantic_release]
 version_variable = "aicodebot:version"
