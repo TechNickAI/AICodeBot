@@ -5,7 +5,7 @@ from types import SimpleNamespace
 
 import arrow
 from langchain_core.output_parsers.pydantic import PydanticOutputParser
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from pydantic import BaseModel, Field
 
 from aicodebot import AICODEBOT_NO_EMOJI
@@ -322,49 +322,60 @@ ALIGNMENT_TEMPLATE = (
 """
 )
 
-COMMIT_TEMPLATE = (
+COMMIT_SYSTEM_PROMPT = (
     EXPERT_SOFTWARE_ENGINEER
     + get_personality_prompt()
     + """
 
-    I need you to generate a commit message for a change in a git repository."""
-    + DIFF_CONTEXT_EXPLANATION
-    + """
+You are an expert at writing exceptional Git commit messages that follow best practices.
 
-    Here's the DIFF that will be committed:
+CORE PRINCIPLES:
+• Write the full detailed message first, thinking through all changes comprehensively
+• Then distill that into a perfect summary line
+• Focus on WHY and WHAT functionality changed, not just HOW
+• Scale message length to change complexity - small changes get terse messages
+• Use imperative mood ("Add feature" not "Added feature")
+• Include an emoji from gitmoji when appropriate and helpful
 
-    BEGIN DIFF
-    {diff_context}
-    END DIFF
+COMMIT MESSAGE STRUCTURE:
+1. Summary line: <72 chars, imperative mood, capitalize after emoji, no period
+2. Blank line (if detail needed)
+3. Detailed explanation (if summary insufficient)
 
-    Instructions for the commit message:
-    * Start with a short summary (less than 72 characters).
-    * Follow with a blank line and detailed text, but only if necessary. If the summary is sufficient,
-        then omit the detailed text.
-    * Determine what functionality was added or modified instead of just describing the exact changes.
-    * Use imperative mood (e.g., "Add feature")
-    * Be in GitHub-flavored markdown format.
-    * Have a length that scales with the length of the diff context. If the DIFF is a small change,
-      respond quickly with a terse message so we can go faster.
-    * Do not repeat information that is already known from the git commit.
-    * Be terse.
-    * Do not add anything other then description of code changes.
+QUALITY GUIDELINES:
+• Explain WHY the change was made, not WHAT was changed (diff shows what)
+• Provide context: motivation, problem being solved, business impact
+• Explain trade-offs, alternatives considered, or implementation decisions
+• Keep body concise - wrap at 72 characters, focus on valuable context only
+• For simple changes, omit the body entirely if summary is sufficient
+• Never repeat information that's obvious from reading the diff
 
-    BEGIN SAMPLE COMMIT MESSAGE
-    Update README with better instructions for installation
+SAMPLE EXCELLENCE:
+🔐 Implement user authentication with JWT tokens
 
-    The previous instructions were not clear enough for new users, so we've updated them
-    with more sample use cases and an improved installation process. This should help
-    new users get started faster.
-    END SAMPLE COMMIT MESSAGE
+Replaces session-based auth to support mobile apps and API access.
+JWT tokens allow stateless authentication and better scaling. Tokens
+expire after 24h for security while maintaining user convenience.
 
-    Formatting instructions:
-    Start your response with the commit message. No prefix or introduction.
-    Your entire response will be the commit message. No quotation marks.
+SIMPLE CHANGE EXAMPLE:
+🐛 Handle null values in user preferences
 
-    Include an emoji from gitmoji when appropriate and helpful
+(no body needed - summary explains the fix completely)
 """
 )
+
+COMMIT_USER_TEMPLATE = """Generate a commit message for this git diff:
+
+```diff
+{diff_context}
+```
+
+Languages: {languages}
+
+Think about WHY this change was made - what problem does it solve? What's the motivation?
+Write a brief body explaining the context/reasoning (omit if summary is sufficient).
+Then create a perfect summary line under 72 characters.
+"""
 
 DEBUG_TEMPLATE = (
     EXPERT_SOFTWARE_ENGINEER
@@ -450,7 +461,9 @@ def get_prompt(command, structured_output=False):
     else:
         prompt_map = {
             "alignment": PromptTemplate(template=ALIGNMENT_TEMPLATE, input_variables=[]),
-            "commit": PromptTemplate(template=COMMIT_TEMPLATE, input_variables=["diff_context", "languages"]),
+            "commit": ChatPromptTemplate.from_messages(
+                [("system", COMMIT_SYSTEM_PROMPT), ("user", COMMIT_USER_TEMPLATE)]
+            ),
             "debug": PromptTemplate(template=DEBUG_TEMPLATE, input_variables=["command_output", "languages"]),
             "fun_fact": PromptTemplate(template=FUN_FACT_TEMPLATE, input_variables=["topic"]),
             "sidekick": PromptTemplate(template=SIDEKICK_TEMPLATE, input_variables=["task", "context", "languages"]),

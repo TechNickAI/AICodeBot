@@ -17,18 +17,23 @@ from aicodebot.prompts import get_prompt
 
 
 class CommitMessage(BaseModel):
-    # Note we get better results if the message_detail is first.
+    # Generate detailed message first, then distill to summary for better reasoning
     git_message_detail: str | None = Field(
         default=None,
-        description="An optional detailed explanation of the changes made in this commit,"
-        " if the summary doesn't provide enough context",
+        description="Brief explanation of WHY this change was made - motivation, context, "
+        "business impact, or technical decisions. Do NOT describe what changed (diff shows that). "
+        "Keep under 3 sentences, wrap at 72 chars. Omit entirely if summary is sufficient.",
     )
 
-    git_message_summary: str = Field(description="A brief summary of the commit message (max 72 characters)")
+    git_message_summary: str = Field(
+        description="Perfect summary line under 72 characters. Imperative mood. "
+        "Distill the detailed message into its essential functional change. "
+        "Should be precise enough that a developer understands the purpose immediately."
+    )
 
 
 @click.command()
-@click.option("-t", "--response-token-size", type=int, default=1000)
+@click.option("-t", "--response-token-size", type=int, default=15_000)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit.")
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
@@ -118,7 +123,7 @@ def commit(response_token_size, yes, skip_pre_commit, files):  # noqa: PLR0915
     git_message_detail = get_attr_or_item(response, "git_message_detail")
 
     commit_message = git_message_summary or "No summary provided"
-    if git_message_detail:
+    if git_message_detail and git_message_detail.strip():
         commit_message += f"\n\n{git_message_detail}"
 
     console.print(Panel(OurMarkdown(commit_message)))
