@@ -1,11 +1,13 @@
-from aicodebot.helpers import logger
 from functools import cache
+
 from langchain_core.callbacks import BaseCallbackHandler
 from rich.console import Console
 from rich.markdown import CodeBlock, Markdown
 from rich.panel import Panel
 from rich.style import Style
 from rich.syntax import Syntax
+
+from aicodebot.helpers import logger
 
 
 class RichLiveCallbackHandler(BaseCallbackHandler):

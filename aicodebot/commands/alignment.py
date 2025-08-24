@@ -1,9 +1,10 @@
+import click
+from rich.live import Live
+
 from aicodebot.helpers import logger
 from aicodebot.lm import CREATIVE_TEMPERATURE, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
-from rich.live import Live
-import click
 
 
 @click.command()

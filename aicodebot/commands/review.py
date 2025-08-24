@@ -1,10 +1,14 @@
+import json
+import sys
+
+import click
+from rich.live import Live
+
 from aicodebot.coder import Coder
 from aicodebot.helpers import logger
 from aicodebot.lm import DEFAULT_RESPONSE_TOKENS, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
-from rich.live import Live
-import click, json, sys
 
 
 @click.command()

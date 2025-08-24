@@ -1,15 +1,20 @@
-from aicodebot.coder import Coder
-from aicodebot.commands import commit, review
-from aicodebot.lm import token_size
-from aicodebot.patch import Patch
+import subprocess
 from pathlib import Path
+
+import click
+import humanize
+import pyperclip
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import Completer, Completion
 from prompt_toolkit.history import FileHistory
 from rich.panel import Panel
 from rich.table import Table
-import click, humanize, pyperclip, subprocess
+
+from aicodebot.coder import Coder
+from aicodebot.commands import commit, review
+from aicodebot.lm import token_size
+from aicodebot.patch import Patch
 
 
 class Chat:

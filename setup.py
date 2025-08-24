@@ -1,6 +1,8 @@
-from aicodebot import version
 from pathlib import Path
+
 from setuptools import find_packages, setup
+
+from aicodebot import version
 
 # Pull in the long description from the README
 long_description = Path("README.md").read_text(encoding="utf-8")

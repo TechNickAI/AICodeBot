@@ -1,6 +1,9 @@
-from loguru import logger
+import os
+import subprocess
+import sys
 from pathlib import Path
-import os, subprocess, sys
+
+from loguru import logger
 
 # ---------------------------------------------------------------------------- #
 #                    Global logging configuration for loguru                   #

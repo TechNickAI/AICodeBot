@@ -1,5 +1,6 @@
-from aicodebot.lm import LanguageModelManager, token_size
 from pathlib import Path
+
+from aicodebot.lm import LanguageModelManager, token_size
 
 
 def test_token_size(monkeypatch):

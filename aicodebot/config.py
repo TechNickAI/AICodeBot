@@ -1,6 +1,10 @@
-from aicodebot.helpers import create_and_write_file, logger
+import os
 from pathlib import Path
-import os, yaml
+
+import httpx
+import yaml
+
+from aicodebot.helpers import create_and_write_file, logger
 
 
 def get_local_data_dir():

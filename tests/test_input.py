@@ -1,10 +1,14 @@
+import textwrap
+from io import StringIO
+from pathlib import Path
+
+import pyperclip
+import pytest
+
 from aicodebot.helpers import create_and_write_file
 from aicodebot.input import Chat
 from aicodebot.output import get_console
-from io import StringIO
-from pathlib import Path
 from tests.conftest import in_temp_directory
-import pyperclip, pytest, textwrap
 
 
 class MockConsole:

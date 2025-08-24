@@ -1,7 +1,9 @@
-from aicodebot.helpers import logger
+import re
+import subprocess
 from pathlib import Path
 from types import SimpleNamespace
-import re, subprocess
+
+from aicodebot.helpers import logger
 
 
 class Patch:

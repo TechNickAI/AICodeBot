@@ -1,8 +1,12 @@
+import os
+import tempfile
+from pathlib import Path
+
+import pytest
+
 from aicodebot.coder import Coder
 from aicodebot.helpers import create_and_write_file
-from pathlib import Path
 from tests.conftest import in_temp_directory
-import os, pytest, tempfile
 
 
 def test_generate_directory_structure(

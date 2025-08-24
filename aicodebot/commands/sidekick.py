@@ -1,3 +1,9 @@
+import sys
+
+import click
+from rich.live import Live
+from rich.panel import Panel
+
 from aicodebot import AICODEBOT
 from aicodebot.coder import Coder
 from aicodebot.config import Session
@@ -6,9 +12,6 @@ from aicodebot.input import Chat, generate_prompt_session
 from aicodebot.lm import DEFAULT_CONTEXT_TOKENS, LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import generate_files_context, get_prompt
-from rich.live import Live
-from rich.panel import Panel
-import click, sys
 
 
 @click.command()

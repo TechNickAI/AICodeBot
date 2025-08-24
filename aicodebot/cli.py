@@ -1,8 +1,14 @@
-from aicodebot import AICODEBOT, version as aicodebot_version
+import os
+import sys
+
+import click
+import langchain_core
+
+from aicodebot import AICODEBOT
+from aicodebot import version as aicodebot_version
 from aicodebot.commands import alignment, commit, configure, debug, review, sidekick
 from aicodebot.config import read_config
 from aicodebot.output import get_console
-import click, langchain_core, os, sys
 
 # -------------------------- Top level command group ------------------------- #
 

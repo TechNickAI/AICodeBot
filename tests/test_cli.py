@@ -1,12 +1,16 @@
+import json
+import os
+from pathlib import Path
+
+import pytest
+from git import Repo
+
 from aicodebot import version as aicodebot_version
 from aicodebot.cli import cli
 from aicodebot.config import read_config
 from aicodebot.helpers import create_and_write_file
 from aicodebot.prompts import DEFAULT_PERSONALITY
-from git import Repo
-from pathlib import Path
 from tests.conftest import in_temp_directory
-import json, os, pytest
 
 # smaller than the default size to speed up the tests
 TEST_RESPONSE_TOKEN_SIZE = 150

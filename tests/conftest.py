@@ -1,9 +1,12 @@
-from aicodebot.helpers import create_and_write_file
-from click.testing import CliRunner
+import os
 from contextlib import contextmanager
-from git import Repo
 from pathlib import Path
-import os, pytest
+
+import pytest
+from click.testing import CliRunner
+from git import Repo
+
+from aicodebot.helpers import create_and_write_file
 
 
 @pytest.fixture

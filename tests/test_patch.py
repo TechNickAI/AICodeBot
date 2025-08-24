@@ -1,7 +1,11 @@
-from aicodebot.patch import Patch
+import shutil
+import textwrap
 from pathlib import Path
+
+import pytest
+
+from aicodebot.patch import Patch
 from tests.conftest import in_temp_directory
-import pytest, shutil, textwrap
 
 
 def test_apply_patch(temp_git_repo):

@@ -1,15 +1,19 @@
+import subprocess
+import sys
+
+import click
+from rich.live import Live
+
 from aicodebot.helpers import logger
 from aicodebot.lm import LanguageModelManager
 from aicodebot.output import OurMarkdown, RichLiveCallbackHandler, get_console
 from aicodebot.prompts import get_prompt
-from rich.live import Live
-import click, subprocess, sys
 
 
 @click.command(context_settings={"ignore_unknown_options": True})
 @click.argument("command", nargs=-1)
 @click.pass_context
-def debug(ctx, command):
+def debug(ctx, command):  # ruff: noqa: ARG001 - ctx required by click decorator
     """Run a command and debug the output."""
     console = get_console()
 
