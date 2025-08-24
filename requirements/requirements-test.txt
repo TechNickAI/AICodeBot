@@ -2,5 +2,6 @@
 -r requirements.txt
 pytest
 pytest-cov
+pytest-asyncio
 vcrpy
 pytest-recording
