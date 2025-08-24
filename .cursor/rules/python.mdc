@@ -1,7 +1,7 @@
 ---
-alwaysApply: true
+description: when editing python files
+alwaysApply: false
 ---
-
 ## Python
 
 - **Imports ALWAYS go to the top of the file - NEVER import within functions, unless it would
