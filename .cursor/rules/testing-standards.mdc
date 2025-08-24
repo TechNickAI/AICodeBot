@@ -1,0 +1,190 @@
+---
+description: when writing tests
+alwaysApply: false
+---
+
+# 🧪 Testing Guidelines
+
+## Core Requirements
+
+- Mock external API calls (OpenAI, Anthropic, etc.) unless the test is explicitly set to be "live"
+- Re-use fixtures from conftest.py files, request if not provided
+- Always use pytest as testing framework. Don't import unittest under any circumstances
+- Use pytest-mock (mocker fixture) instead of unittest.mock for mocking
+- Use monkeypatch fixture for environment variables and configuration
+
+## 🌐 Live Tests & Network Dependencies
+
+**Environment Variable Control:**
+
+- Use `SKIP_LIVE_TESTS=1` to skip tests that require network/external APIs
+- All live tests must include:
+  `@pytest.mark.skipif(os.environ.get("SKIP_LIVE_TESTS"), reason="Live test skipped with SKIP_LIVE_TESTS")`
+- This allows running tests offline, on planes, or in CI environments with unreliable network
+
+**Live Test Guidelines:**
+
+- Keep live tests minimal (2-3 per module maximum)
+- Live tests should validate end-to-end integration, not API behavior
+- Always combine with `@pytest.mark.flaky(reruns=3, reruns_delay=1)` for reliability
+
+```python
+# ✅ CORRECT: Live test with skip capability
+@pytest.mark.flaky(reruns=3, reruns_delay=1)
+@pytest.mark.skipif(os.environ.get("SKIP_LIVE_TESTS"), reason="Live test skipped with SKIP_LIVE_TESTS")
+def test_openai_integration_live():
+    """Live test with real API - validates end-to-end flow."""
+    result = get_code_review("print('hello')")
+    assert result.success
+    assert len(result.suggestions) > 0
+
+# ✅ CORRECT: Unit test with mocked external dependency
+def test_code_review_mocked(mocker):
+    """Unit test - focuses on our business logic."""
+    mocker.patch("aicodebot.lm.LanguageModelManager.model_factory", return_value=mock_model)
+    result = get_code_review("print('hello')")
+    assert result.formatted_output.startswith("Code Review:")
+```
+
+## 🎯 **What to Test vs What NOT to Test**
+
+**GOLDEN RULE: Test YOUR business logic, not the libraries you depend on.**
+
+### ✅ **ALWAYS Test These**
+
+**Your Business Logic:**
+
+```python
+# ✅ Provider-specific handling logic
+def test_anthropic_vs_openai_parameter_mapping():
+    # This is OUR logic that transforms based on provider
+
+# ✅ Custom error handling and recovery
+def test_handles_api_key_missing_gracefully():
+    # This is OUR error handling logic
+
+# ✅ Data transformations and file processing
+def test_formats_commit_message_correctly():
+    # This is OUR formatting logic
+
+# ✅ Configuration and workflow management
+def test_config_file_migration():
+    # This is OUR configuration logic
+```
+
+**Integration Points:**
+
+```python
+# ✅ How you call external services
+def test_sends_correct_parameters_to_openai():
+    # Test the interface between your code and external APIs
+
+# ✅ How you handle external responses
+def test_processes_anthropic_response_correctly():
+    # Test how you transform external data into internal models
+```
+
+### 🚫 **NEVER Test These**
+
+**Library Code:**
+
+```python
+# 🚫 Don't test langchain model validation
+def test_langchain_model_validation():
+    # Langchain already tests this extensively
+
+# 🚫 Don't test HTTP client configuration
+def test_httpx_client_headers():
+    # This is testing httpx library behavior
+
+# 🚫 Don't test click CLI framework
+def test_click_option_parsing():
+    # Click already tests this
+```
+
+### 🤔 **Ask Yourself: "Is This MY Code?"**
+
+**Decision Framework:**
+
+1. **Did I write this logic?** → ✅ Test it
+2. **Is this a library doing what it's supposed to do?** → 🚫 Don't test it
+3. **Could this break if I change MY code?** → ✅ Test it
+4. **Would this break if the library has a bug?** → 🚫 Not your responsibility to test
+5. **Is this testing HOW I use a library?** → ✅ Test it
+6. **Is this testing IF the library works?** → 🚫 Don't test it
+
+## 🎭 Thoughtful Mocking - When to Mock vs When to Fix
+
+**CRITICAL PRINCIPLE: Mocking should isolate your code from external dependencies, NOT hide internal
+problems.**
+
+### ✅ **Good Mocking - External Dependencies**
+
+```python
+# ✅ GOOD: Mock external API calls
+def test_code_analysis(mocker):
+    mock_response = {"choices": [{"message": {"content": "Great code!"}}]}
+    mocker.patch("openai.ChatCompletion.create", return_value=mock_response)
+    result = analyze_code("print('hello')")
+    assert "Great code!" in result
+
+# ✅ GOOD: Mock file system operations
+def test_config_file_creation(tmp_path, mocker):
+    config_path = tmp_path / "config.yaml"
+    mocker.patch("aicodebot.config.get_config_file", return_value=config_path)
+    # ... rest of test
+```
+
+### 🚫 **Bad Mocking - Covering Up Problems**
+
+```python
+# 🚫 BAD: Mocking to hide configuration errors
+def test_language_model_setup(mocker):
+    # This hides the fact that our config setup is broken!
+    mocker.patch("aicodebot.config.read_config", return_value={"provider": "fake"})
+
+# 🚫 BAD: Mocking internal logic that should work
+def test_commit_message_generation(mocker):
+    # This hides the fact that our internal logic is broken!
+    mocker.patch("aicodebot.coder.generate_message", return_value="fake message")
+```
+
+## 🏗️ Test Structure
+
+```python
+import pytest
+from aicodebot.config import read_config
+from aicodebot.lm import LanguageModelManager
+
+@pytest.fixture
+def mock_config():
+    return {
+        "provider": "openai",
+        "model": "gpt-4o",
+        "personality": "coder"
+    }
+
+def test_language_model_initialization(mock_config, mocker):
+    """Test LM manager initializes with correct config
+
+    Ensures proper configuration loading and provider setup
+    """
+    mocker.patch("aicodebot.config.read_config", return_value=mock_config)
+
+    lmm = LanguageModelManager()
+    assert lmm.provider == "OpenAI"
+    assert lmm.model_name == "gpt-4o"
+```
+
+## Rules
+
+- When there is a test failure that you are examining - think first - is this a test problem or a
+  code problem? What's the right thing to fix?
+- **Never "fix" a broken test by mocking a python call that hides the error.**
+- **Be extremely thoughtful about when to use mocking - confirm it's actually the best solution and
+  not a hack.**
+- Don't overzealously test for exact text - we don't want tests failing when we change text. Keep
+  tests resilient.
+- **FOCUS ON YOUR BUSINESS LOGIC** - Test what you wrote, not what libraries do.
+- **Quality over quantity** - 10 focused tests that test your logic are better than 100 tests that
+  test everything.

@@ -1,0 +1,139 @@
+---
+alwaysApply: true
+---
+
+## Python
+
+- **Imports ALWAYS go to the top of the file - NEVER import within functions, unless it would
+  create circular import** ⚠️
+- Use Decimal for financial calculations - never use float for money/prices
+- Don't abbreviate packages (use "pathlib" not "pl", "yaml" not "yml")
+
+## Modern python
+
+We use python 3.13+ and follow modern best practices, including:
+
+- Use `Path` lib for files instead of `open`
+- Use `var!s` instead of `str(var)`
+- Prefer walrus operator (:=) to reduce repetition in code
+- Use modern union syntax `X | Y` instead of `Union[X, Y]` or `(X, Y)` in isinstance calls
+
+## Libraries to use
+
+- Use `click` for command line applications with rich styling
+- Use `rich` for making command line applications more beautiful and more user friendly
+- We have `pydantic` installed (through language model libraries), so you may use that when it adds value
+- We are using `httpx` for async HTTP requests
+- Use `loguru` for logging (from `aicodebot.helpers` as `logger`)
+
+## Exceptions - READ THIS CAREFULLY 🚨
+
+### ⚠️ CRITICAL: try/except is FORBIDDEN except in these EXACT 2 scenarios:
+
+**SCENARIO 1: Handling a SPECIFIC exception type with actual handling logic**
+
+```python
+# ✅ ALLOWED: Specific exception + real handling + proper logging
+try:
+    result = process_api_request(data)
+except APIRateLimitError as e:
+    logger.warning(f"Rate limited, retrying in {e.retry_after} seconds")
+    time.sleep(e.retry_after)
+    return retry_request(data)
+except APIAuthError as e:
+    logger.error(f"Authentication failed: {e}")
+    raise ConfigurationError("Invalid API key - run 'aicodebot configure'") from e
+```
+
+**SCENARIO 2: Processing loop where you want to continue on errors**
+
+```python
+# ✅ ALLOWED: Loop processing where individual failures shouldn't stop the loop
+for file_path in file_paths:
+    try:
+        process_file(file_path)
+    except FileProcessingError as e:
+        logger.warning(f"Failed to process {file_path}: {e}")
+        continue  # Continue processing other files
+```
+
+### 🚫 ABSOLUTELY FORBIDDEN - NEVER EVER DO THESE:
+
+```python
+# 🚫 NEVER: Generic exception catching
+try:
+    some_function()
+except Exception as e:
+    logger.error("Something went wrong")  # This hides errors from us!
+
+# 🚫 NEVER: Log and continue without specific handling
+try:
+    some_function()
+except SomeError as e:
+    logger.error(f"Error: {e}")  # Just logging is NOT handling!
+
+# 🚫 NEVER: Swallowing exceptions
+try:
+    some_function()
+except Exception:
+    pass  # Absolutely forbidden!
+```
+
+### ✅ DEFAULT APPROACH - 99% of the time, do this:
+
+```python
+# ✅ PREFERRED: Let exceptions bubble up
+result = process_code_changes(files)  # No try/except at all!
+model = get_language_model(provider)  # Let it crash if provider is invalid!
+response = httpx.get(url)  # Let network errors bubble up!
+```
+
+### 🎯 REMEMBER:
+
+- **Exceptions are NOT errors to be hidden - they're signals something needs attention**
+- **If you're tempted to use try/except, ask: "Am I actually HANDLING this or just HIDING
+  it?"**
+- **Logging an error is NOT the same as handling an error**
+
+## 🚫 Defensive Programming - hasattr/getattr
+
+**NEVER use hasattr() or getattr() unless there's a REALLY good reason.**
+
+### ❌ BAD: Defensive programming
+
+```python
+# 🚫 NEVER: Checking if methods exist in your own class
+if hasattr(self, "process_commit") and callable(self.process_commit):
+    self.process_commit(commit_data)
+
+# 🚫 NEVER: Using getattr with defaults for config
+value = getattr(config, "SOME_SETTING", "default")
+```
+
+### ✅ GOOD: Trust your code
+
+```python
+# ✅ PREFERRED: Just call the method - it exists!
+self.process_commit(commit_data)
+
+# ✅ PREFERRED: Config entries exist - don't use defaults
+value = config.SOME_SETTING
+```
+
+### 🎯 PHILOSOPHY:
+
+- **Trust your own classes** - Methods you defined exist
+- **Fail fast** - If something doesn't exist, let it crash
+- **Broken is better than wrong** - Don't hide missing attributes with defaults
+
+## Logging
+
+Use our logger which is loguru, from `aicodebot.helpers.logger`. Use emojis when they are
+helpful. Use other log levels from loguru when helpful, such as logger.success() when a command
+completes. Add logging that is helpful not only for humans, but for AI to troubleshoot. Always
+use logger.exception in an exception catch, not logger.error()
+
+```python
+from aicodebot.helpers import logger
+logger.info("🚀 Starting code review process", extra={"file_count": len(files)})
+```

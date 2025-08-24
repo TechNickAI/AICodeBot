@@ -1,0 +1,42 @@
+---
+description: For fixing lint errors
+globs:
+alwaysApply: false
+---
+
+# 🧹 Fix Lint Errors (Ruff)
+
+We use `ruff` for linting. If there are lint errors, or if the user says "fix lint errors", you
+should:
+
+1. Run: `ruff check --fix --unsafe-fixes`
+2. Repeat until all errors are fixed.
+
+## Using Targeted Ignores
+
+For legitimate exceptions where the error would be better handled with an ignore:
+
+1. **Always use targeted ignores** with the specific rule(s):
+
+   - `# ruff: noqa: RULE_CODE` - For the new format (preferred)
+   - `# noqa: RULE_CODE` - For compatibility with other linters
+
+2. **Always include a brief explanation** of why the rule is being ignored:
+
+   ```python
+   # Good
+   import subprocess
+   process = subprocess.Popen(["pbcopy"], stdin=subprocess.PIPE)  # ruff: noqa: S603,S607 - Needed for clipboard access
+
+   # Bad - missing explanation
+   process = subprocess.Popen(["pbcopy"], stdin=subprocess.PIPE)  # ruff: noqa: S603,S607
+   ```
+
+3. **Add TODOs for temporary ignores** that should be revisited later:
+
+   ```python
+   # TODO(nick): Remove when we implement proper input validation
+   user_input = input()  # ruff: noqa: S322 - Will be replaced with validated input
+   ```
+
+When you fix all errors, celebrate! 🌟

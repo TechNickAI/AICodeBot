@@ -1,0 +1,42 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# 💅 Code Style Guidelines
+
+## Line Length
+
+- Maximum line length: 120 characters (per pyproject.toml Ruff configuration)
+- Break long docstring lines during generation
+- Never generate lines longer than 120 characters
+
+## Comments
+
+- Focus on explaining the "why" behind the code rather than the "what"
+- File headers: Provide a brief overview of the file's purpose (1-2 sentences)
+- Function documentation: Include 1-3 sentences explaining intent and non-obvious logic
+- Use section dividers for logical organization
+- Use inline comments sparingly - only for complex logic or business rules
+- Avoid commenting the obvious, especially when code is self-documenting
+- Emojis encouraged in comments when they add clarity
+- Occasional clever puns/jokes welcome. You should aim to create delight for the people reading
+  the code. :)
+
+## Zen of Python
+
+1. **Readability is the number 1 code quality metric**.
+2. Beautiful is better than ugly.
+3. Explicit is better than implicit.
+4. Simple is better than complex.
+5. Complex is better than complicated.
+6. Flat is better than nested.
+7. Sparse is better than dense.
+8. Special cases aren't special enough to break the rules.
+   - Although practicality beats purity.
+9. Errors should never pass silently.
+   - Unless explicitly silenced.
+10. In the face of ambiguity, refuse the temptation to guess.
+11. There should be one -- and preferably only one -- obvious way to do it.
+12. Now is better than never.
