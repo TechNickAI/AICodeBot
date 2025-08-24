@@ -1,5 +1,3 @@
-import os
-
 import tiktoken
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
@@ -19,10 +17,10 @@ class LanguageModelManager:
 
     provider = model_name = None
 
-    OPENAI = "OpenAI"
-    ANTHROPIC = "Anthropic"
+    OPENAI = "openai"
+    ANTHROPIC = "anthropic"
     PROVIDERS = [OPENAI, ANTHROPIC]
-    DEFAULT_MODEL = "gpt-4o"
+    DEFAULT_MODEL = "gpt-5"
     DEFAULT_PROVIDER = OPENAI
 
     def __init__(self, model_name=None, provider=None):
@@ -69,21 +67,19 @@ class LanguageModelManager:
             raise ValueError(f"Provider {provider} is not one of: {self.PROVIDERS}")
 
     def get_api_key(self, key_name):
-        # Read the api key from either the environment or the config file
+        # Read the API key from the config file only (environment variables only used during initial setup)
+        config = read_config() or {}
         key_name_upper = key_name.upper()
-        api_key = os.getenv(key_name_upper)
-        if api_key:
-            return api_key
+        key_name_lower = key_name.lower()
+
+        # Try provider-specific keys first (new format)
+        if key_name_upper == "OPENAI_API_KEY":
+            return config.get("openai_api_key") or config.get("OPENAI_API_KEY") or config.get(key_name_lower)
+        elif key_name_upper == "ANTHROPIC_API_KEY":
+            return config.get("anthropic_api_key") or config.get("ANTHROPIC_API_KEY") or config.get(key_name_lower)
         else:
-            config = read_config() or {}
-            key_name_lower = key_name.lower()
-            # Try both upper and lower case from the config file
-            if key_name_lower in config:
-                return config[key_name_lower]
-            elif key_name_upper in config:
-                return config[key_name_upper]
-            else:
-                return None
+            # Legacy fallback
+            return config.get(key_name_lower) or config.get(key_name_upper)
 
     def get_model_token_limit(self, model_name):
         model_token_limits = {
@@ -104,20 +100,28 @@ class LanguageModelManager:
         return len(tokens)
 
     def read_model_config(self):
-        # Figure out which model to use, based on the environment variables or config file
+        # Figure out which model to use, based on the configuration file or environment variables
         config = read_config() or {}
-        self.provider = (
-            (os.getenv("ANTHROPIC_API_KEY") and self.ANTHROPIC)
-            or (os.getenv("OPENAI_API_KEY") and self.OPENAI)
-            or os.getenv("AICODEBOT_MODEL_PROVIDER", config.get("language_model_provider", self.DEFAULT_PROVIDER))
-        )
 
-        if self.provider == self.OPENAI:
-            self.model_name = "gpt-4o"
-        elif self.provider == self.ANTHROPIC:
-            self.model_name = "claude-3-7-sonnet-latest"
+        # Check for new config format first (v1.3+)
+        if config.get("version", 0) >= 1.3 and "provider" in config and "model" in config:
+            # Use the new dynamic configuration
+            self.provider = config["provider"].lower()
+            self.model_name = config["model"]
+            logger.debug(f"Using configured provider: {self.provider}, model: {self.model_name}")
+
         else:
-            self.model_name = os.getenv("AICODEBOT_MODEL", config.get("language_model", self.DEFAULT_MODEL))
+            # Legacy config fallback (no environment variable detection)
+            logger.debug("Using legacy configuration")
+            self.provider = config.get("language_model_provider", self.DEFAULT_PROVIDER)
+
+            # Set default models for legacy configs
+            if self.provider == self.OPENAI:
+                self.model_name = config.get("language_model", "gpt-4o")
+            elif self.provider == self.ANTHROPIC:
+                self.model_name = config.get("language_model", "claude-3-5-sonnet-20241022")
+            else:
+                self.model_name = config.get("language_model", self.DEFAULT_MODEL)
 
         # --------------------------- API key verification --------------------------- #
         if self.provider == self.OPENAI:
@@ -125,11 +129,13 @@ class LanguageModelManager:
         elif self.provider == self.ANTHROPIC:
             key_name = "ANTHROPIC_API_KEY"
         else:
-            raise ValueError(f"Unrecognized provider: {self.provider}")
+            valid_providers = [self.OPENAI, self.ANTHROPIC]
+            raise ValueError(f"Unrecognized provider: {self.provider}. Valid options are: {valid_providers}")
 
         if not self.get_api_key(key_name):
             raise ValueError(
-                f"In order to use {self.provider}, you must set the {key_name} in your environment or config file"
+                f"In order to use {self.provider}, you must set the API key in your config file.\n"
+                f"Run 'aicodebot configure' to set up your configuration."
             )
 
         return self.provider, self.model_name

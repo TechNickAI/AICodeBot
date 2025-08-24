@@ -26,10 +26,10 @@ def cli(ctx, debug_output):
     if not existing_config:
         if ctx.invoked_subcommand != "configure":
             console.print(f"Welcome to {AICODEBOT}. Let's set up your config file.\n", style=console.bot_style)
-            configure.callback(openai_api_key=os.getenv("OPENAI_API_KEY"), verbose=0)
+            configure.callback(
+                openai_api_key=os.getenv("OPENAI_API_KEY"), anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"), verbose=0
+            )
             sys.exit(0)
-    else:
-        os.environ["OPENAI_API_KEY"] = existing_config["openai_api_key"]
 
     # Turn on langchain debug output if requested
     langchain_core.debug = debug_output

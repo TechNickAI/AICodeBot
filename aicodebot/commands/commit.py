@@ -28,7 +28,7 @@ class CommitMessage(BaseModel):
 
 
 @click.command()
-@click.option("-t", "--response-token-size", type=int, default=250)
+@click.option("-t", "--response-token-size", type=int, default=1000)
 @click.option("-y", "--yes", is_flag=True, default=False, help="Don't ask for confirmation before committing.")
 @click.option("--skip-pre-commit", is_flag=True, help="Skip running pre-commit.")
 @click.argument("files", nargs=-1, type=click.Path(exists=True))
