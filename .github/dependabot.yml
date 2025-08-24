@@ -1,5 +1,5 @@
 ---
-# Automatically update depencies with Dependabot
+# Automatically update dependencies with Dependabot
 # Please see the documentation for all configuration options:
 # https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
 
@@ -10,9 +10,24 @@ updates:
     schedule:
       interval: "weekly"
       day: "wednesday"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
 
   - package-ecosystem: "pip"
-    directory: "/"
+    directory: "/requirements"
     schedule:
       interval: "weekly"
       day: "wednesday"
+    labels:
+      - "dependencies"
+      - "python"
+      - "auto-merge-candidate"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Allow patch and minor updates for automatic merging consideration
+    open-pull-requests-limit: 10
