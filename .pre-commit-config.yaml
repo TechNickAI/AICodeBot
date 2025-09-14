@@ -9,10 +9,16 @@ repos:
       - id: check-toml
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.10
+    rev: v0.13.0
     hooks:
       # Linter
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
       # Formatter
       - id: ruff-format
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
+        name: Check Github Actions
